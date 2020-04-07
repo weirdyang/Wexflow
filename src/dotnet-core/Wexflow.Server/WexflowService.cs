@@ -73,6 +73,7 @@ namespace Wexflow.Server
             // Designer
             // 
             GetTasks();
+            GetNewTaskId();
             GetWorkflowXml();
             GetWorkflowJson();
             GetTaskNames();
@@ -706,6 +707,37 @@ namespace Wexflow.Server
                             Contents = s => s.Write(tasksBytes, 0, tasksBytes.Length)
                         };
 
+                    }
+                }
+
+                return new Response()
+                {
+                    ContentType = "application/json"
+                };
+            });
+        }
+
+        /// <summary>
+        /// Returns next vacant Task Id.
+        /// </summary>
+        private void GetNewTaskId()
+        {
+            Get(Root + "getnewtaskid", args =>
+            {
+                for (int task = 500; task < 999; task++)
+                {
+                    var wf = WexflowServer.WexflowEngine.GetWorkflow(task);
+                    if (wf == null)
+                    {
+                        string newTaskId = task.ToString();
+                        var tasksStr = JsonConvert.SerializeObject(newTaskId);
+                        var tasksBytes = Encoding.UTF8.GetBytes(tasksStr);
+
+                        return new Response()
+                        {
+                            ContentType = "application/json",
+                            Contents = s => s.Write(tasksBytes, 0, tasksBytes.Length)
+                        };
                     }
                 }
 
