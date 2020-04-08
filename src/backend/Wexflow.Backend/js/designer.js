@@ -1119,6 +1119,7 @@
             Blockly.Blocks['task'] = {
                 init: function () {
                     this.jsonInit(taskJson);
+                    var thisBlock = this;
                     this.setTooltip(function () {
                         return 'Task "%1"'.replace('%1', thisBlock.getFieldValue('TASK'));
                     });
@@ -1141,6 +1142,7 @@
             Blockly.Blocks['if'] = {
                 init: function () {
                     this.jsonInit(ifJson);
+                    var thisBlock = this;
                     this.setTooltip(function () {
                         return 'If(%1)'.replace('%1', thisBlock.getFieldValue('IF'));
                     });
@@ -1162,6 +1164,7 @@
             Blockly.Blocks['while'] = {
                 init: function () {
                     this.jsonInit(whileJson);
+                    var thisBlock = this;
                     this.setTooltip(function () {
                         return 'While(%1)'.replace('%1', thisBlock.getFieldValue('WHILE'));
                     });
@@ -1183,6 +1186,7 @@
             Blockly.Blocks['case'] = {
                 init: function () {
                     this.jsonInit(caseJson);
+                    var thisBlock = this;
                     this.setTooltip(function () {
                         return 'Case "%1"'.replace('%1', thisBlock.getFieldValue('CASE'));
                     });
@@ -1204,6 +1208,7 @@
             Blockly.Blocks['switch'] = {
                 init: function () {
                     this.jsonInit(switchJson);
+                    var thisBlock = this;
                     this.setTooltip(function () {
                         return 'Switch(%1)'.replace('%1', thisBlock.getFieldValue('SWITCH'));
                     });
@@ -1340,9 +1345,6 @@
                     window.addEventListener('resize', onresize, false);
                     onresize();
                     Blockly.svgResize(workspace);
-
-
-
                 }, function () {
                     Common.toastInfo("An error occurred while retrieving the graph.");
                 }, auth);
