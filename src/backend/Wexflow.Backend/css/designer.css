@@ -104,9 +104,9 @@
 
 #centerswitch {
     position: absolute;
-    width: 322px;
+    width: 422px;
     left: 50%;
-    margin-left: -171px;
+    margin-left: -271px;
     top: 15px;
 }
 
@@ -122,6 +122,21 @@
     display: inline-block;
     font-size: 14px;
     text-align: center;
+    cursor: pointer;
+}
+
+#graphswitch {
+    font-family: Roboto;
+    color: #808292;
+    border-radius: 0px 5px 5px 0px;
+    border: 1px solid #E8E8EF;
+    height: 39px;
+    width: 102px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 39px;
+    text-align: center;
+    margin-left: -5px;
     cursor: pointer;
 }
 
@@ -155,7 +170,7 @@
     cursor: pointer;
 }
 
-    #leftswitch:hover, #middleswitch:hover, #rightswitch:hover {
+    #leftswitch:hover, #middleswitch:hover, #rightswitch:hover, #graphswitch:hover {
         border: 1px solid #E8E8EF;
         opacity: .7;
     }
@@ -1018,4 +1033,18 @@ margin-top: 12px;
      width: 100px;
      height: 100px;
      font-size: 40px;
+}
+
+#blocklyArea {
+    display: none;
+    position: absolute;
+    top: 116px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+#blocklyDiv {
+    position: absolute;
 }

@@ -697,6 +697,7 @@
             "Tasks": []
         }
         let diag = true;
+        let graph = false;
         let json = false;
         let xml = false;
 
@@ -1092,6 +1093,7 @@
         // diagram click
         document.getElementById("leftswitch").onclick = function () {
             diag = true;
+            graph = false;
             json = false;
             xml = false;
 
@@ -1101,16 +1103,330 @@
             wfpropwrap.style.display = "block";
             canvas.style.display = "block";
             code.style.display = "none";
+            document.getElementById("blocklyArea").style.display = "none";
 
             this.style.backgroundColor = "#F0F0F0";
+            document.getElementById("graphswitch").style.backgroundColor = "transparent";
             document.getElementById("middleswitch").style.backgroundColor = "transparent";
             document.getElementById("rightswitch").style.backgroundColor = "transparent";
 
         };
 
+        // graph click
+
+        function openGraph(workflowId) {
+            // task
+            let taskJson = {
+                "message0": "Task %1",
+                "args0": [
+                    { "type": "field_number", "name": "TASK", "check": "Number" }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 230
+            };
+
+            Blockly.Blocks['task'] = {
+                init: function () {
+                    this.jsonInit(taskJson);
+                    let thisBlock = this;
+                    this.setTooltip(function () {
+                        let taskId = parseInt(thisBlock.getFieldValue('TASK'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'Task %1'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
+                    });
+                }
+            };
+
+            // if
+            let ifJson = {
+                "message0": "If %1 Do %2 Else %3",
+                "args0": [
+                    { "type": "field_number", "name": "IF", "check": "Number" },
+                    { "type": "input_statement", "name": "DO" },
+                    { "type": "input_statement", "name": "ELSE" }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 160
+            };
+
+            Blockly.Blocks['if'] = {
+                init: function () {
+                    this.jsonInit(ifJson);
+                    let thisBlock = this;
+                    this.setTooltip(function () {
+                        let taskId = parseInt(thisBlock.getFieldValue('IF'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+
+                        return 'If(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
+                    });
+                }
+            };
+
+            // while
+            let whileJson = {
+                "message0": "While %1 %2",
+                "args0": [
+                    { "type": "field_number", "name": "WHILE", "check": "Number" },
+                    { "type": "input_statement", "name": "DO" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 160
+            };
+
+            Blockly.Blocks['while'] = {
+                init: function () {
+                    this.jsonInit(whileJson);
+                    let thisBlock = this;
+                    this.setTooltip(function () {
+                        let taskId = parseInt(thisBlock.getFieldValue('WHILE'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'While(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
+                    });
+                }
+            };
+
+            // switch/case
+            let caseJson = {
+                "message0": "Case %1 %2",
+                "args0": [
+                    { "type": "field_input", "name": "CASE_VALUE" },
+                    { "type": "input_statement", "name": "CASE" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 160
+            };
+
+            Blockly.Blocks['case'] = {
+                init: function () {
+                    this.jsonInit(caseJson);
+                    let thisBlock = this;
+                    this.setTooltip(function () {
+                        return 'Case "%1"'.replace('%1', thisBlock.getFieldValue('CASE_VALUE'));
+                    });
+                }
+            };
+
+            let switchJson = {
+                "message0": "Switch %1 %2 Default %3",
+                "args0": [
+                    { "type": "field_number", "name": "SWITCH", "check": "Number" },
+                    { "type": "input_statement", "name": "CASE" },
+                    { "type": "input_statement", "name": "DEFAULT" }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 160
+            };
+
+            Blockly.Blocks['switch'] = {
+                init: function () {
+                    this.jsonInit(switchJson);
+                    let thisBlock = this;
+                    this.setTooltip(function () {
+                        let taskId = parseInt(thisBlock.getFieldValue('SWITCH'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'Switch(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
+                    });
+                }
+            };
+
+            // onSuccess
+            let onSuccessJson = {
+                "message0": "OnSuccess %1",
+                "args0": [
+                    { "type": "input_statement", "name": "ON_SUCCESS" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 60
+            };
+
+            Blockly.Blocks['onSuccess'] = {
+                init: function () {
+                    this.jsonInit(onSuccessJson);
+                    this.setTooltip(function () {
+                        return 'OnSuccess';
+                    });
+                }
+            };
+
+            // onWarning
+            let onWarningJson = {
+                "message0": "OnWarning %1",
+                "args0": [
+                    { "type": "input_statement", "name": "ON_WARNING" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 60
+            };
+
+            Blockly.Blocks['onWarning'] = {
+                init: function () {
+                    this.jsonInit(onWarningJson);
+                    this.setTooltip(function () {
+                        return 'OnWarning';
+                    });
+                }
+            };
+
+            // onError
+            let onErrorJson = {
+                "message0": "OnError %1",
+                "args0": [
+                    { "type": "input_statement", "name": "ON_ERROR" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 60
+            };
+
+            Blockly.Blocks['onError'] = {
+                init: function () {
+                    this.jsonInit(onErrorJson);
+                    this.setTooltip(function () {
+                        return 'OnError';
+                    });
+                }
+            };
+
+            // onRejected
+            let onRejectedJson = {
+                "message0": "OnRejected %1",
+                "args0": [
+                    { "type": "input_statement", "name": "ON_REJECTED" },
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 60
+            };
+
+            Blockly.Blocks['onRejected'] = {
+                init: function () {
+                    this.jsonInit(onRejectedJson);
+                    this.setTooltip(function () {
+                        return 'OnRejected';
+                    });
+                }
+            };
+
+            if (checkId === false) {
+                Common.get(uri + "/graphBlockly/" + workflowId, function (blocklyXml) {
+                    let blocklyArea = document.getElementById('blocklyArea');
+                    let blocklyDiv = document.getElementById('blocklyDiv');
+                    blocklyDiv.innerHTML = "";
+                    let workspace = Blockly.inject(blocklyDiv, { toolbox: document.getElementById('toolbox'), grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }, trashcan: true, scrollbars: true, sounds: false, zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 } });
+                    workspace.options.readOnly = true;
+                    let xml_text = Blockly.Xml.textToDom(blocklyXml);
+                    Blockly.Xml.domToWorkspace(xml_text, workspace);
+
+                    graph = true;
+                    diag = false;
+                    json = false;
+                    xml = false;
+
+                    leftcard.style.display = "none";
+                    propwrap.style.display = "none";
+                    wfclose.style.display = "none";
+                    wfpropwrap.style.display = "none";
+                    canvas.style.display = "none";
+                    code.style.display = "none";
+                    document.getElementById("blocklyArea").style.display = "block";
+
+                    document.getElementById("graphswitch").style.backgroundColor = "#F0F0F0";
+                    document.getElementById("leftswitch").style.backgroundColor = "transparent";
+                    document.getElementById("middleswitch").style.backgroundColor = "transparent";
+                    document.getElementById("rightswitch").style.backgroundColor = "transparent";
+
+
+                    let onresize = function (e) {
+                        // Compute the absolute coordinates and dimensions of blocklyArea.
+                        let element = blocklyArea;
+                        let x = 0;
+                        let y = 0;
+                        do {
+                            x += element.offsetLeft;
+                            y += element.offsetTop;
+                            element = element.offsetParent;
+                        } while (element);
+                        // Position blocklyDiv over blocklyArea.
+                        blocklyDiv.style.left = x + 'px';
+                        blocklyDiv.style.top = y + 'px';
+                        blocklyDiv.style.top = 0;
+                        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+                        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+                        Blockly.svgResize(workspace);
+                    };
+                    window.addEventListener('resize', onresize, false);
+                    onresize();
+                    Blockly.svgResize(workspace);
+                }, function () {
+                    Common.toastInfo("An error occurred while retrieving the graph.");
+                }, auth);
+
+            } else {
+                Common.toastInfo("You must save the workflow to view the graph.");
+            }
+        }
+
+        document.getElementById("graphswitch").onclick = function () {
+            let wfid = document.getElementById("wfid").value;
+            if (isInt(wfid)) {
+                let workflowId = parseInt(wfid);
+                openGraph(workflowId);
+            } else {
+                Common.toastInfo("Enter a valid workflow id.");
+            }
+        };
+
         // json click
         function openJsonView(jsonVal) {
             diag = false;
+            graph = false;
             json = true;
             xml = false;
 
@@ -1119,9 +1435,11 @@
             wfclose.style.display = "none";
             wfpropwrap.style.display = "none";
             canvas.style.display = "none";
+            document.getElementById("blocklyArea").style.display = "none";
             code.style.display = "block";
 
             document.getElementById("middleswitch").style.backgroundColor = "#F0F0F0";
+            document.getElementById("graphswitch").style.backgroundColor = "transparent";
             document.getElementById("leftswitch").style.backgroundColor = "transparent";
             document.getElementById("rightswitch").style.backgroundColor = "transparent";
 
@@ -1298,6 +1616,7 @@
 
             diag = false;
             json = false;
+            graph = false;
             xml = true;
 
             leftcard.style.display = "none";
@@ -1305,9 +1624,11 @@
             wfclose.style.display = "none";
             wfpropwrap.style.display = "none";
             canvas.style.display = "none";
+            document.getElementById("blocklyArea").style.display = "none";
             code.style.display = "block";
 
             document.getElementById("rightswitch").style.backgroundColor = "#F0F0F0";
+            document.getElementById("graphswitch").style.backgroundColor = "transparent";
             document.getElementById("leftswitch").style.backgroundColor = "transparent";
             document.getElementById("middleswitch").style.backgroundColor = "transparent";
 
@@ -1733,6 +2054,7 @@
                         } else {
                             let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
 
+                            // load view
                             if (json === true) {
                                 Common.get(uri + "/json/" + id,
                                     function (val) {
@@ -1743,11 +2065,12 @@
                                     function (val) {
                                         openXmlView(val);
                                     }, function () { }, auth);
+                            } else if (graph === true) {
+                                openGraph(id);
                             }
 
                             // load diagram
                             loadDiagram(id);
-
                         }
                     };
 
@@ -2163,6 +2486,8 @@
                                 function (val) {
                                     openXmlView(val);
                                 }, function () { }, auth);
+                        } else if (graph === true) {
+                            openGraph(workflowId);
                         }
 
                         // load diagram
