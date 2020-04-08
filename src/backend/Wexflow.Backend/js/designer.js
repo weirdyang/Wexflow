@@ -1106,7 +1106,7 @@
 
         function openGraph(workflowId) {
             // task
-            var taskJson = {
+            let taskJson = {
                 "message0": "Task %1",
                 "args0": [
                     { "type": "field_number", "name": "TASK", "check": "Number" }
@@ -1119,15 +1119,27 @@
             Blockly.Blocks['task'] = {
                 init: function () {
                     this.jsonInit(taskJson);
-                    var thisBlock = this;
+                    let thisBlock = this;
                     this.setTooltip(function () {
-                        return 'Task "%1"'.replace('%1', thisBlock.getFieldValue('TASK'));
+                        let taskId = parseInt(thisBlock.getFieldValue('TASK'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'Task %1'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
                     });
                 }
             };
 
             // if
-            var ifJson = {
+            let ifJson = {
                 "message0": "If %1 Do %2 Else %3",
                 "args0": [
                     { "type": "field_number", "name": "IF", "check": "Number" },
@@ -1142,15 +1154,28 @@
             Blockly.Blocks['if'] = {
                 init: function () {
                     this.jsonInit(ifJson);
-                    var thisBlock = this;
+                    let thisBlock = this;
                     this.setTooltip(function () {
-                        return 'If(%1)'.replace('%1', thisBlock.getFieldValue('IF'));
+                        let taskId = parseInt(thisBlock.getFieldValue('IF'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+
+                        return 'If(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
                     });
                 }
             };
 
             // while
-            var whileJson = {
+            let whileJson = {
                 "message0": "While %1 %2",
                 "args0": [
                     { "type": "field_number", "name": "WHILE", "check": "Number" },
@@ -1164,15 +1189,27 @@
             Blockly.Blocks['while'] = {
                 init: function () {
                     this.jsonInit(whileJson);
-                    var thisBlock = this;
+                    let thisBlock = this;
                     this.setTooltip(function () {
-                        return 'While(%1)'.replace('%1', thisBlock.getFieldValue('WHILE'));
+                        let taskId = parseInt(thisBlock.getFieldValue('WHILE'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'While(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
                     });
                 }
             };
 
             // switch/case
-            var caseJson = {
+            let caseJson = {
                 "message0": "Case %1 %2",
                 "args0": [
                     { "type": "field_input", "name": "CASE_VALUE" },
@@ -1186,14 +1223,14 @@
             Blockly.Blocks['case'] = {
                 init: function () {
                     this.jsonInit(caseJson);
-                    var thisBlock = this;
+                    let thisBlock = this;
                     this.setTooltip(function () {
-                        return 'Case "%1"'.replace('%1', thisBlock.getFieldValue('CASE'));
+                        return 'Case "%1"'.replace('%1', thisBlock.getFieldValue('CASE_VALUE'));
                     });
                 }
             };
 
-            var switchJson = {
+            let switchJson = {
                 "message0": "Switch %1 %2 Default %3",
                 "args0": [
                     { "type": "field_number", "name": "SWITCH", "check": "Number" },
@@ -1208,15 +1245,27 @@
             Blockly.Blocks['switch'] = {
                 init: function () {
                     this.jsonInit(switchJson);
-                    var thisBlock = this;
+                    let thisBlock = this;
                     this.setTooltip(function () {
-                        return 'Switch(%1)'.replace('%1', thisBlock.getFieldValue('SWITCH'));
+                        let taskId = parseInt(thisBlock.getFieldValue('SWITCH'));
+                        let taskName = "";
+                        let taskDesc = "";
+
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            if (task.Id === taskId) {
+                                taskName = task.Name;
+                                taskDesc = task.Description;
+                                break;
+                            }
+                        }
+                        return 'Switch(%1)'.replace('%1', taskId) + " - " + taskName + " - " + taskDesc;
                     });
                 }
             };
 
             // onSuccess
-            var onSuccessJson = {
+            let onSuccessJson = {
                 "message0": "OnSuccess %1",
                 "args0": [
                     { "type": "input_statement", "name": "ON_SUCCESS" },
@@ -1236,7 +1285,7 @@
             };
 
             // onWarning
-            var onWarningJson = {
+            let onWarningJson = {
                 "message0": "OnWarning %1",
                 "args0": [
                     { "type": "input_statement", "name": "ON_WARNING" },
@@ -1256,7 +1305,7 @@
             };
 
             // onError
-            var onErrorJson = {
+            let onErrorJson = {
                 "message0": "OnError %1",
                 "args0": [
                     { "type": "input_statement", "name": "ON_ERROR" },
@@ -1276,7 +1325,7 @@
             };
 
             // onRejected
-            var onRejectedJson = {
+            let onRejectedJson = {
                 "message0": "OnRejected %1",
                 "args0": [
                     { "type": "input_statement", "name": "ON_REJECTED" },
@@ -1297,12 +1346,12 @@
 
             if (checkId === false) {
                 Common.get(uri + "/graphBlockly/" + workflowId, function (blocklyXml) {
-                    var blocklyArea = document.getElementById('blocklyArea');
-                    var blocklyDiv = document.getElementById('blocklyDiv');
+                    let blocklyArea = document.getElementById('blocklyArea');
+                    let blocklyDiv = document.getElementById('blocklyDiv');
                     blocklyDiv.innerHTML = "";
-                    var workspace = Blockly.inject(blocklyDiv, { toolbox: document.getElementById('toolbox'), grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }, trashcan: true, scrollbars: true, sounds: false, zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 } });
+                    let workspace = Blockly.inject(blocklyDiv, { toolbox: document.getElementById('toolbox'), grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }, trashcan: true, scrollbars: true, sounds: false, zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 } });
                     workspace.options.readOnly = true;
-                    var xml_text = Blockly.Xml.textToDom(blocklyXml);
+                    let xml_text = Blockly.Xml.textToDom(blocklyXml);
                     Blockly.Xml.domToWorkspace(xml_text, workspace);
 
                     graph = true;
@@ -1324,11 +1373,11 @@
                     document.getElementById("rightswitch").style.backgroundColor = "transparent";
 
 
-                    var onresize = function (e) {
+                    let onresize = function (e) {
                         // Compute the absolute coordinates and dimensions of blocklyArea.
-                        var element = blocklyArea;
-                        var x = 0;
-                        var y = 0;
+                        let element = blocklyArea;
+                        let x = 0;
+                        let y = 0;
                         do {
                             x += element.offsetLeft;
                             y += element.offsetTop;
@@ -1355,9 +1404,9 @@
         }
 
         document.getElementById("graphswitch").onclick = function () {
-            var wfid = document.getElementById("wfid").value;
+            let wfid = document.getElementById("wfid").value;
             if (isInt(wfid)) {
-                var workflowId = parseInt(wfid);
+                let workflowId = parseInt(wfid);
                 openGraph(workflowId);
             } else {
                 Common.toastInfo("Enter a valid workflow id.");
