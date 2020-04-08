@@ -2476,6 +2476,8 @@
                                 function (val) {
                                     openXmlView(val);
                                 }, function () { }, auth);
+                        } else if (graph === true) {
+                            openGraph(workflowId);
                         }
 
                         // load diagram
