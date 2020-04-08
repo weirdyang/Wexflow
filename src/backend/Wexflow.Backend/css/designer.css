@@ -223,12 +223,24 @@
     line-height: 38px;
     margin-right: 20px;
     transition: all .2s cubic-bezier(.05,.03,.35,1);
+    float: right;
+    margin-top: 11px;
 }
 
-    #newworkflow:hover {
-        cursor: pointer;
-        opacity: .7;
-    }
+#topMenu1 {
+    float: right;
+    margin-right: 5px;
+}
+
+.dropdown-menu {
+    right: 55px;
+    left: auto;
+}
+
+#newworkflow:hover {
+    cursor: pointer;
+    opacity: .7;
+}
 
 #buttonsright {
     float: right;
