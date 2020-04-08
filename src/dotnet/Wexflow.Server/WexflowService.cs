@@ -89,6 +89,7 @@ namespace Wexflow.Server
             DeleteWorkflows();
             GetExecutionGraph();
             GetExecutionGraphAsXml();
+            GetExecutionGraphAsBlockly();
             UploadWorkflow();
 
             //
@@ -142,7 +143,7 @@ namespace Wexflow.Server
                         workflows = WexflowServer.WexflowEngine.Workflows
                             .ToList()
                             .Where(wf =>
-                                    wf.Name.ToUpper().Contains(keywordToUpper) 
+                                    wf.Name.ToUpper().Contains(keywordToUpper)
                                     || wf.Description.ToUpper().Contains(keywordToUpper)
                                     || wf.Id.ToString().Contains(keywordToUpper))
                             .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
@@ -2341,6 +2342,174 @@ namespace Wexflow.Server
                     Contents = s => s.Write(graphBytes, 0, graphBytes.Length)
                 };
             });
+        }
+
+        /// <summary>
+        /// Returns the execution graph of the workflow.
+        /// </summary>
+        private void GetExecutionGraphAsBlockly()
+        {
+            Get(Root + "graphBlockly/{id}", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var graph = "<xml />";
+
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password))
+                {
+                    Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(args.id);
+                    var xml = ExecutionGraphToBlockly(wf);
+                    if (xml != null)
+                    {
+                        graph = xml.ToString();
+                    }
+                }
+
+                var graphStr = JsonConvert.SerializeObject(graph);
+                var graphBytes = Encoding.UTF8.GetBytes(graphStr);
+
+                return new Response
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(graphBytes, 0, graphBytes.Length)
+                };
+            });
+        }
+
+        private XElement ExecutionGraphToBlockly(Core.Workflow wf)
+        {
+            if (wf != null && wf.ExecutionGraph != null)
+            {
+                var nodes = wf.ExecutionGraph.Nodes;
+                var xml = new XElement("xml");
+                var startNode = GetStartupNode(nodes);
+                var depth = 0;
+                var block = NodeToBlockly(wf, startNode, nodes, startNode is If || startNode is While || startNode is Switch, false, ref depth);
+                xml.Add(block);
+                return xml;
+            }
+
+            return null;
+        }
+
+        private XElement NodeToBlockly(Core.Workflow wf, Core.ExecutionGraph.Node node, Core.ExecutionGraph.Node[] nodes, bool isFlowchart, bool isEvent, ref int depth)
+        {
+            var block = new XElement("block");
+
+            if (nodes.Any())
+            {
+                if (node is If)
+                {
+                    var @if = node as If;
+                    if (@if != null)
+                    {
+                        block.Add(new XAttribute("type", "if"), new XElement("field", new XAttribute("name", "IF"), @if.IfId));
+                        var @do = new XElement("statement", new XAttribute("name", "DO"));
+                        @do.Add(NodeToBlockly(wf, GetStartupNode(@if.DoNodes), @if.DoNodes, true, isEvent, ref depth));
+                        block.Add(@do);
+                        if (@if.ElseNodes != null && @if.ElseNodes.Length > 0)
+                        {
+                            var @else = new XElement("statement", new XAttribute("name", "ELSE"));
+                            @else.Add(NodeToBlockly(wf, GetStartupNode(@if.ElseNodes), @if.ElseNodes, true, isEvent, ref depth));
+                            block.Add(@else);
+                        }
+                        depth = 0;
+                    }
+                }
+                else if (node is While)
+                {
+                    var @while = node as While;
+                    if (@while != null)
+                    {
+                        block.Add(new XAttribute("type", "while"), new XElement("field", new XAttribute("name", "WHILE"), @while.WhileId));
+                        var @do = new XElement("statement", new XAttribute("name", "DO"));
+                        @do.Add(NodeToBlockly(wf, GetStartupNode(@while.Nodes), @while.Nodes, true, isEvent, ref depth));
+                        block.Add(@do);
+                        depth = 0;
+                    }
+                }
+                else if (node is Switch)
+                {
+                    var @switch = node as Switch;
+                    if (@switch != null)
+                    {
+                        block.Add(new XAttribute("type", "switch"), new XElement("field", new XAttribute("name", "SWITCH"), @switch.SwitchId));
+                        var @case = new XElement("statement", new XAttribute("name", "CASE"));
+                        if (@switch.Cases.Length > 0)
+                        {
+                            var xcases = SwitchCasesToBlockly(wf, @switch.Cases[0], 0, @switch.Cases.Length > 1 ? @switch.Cases[1] : null, @switch, true, isEvent, ref depth);
+                            @case.Add(xcases);
+                        }
+                        block.Add(@case);
+                        if (@switch.Default != null && @switch.Default.Length > 0)
+                        {
+                            var @default = new XElement("statement", new XAttribute("name", "DEFAULT"));
+                            @default.Add(NodeToBlockly(wf, GetStartupNode(@switch.Default), @switch.Default, true, isEvent, ref depth));
+                            block.Add(@default);
+                        }
+                        depth = 0;
+                    }
+                }
+                else
+                {
+                    block.Add(new XAttribute("type", "task"), new XElement("field", new XAttribute("name", "TASK"), node.Id));
+                    if (isFlowchart || isEvent)
+                    {
+                        depth++;
+                    }
+                }
+
+                if (isFlowchart && depth == 0)
+                {
+                    isFlowchart = false;
+                }
+
+                var childNode = nodes.FirstOrDefault(n => n.ParentId == node.Id);
+                if (childNode != null)
+                {
+                    block.Add(new XElement("next", NodeToBlockly(wf, childNode, nodes, isFlowchart, isEvent, ref depth)));
+                }
+                else if (childNode == null && !isFlowchart && !isEvent)
+                {
+                    block.Add(new XElement("next",
+                        new XElement("block", new XAttribute("type", "onSuccess"), new XElement("statement", new XAttribute("name", "ON_SUCCESS"), NodeToBlockly(wf, GetStartupNode((wf.ExecutionGraph.OnSuccess ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes), (wf.ExecutionGraph.OnSuccess ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes, false, true, ref depth))
+                            , new XElement("next",
+                                new XElement("block", new XAttribute("type", "onWarning"), new XElement("statement", new XAttribute("name", "ON_WARNING"), NodeToBlockly(wf, GetStartupNode((wf.ExecutionGraph.OnWarning ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes), (wf.ExecutionGraph.OnWarning ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes, false, true, ref depth))
+                                , new XElement("next",
+                                new XElement("block", new XAttribute("type", "onError"), new XElement("statement", new XAttribute("name", "ON_ERROR"), NodeToBlockly(wf, GetStartupNode((wf.ExecutionGraph.OnError ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes), (wf.ExecutionGraph.OnError ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes, false, true, ref depth))
+                                , new XElement("next",
+                                new XElement("block", new XAttribute("type", "onRejected"), new XElement("statement", new XAttribute("name", "ON_REJECTED"), NodeToBlockly(wf, GetStartupNode((wf.ExecutionGraph.OnRejected ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes), (wf.ExecutionGraph.OnRejected ?? new Core.ExecutionGraph.GraphEvent(new Core.ExecutionGraph.Node[] { })).Nodes, false, true, ref depth))
+                                ))))))
+                            )));
+                }
+            }
+
+            if (block.Attribute("type") == null)
+            {
+                return null;
+            }
+
+            return block;
+        }
+
+        private XElement SwitchCasesToBlockly(Core.Workflow wf, Case @case, int caseIndex, Case nextCase, Switch @switch, bool isFlowchart, bool isEvent, ref int depth)
+        {
+            var xscase = new XElement("block", new XAttribute("type", "case"), new XElement("field", new XAttribute("name", "CASE_VALUE"), @case.Value));
+            xscase.Add(new XElement("statement", new XAttribute("name", "CASE"), NodeToBlockly(wf, GetStartupNode(@case.Nodes), @case.Nodes, isFlowchart, isEvent, ref depth)));
+            if (nextCase != null)
+            {
+                caseIndex++;
+                xscase.Add(new XElement("next", SwitchCasesToBlockly(wf, nextCase, caseIndex, @switch.Cases.Length > caseIndex + 1 ? @switch.Cases[caseIndex + 1] : null, @switch, isFlowchart, isEvent, ref depth)));
+            }
+            return xscase;
+        }
+
+        private Core.ExecutionGraph.Node GetStartupNode(IEnumerable<Core.ExecutionGraph.Node> nodes)
+        {
+            return nodes.FirstOrDefault(n => n.ParentId == Core.Workflow.StartId);
         }
 
         /// <summary>
