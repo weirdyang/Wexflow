@@ -201,8 +201,7 @@
                 },
                 function () {
                     Common.toastError("An error occured while getting a new workflow id.");
-                }, auth
-            );
+                }, auth);
 
 
         };
