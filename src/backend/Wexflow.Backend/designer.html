@@ -5,9 +5,10 @@
     <link rel="icon" href="images/logo.png" type="image/png">
 
     <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/designer.min.css" rel="stylesheet" />
     <link href="css/flowy.css" rel="stylesheet" />
     <link href="css/jquery.toast.min.css" rel="stylesheet" />
-    <link href="css/jBox.all.min.css" rel="stylesheet" />
+    <link href="css/jBox.all.min.css" rel="stylesheet" />-->
     <link href="css/designer.css" rel="stylesheet" />
 
     <!--<link href="css/designer.min.css" rel="stylesheet" />-->
@@ -39,10 +40,18 @@
             <div id="rightswitch">XML</div>
         </div>
         <div id="buttonsright">
-            <div id="export">Export</div>
-            <div id="import">Import</div>
-            <div id="newworkflow">New Workflow</div>
+            <div id="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="topMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    ...
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="topMenu1">
+                    <li id="import">Import</li>
+                    <li id="export">Export</li>
+                </ul>
+            </div>
         </div>
+        <div id="newworkflow">New Workflow</div>
     </div>
     <div id="leftcard">
         <div id="closecard">
@@ -145,6 +154,7 @@
     <script src="js/blocks_compressed.js"></script>
     <script src="js/en.js"></script>
     <script src="js/designer.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <!--<script src="js/ace.js"></script>
     <script src="js/designer.min.js"></script>-->

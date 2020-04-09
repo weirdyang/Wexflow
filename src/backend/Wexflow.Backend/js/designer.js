@@ -146,7 +146,17 @@
                 }
             }
 
-            document.getElementById("wfid").value = "";
+            Common.get(uri + "/getnewtaskid",
+                function (res) {
+                    if (res === true) {
+                        document.getElementById("wfid").value = Common.data.value();
+                    } else {
+                        document.getElementById("wfid").value = "500";
+                    }
+                },
+                function () { }, auth
+            );
+
             document.getElementById("wfname").value = "";
             document.getElementById("wfdesc").value = "";
             document.getElementById("wflaunchtype").value = "";
