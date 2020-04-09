@@ -73,7 +73,6 @@ namespace Wexflow.Server
             // Designer
             // 
             GetTasks();
-            GetNewTaskId();
             GetWorkflowXml();
             GetWorkflowJson();
             GetTaskNames();
@@ -84,6 +83,7 @@ namespace Wexflow.Server
             IsCronExpressionValid();
             IsPeriodValid();
             IsXmlWorkflowValid();
+            GetNewWorkflowId();
             SaveXmlWorkflow();
             SaveWorkflow();
             DeleteWorkflow();
@@ -718,30 +718,39 @@ namespace Wexflow.Server
         /// <summary>
         /// Returns next vacant Task Id.
         /// </summary>
-        private void GetNewTaskId()
+        private void GetNewWorkflowId()
         {
-            Get(Root + "getnewtaskid", args =>
+            Get(Root + "workflowId", args =>
             {
-                for (int task = 500; task < 999; task++)
-                {
-                    var wf = WexflowServer.WexflowEngine.GetWorkflow(task);
-                    if (wf == null)
-                    {
-                        string newTaskId = task.ToString();
-                        var tasksStr = JsonConvert.SerializeObject(newTaskId);
-                        var tasksBytes = Encoding.UTF8.GetBytes(tasksStr);
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
 
-                        return new Response()
+                var workflowId = 0;
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password))
+                {
+                    try
+                    {
+                        var workflows = WexflowServer.WexflowEngine.Workflows;
+
+                        if (workflows != null && workflows.Count > 0)
                         {
-                            ContentType = "application/json",
-                            Contents = s => s.Write(tasksBytes, 0, tasksBytes.Length)
-                        };
+                            workflowId = workflows.Select(w => w.Id).Max() + 1;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
                     }
                 }
+                var workflowIdStr = JsonConvert.SerializeObject(workflowId);
+                var workflowIdBytes = Encoding.UTF8.GetBytes(workflowIdStr);
 
                 return new Response()
                 {
-                    ContentType = "application/json"
+                    ContentType = "application/json",
+                    Contents = s => s.Write(workflowIdBytes, 0, workflowIdBytes.Length)
                 };
             });
         }

@@ -116,90 +116,95 @@
         };
 
         document.getElementById("newworkflow").onclick = function () {
-            checkId = true;
-            flowy.deleteBlocks();
-            removeworkflow.style.display = "none";
-
-            //document.getElementById("leftcard").style.left = "0";
-            //leftcardHidden = false;
-            //canvas.style.left = leftcardwidth + "px";
-            //canvas.style.width = "calc(100% - " + leftcardwidth + "px)";
-            //closecardimg.src = "assets/closeleft.png";
-
-            document.getElementById("leftcard").style.left = -leftcardwidth + "px";
-            closecardimg.src = "assets/openleft.png";
-            leftcardHidden = true;
-
-            document.getElementById("wfpropwrap").style.right = "0";
-            wfclose.style.right = "311px";
-            wfpropHidden = false;
-            closewfcardimg.src = "assets/openleft.png";
-
-            if (rightcard === true) {
-                rightcard = false;
-                document.getElementById("properties").classList.remove("expanded");
-                setTimeout(function () {
-                    document.getElementById("propwrap").classList.remove("itson");
-                }, 300);
-                if (tempblock) {
-                    tempblock.classList.remove("selectedblock");
-                }
-            }
-
-            Common.get(uri + "/getnewtaskid",
+            Common.get(uri + "/workflowId",
                 function (res) {
-                    if (res === true) {
-                        document.getElementById("wfid").value = Common.data.value();
-                    } else {
-                        document.getElementById("wfid").value = "500";
+
+                    checkId = true;
+                    flowy.deleteBlocks();
+                    removeworkflow.style.display = "none";
+
+                    //document.getElementById("leftcard").style.left = "0";
+                    //leftcardHidden = false;
+                    //canvas.style.left = leftcardwidth + "px";
+                    //canvas.style.width = "calc(100% - " + leftcardwidth + "px)";
+                    //closecardimg.src = "assets/closeleft.png";
+
+                    document.getElementById("leftcard").style.left = -leftcardwidth + "px";
+                    closecardimg.src = "assets/openleft.png";
+                    leftcardHidden = true;
+
+                    document.getElementById("wfpropwrap").style.right = "0";
+                    wfclose.style.right = "311px";
+                    wfpropHidden = false;
+                    closewfcardimg.src = "assets/openleft.png";
+
+                    if (rightcard === true) {
+                        rightcard = false;
+                        document.getElementById("properties").classList.remove("expanded");
+                        setTimeout(function () {
+                            document.getElementById("propwrap").classList.remove("itson");
+                        }, 300);
+                        if (tempblock) {
+                            tempblock.classList.remove("selectedblock");
+                        }
                     }
+
+                    document.getElementById("wfid").value = res;
+
+                    document.getElementById("wfname").value = "";
+                    document.getElementById("wfdesc").value = "";
+                    document.getElementById("wflaunchtype").value = "";
+                    document.getElementById("wfperiod").onkeyup = "";
+                    document.getElementById("wfcronexp").value = "";
+                    document.getElementById("wfenabled").checked = true;
+                    document.getElementById("wfapproval").checked = false;
+                    document.getElementById("wfenablepj").checked = true;
+
+                    workflow = {
+                        "WorkflowInfo": {
+                            "Id": document.getElementById("wfid").value,
+                            "Name": document.getElementById("wfname").value,
+                            "Description": document.getElementById("wfdesc").value,
+                            "LaunchType": launchTypeReverse(document.getElementById("wflaunchtype").value),
+                            "Period": document.getElementById("wfperiod").value,
+                            "CronExpression": document.getElementById("wfcronexp").value,
+                            "IsEnabled": document.getElementById("wfenabled").checked,
+                            "IsApproval": document.getElementById("wfapproval").checked,
+                            "EnableParallelJobs": document.getElementById("wfenablepj").checked,
+                            "LocalVariables": []
+                        },
+                        "Tasks": []
+                    }
+                    tasks = {};
+
+                    if (json || xml || graph) {
+                        document.getElementById("code-container").style.display = "none";
+                        document.getElementById("blocklyArea").style.display = "none";
+                        json = false;
+                        xml = false;
+                        graph = false;
+                    }
+
+                    leftcard.style.display = "block";
+                    propwrap.style.display = "block";
+                    wfclose.style.display = "block";
+                    wfpropwrap.style.display = "block";
+                    canvas.style.display = "block";
+                    code.style.display = "none";
+
+                    document.getElementById("leftswitch").style.backgroundColor = "#F0F0F0";
+                    document.getElementById("graphswitch").style.backgroundColor = "transparent";
+                    document.getElementById("middleswitch").style.backgroundColor = "transparent";
+                    document.getElementById("rightswitch").style.backgroundColor = "transparent";
+                    diag = true;
+
                 },
-                function () { }, auth
+                function () {
+                    Common.toastError("An error occured while getting a new workflow id.");
+                }, auth
             );
 
-            document.getElementById("wfname").value = "";
-            document.getElementById("wfdesc").value = "";
-            document.getElementById("wflaunchtype").value = "";
-            document.getElementById("wfperiod").onkeyup = "";
-            document.getElementById("wfcronexp").value = "";
-            document.getElementById("wfenabled").checked = true;
-            document.getElementById("wfapproval").checked = false;
-            document.getElementById("wfenablepj").checked = true;
 
-            workflow = {
-                "WorkflowInfo": {
-                    "Id": document.getElementById("wfid").value,
-                    "Name": document.getElementById("wfname").value,
-                    "Description": document.getElementById("wfdesc").value,
-                    "LaunchType": launchTypeReverse(document.getElementById("wflaunchtype").value),
-                    "Period": document.getElementById("wfperiod").value,
-                    "CronExpression": document.getElementById("wfcronexp").value,
-                    "IsEnabled": document.getElementById("wfenabled").checked,
-                    "IsApproval": document.getElementById("wfapproval").checked,
-                    "EnableParallelJobs": document.getElementById("wfenablepj").checked,
-                    "LocalVariables": []
-                },
-                "Tasks": []
-            }
-            tasks = {};
-
-            if (json || xml) {
-                document.getElementById("code-container").style.display = "none";
-                json = false;
-                xml = false;
-            }
-
-            leftcard.style.display = "block";
-            propwrap.style.display = "block";
-            wfclose.style.display = "block";
-            wfpropwrap.style.display = "block";
-            canvas.style.display = "block";
-            code.style.display = "none";
-
-            document.getElementById("leftswitch").style.backgroundColor = "#F0F0F0";
-            document.getElementById("middleswitch").style.backgroundColor = "transparent";
-            document.getElementById("rightswitch").style.backgroundColor = "transparent";
-            diag = true;
         };
 
         function addEventListenerMulti(type, listener, capture, selector) {
