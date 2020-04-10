@@ -1936,7 +1936,7 @@
                 function () { }, auth);
         }
 
-        document.getElementById("browse").onclick = function () {
+        function browse() {
             document.getElementById("overlay").style.display = "block";
             Common.get(uri + "/search?s=",
                 function (workflows) {
@@ -1973,10 +1973,10 @@
 
                         return table;
                     };
-                    let search = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div>';
+                    let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">(Ctrl + o to open this window)</small>';
                     let browserHtml = workflowsToTable(workflows);
 
-                    let footer = '<div id="openworkflow">Open</div>';
+                    let browserFooter = '<div id="openworkflow">Open</div>';
 
                     if (exportModal) {
                         exportModal.destroy();
@@ -1989,9 +1989,9 @@
                     modal = new jBox('Modal', {
                         width: 800,
                         height: 420,
-                        title: search,
+                        title: browserHeader,
                         content: browserHtml,
-                        footer: footer,
+                        footer: browserFooter,
                         delayOpen: 0,
                         onOpen: function () {
                             document.getElementById("overlay").style.display = "none";
@@ -2083,6 +2083,17 @@
                     document.getElementById("overlay").style.display = "none";
                     Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
                 }, auth);
+        }
+
+        document.getElementById("browse").onclick = function () {
+            browse();
+        };
+
+        window.onkeydown = function (event) {
+            if ((event.ctrlKey || event.metaKey || event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) && event.keyCode === 79) {
+                event.preventDefault();
+                browse();
+            }
         };
 
         function compareById(wf1, wf2) {
