@@ -56,6 +56,7 @@ namespace Wexflow.Server
             //
             Search();
             GetWorkflow();
+            GetJob();
             StartWorkflow();
             StartWorkflowWithVariables();
             StopWorkflow();
@@ -252,8 +253,7 @@ namespace Wexflow.Server
                 var auth = GetAuth(Request);
                 var username = auth.Username;
                 var password = auth.Password;
-                //var username = Request.Query["u"].ToString();
-                //var password = Request.Query["p"].ToString();
+
                 var id = int.Parse(Request.Query["w"].ToString());
 
                 Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(id);
@@ -293,6 +293,78 @@ namespace Wexflow.Server
                                     ContentType = "application/json",
                                     Contents = s => s.Write(workflowBytes, 0, workflowBytes.Length)
                                 };
+                            }
+                        }
+                    }
+
+                }
+
+                return new Response()
+                {
+                    ContentType = "application/json"
+                };
+            });
+        }
+
+        /// <summary>
+        /// Returns a workflow from its id.
+        /// </summary>
+        private void GetJob()
+        {
+            Get(Root + "job", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var id = int.Parse(Request.Query["w"].ToString());
+                var jobId = Request.Query["i"].ToString();
+
+                Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(id);
+                if (wf != null)
+                {
+                    if (jobId != wf.InstanceId.ToString())
+                    {
+                        wf = wf.Jobs.Where(j => j.Key.ToString() == jobId).Select(j => j.Value).FirstOrDefault();
+                    }
+
+                    if (wf != null)
+                    {
+                        var workflow = new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description,
+                            wf.IsRunning, wf.IsPaused, wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
+                            wf.IsExecutionGraphEmpty
+                            , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                            );
+
+                        var user = WexflowServer.WexflowEngine.GetUser(username);
+
+                        if (user.Password.Equals(password))
+                        {
+                            if (user.UserProfile == Core.Db.UserProfile.SuperAdministrator)
+                            {
+                                var workflowStr = JsonConvert.SerializeObject(workflow);
+                                var workflowBytes = Encoding.UTF8.GetBytes(workflowStr);
+
+                                return new Response()
+                                {
+                                    ContentType = "application/json",
+                                    Contents = s => s.Write(workflowBytes, 0, workflowBytes.Length)
+                                };
+                            }
+                            else if (user.UserProfile == Core.Db.UserProfile.Administrator)
+                            {
+                                var check = WexflowServer.WexflowEngine.CheckUserWorkflow(user.GetId(), wf.DbId);
+                                if (check)
+                                {
+                                    var workflowStr = JsonConvert.SerializeObject(workflow);
+                                    var workflowBytes = Encoding.UTF8.GetBytes(workflowStr);
+
+                                    return new Response()
+                                    {
+                                        ContentType = "application/json",
+                                        Contents = s => s.Write(workflowBytes, 0, workflowBytes.Length)
+                                    };
+                                }
                             }
                         }
                     }

@@ -945,7 +945,7 @@ namespace Wexflow.Core
                         _stopCalled = false;
                         IsRunning = true;
                         IsRejected = false;
-                        var msg = string.Format("{0} Workflow started.", LogTag);
+                        var msg = string.Format("{0} Workflow started - Instance Id: {1}", LogTag, InstanceId);
                         Logger.Info(msg);
                         Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  INFO - " + msg);
 

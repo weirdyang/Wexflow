@@ -196,7 +196,7 @@ paths:
     get:
      tags:
      - "Manager"
-     summary: "Search for approval workflows"
+     summary: "Displays information of the first job of the workflow"
      description: ""
      produces:
        - "application/json"
@@ -210,7 +210,30 @@ paths:
           description: "successful operation"
      consumes:
       - "application/json"
-      
+   
+  /job:
+    get:
+     tags:
+     - "Manager"
+     summary: "Displays information of a job"
+     description: ""
+     produces:
+       - "application/json"
+     parameters:
+        - in: query
+          name: w
+          type: "number"
+          description: Workflow id
+        - in: query
+          name: i
+          type: "string"
+          description: Job instance id
+     responses:
+        200:
+          description: "successful operation"
+     consumes:
+      - "application/json"
+
   /start:
     post:
      tags:
