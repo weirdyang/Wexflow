@@ -57,6 +57,7 @@ namespace Wexflow.Server
             Search();
             GetWorkflow();
             GetJob();
+            GetJobs();
             StartWorkflow();
             StartWorkflowWithVariables();
             StopWorkflow();
@@ -307,7 +308,7 @@ namespace Wexflow.Server
         }
 
         /// <summary>
-        /// Returns a workflow from its id.
+        /// Returns a job from a workflow id and an instance id.
         /// </summary>
         private void GetJob()
         {
@@ -374,6 +375,77 @@ namespace Wexflow.Server
                 return new Response()
                 {
                     ContentType = "application/json"
+                };
+            });
+        }
+
+        /// <summary>
+        /// Returns a jobs from a workflow id.
+        /// </summary>
+        private void GetJobs()
+        {
+            Get(Root + "jobs", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var id = int.Parse(Request.Query["w"].ToString());
+
+                Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(id);
+                if (wf != null)
+                {
+                    var jobs = wf.Jobs.Select(j => j.Value).Select(
+                        w => new WorkflowInfo(w.DbId, w.Id, w.InstanceId, w.Name, (LaunchType)w.LaunchType, w.IsEnabled, w.IsApproval, w.EnableParallelJobs, w.IsWaitingForApproval, w.Description,
+                            w.IsRunning, w.IsPaused, w.Period.ToString(@"dd\.hh\:mm\:ss"), w.CronExpression,
+                            w.IsExecutionGraphEmpty
+                            , w.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                            ));
+
+                    if (wf != null)
+                    {
+                        var user = WexflowServer.WexflowEngine.GetUser(username);
+
+                        if (user.Password.Equals(password))
+                        {
+                            if (user.UserProfile == Core.Db.UserProfile.SuperAdministrator)
+                            {
+                                var jobsStr = JsonConvert.SerializeObject(jobs);
+                                var jobsBytes = Encoding.UTF8.GetBytes(jobsStr);
+
+                                return new Response()
+                                {
+                                    ContentType = "application/json",
+                                    Contents = s => s.Write(jobsBytes, 0, jobsBytes.Length)
+                                };
+                            }
+                            else if (user.UserProfile == Core.Db.UserProfile.Administrator)
+                            {
+                                var check = WexflowServer.WexflowEngine.CheckUserWorkflow(user.GetId(), wf.DbId);
+                                if (check)
+                                {
+                                    var jobsStr = JsonConvert.SerializeObject(jobs);
+                                    var jobsBytes = Encoding.UTF8.GetBytes(jobsStr);
+
+                                    return new Response()
+                                    {
+                                        ContentType = "application/json",
+                                        Contents = s => s.Write(jobsBytes, 0, jobsBytes.Length)
+                                    };
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                var emptyJobsStr = JsonConvert.SerializeObject(new WorkflowInfo[] { });
+                var emptyJobsBytes = Encoding.UTF8.GetBytes(emptyJobsStr);
+
+                return new Response()
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(emptyJobsBytes, 0, emptyJobsBytes.Length)
                 };
             });
         }
