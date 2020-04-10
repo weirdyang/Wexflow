@@ -1973,7 +1973,7 @@
 
                         return table;
                     };
-                    let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">(Ctrl + o to open this window)</small>';
+                    let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">Ctrl+O to open this window</small>';
                     let browserHtml = workflowsToTable(workflows);
 
                     let browserFooter = '<div id="openworkflow">Open</div>';
