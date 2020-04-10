@@ -1074,6 +1074,16 @@ namespace Wexflow.Core
                         var msg = string.Format("An error occured while running the workflow. Error: {0}", this);
                         Logger.Error(msg, e);
                         Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  ERROR - " + msg + "\r\n" + e);
+                        Database.DecrementRunningCount();
+                        Database.IncrementFailedCount();
+                        entry.Status = Db.Status.Failed;
+                        entry.StatusDate = DateTime.Now;
+                        entry.Logs = string.Join("\r\n", Logs);
+                        Database.UpdateEntry(entry.GetDbId(), entry);
+                        _historyEntry.Status = Db.Status.Failed;
+                        _historyEntry.StatusDate = DateTime.Now;
+                        _historyEntry.Logs = string.Join("\r\n", Logs);
+                        Database.InsertHistoryEntry(_historyEntry);
                     }
                     finally
                     {

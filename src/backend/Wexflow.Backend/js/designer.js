@@ -684,7 +684,7 @@
             }
         };
 
-        // CTRL+S
+        // CTRL+S, CTRL+O
         let workflow = {
             "WorkflowInfo": {
                 "Id": document.getElementById("wfid").value,
@@ -1056,6 +1056,11 @@
                     }, json, auth);
                 }
 
+                return false;
+            }
+            else if ((event.ctrlKey || event.metaKey || event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) && event.keyCode === 79) {
+                event.preventDefault();
+                browse();
                 return false;
             }
         };
@@ -2087,13 +2092,6 @@
 
         document.getElementById("browse").onclick = function () {
             browse();
-        };
-
-        window.onkeydown = function (event) {
-            if ((event.ctrlKey || event.metaKey || event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) && event.keyCode === 79) {
-                event.preventDefault();
-                browse();
-            }
         };
 
         function compareById(wf1, wf2) {

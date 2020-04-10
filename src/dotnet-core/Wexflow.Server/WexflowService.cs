@@ -1432,6 +1432,128 @@ namespace Wexflow.Server
             };
         }
 
+        private XElement JsonNodeToXmlNode(JToken node)
+        {
+            var ifId = (int?)node.SelectToken("IfId");
+            var whileId = (int?)node.SelectToken("WhileId");
+            var switchId = (int?)node.SelectToken("SwitchId");
+            if (ifId != null)
+            {
+                var xif = new XElement(xn + "If", new XAttribute("id", (int)node.SelectToken("Id")),
+                    new XAttribute("parent", (int)node.SelectToken("ParentId")),
+                    new XAttribute("if", ifId));
+
+                var xdo = new XElement(xn + "Do");
+                var doNodes = (JArray)node.SelectToken("DoNodes");
+                if (doNodes != null)
+                {
+                    foreach (var doNode in doNodes)
+                    {
+                        var taskId = (int)doNode.SelectToken("Id");
+                        var parentId = (int)doNode.SelectToken("ParentId");
+                        xdo.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
+                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                    }
+                }
+                xif.Add(xdo);
+
+                var xelse = new XElement(xn + "Else");
+                var elseNodes = (JArray)node.SelectToken("ElseNodes");
+                if (elseNodes != null)
+                {
+                    foreach (var elseNode in elseNodes)
+                    {
+                        var taskId = (int)elseNode.SelectToken("Id");
+                        var parentId = (int)elseNode.SelectToken("ParentId");
+                        xelse.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
+                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                    }
+
+                    if (elseNodes.Count > 0)
+                    {
+                        xif.Add(xelse);
+                    }
+                }
+
+                return xif;
+            }
+            else if (whileId != null)
+            {
+                var xwhile = new XElement(xn + "While", new XAttribute("id", (int)node.SelectToken("Id")),
+                    new XAttribute("parent", (int)node.SelectToken("ParentId")),
+                    new XAttribute("while", whileId));
+
+                var doNodes = (JArray)node.SelectToken("Nodes");
+                if (doNodes != null)
+                {
+                    foreach (var doNode in doNodes)
+                    {
+                        var taskId = (int)doNode.SelectToken("Id");
+                        var parentId = (int)doNode.SelectToken("ParentId");
+                        xwhile.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
+                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                    }
+                }
+
+                return xwhile;
+            }
+            else if (switchId != null)
+            {
+                var xswitch = new XElement(xn + "Switch", new XAttribute("id", (int)node.SelectToken("Id")),
+                    new XAttribute("parent", (int)node.SelectToken("ParentId")),
+                    new XAttribute("switch", switchId));
+
+                var cases = (JArray)node.SelectToken("Cases");
+                foreach (var @case in cases)
+                {
+                    var value = (string)@case.SelectToken("Value");
+
+                    var xcase = new XElement(xn + "Case", new XAttribute("value", value));
+
+                    var doNodes = (JArray)@case.SelectToken("Nodes");
+                    if (doNodes != null)
+                    {
+                        foreach (var doNode in doNodes)
+                        {
+                            var taskId = (int)doNode.SelectToken("Id");
+                            var parentId = (int)doNode.SelectToken("ParentId");
+                            xcase.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
+                                new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                        }
+
+                    }
+
+                    xswitch.Add(xcase);
+                }
+
+                var @default = (JArray)node.SelectToken("Default");
+                if (@default != null && @default.Count > 0)
+                {
+                    var xdefault = new XElement(xn + "Default");
+
+                    foreach (var doNode in @default)
+                    {
+                        var taskId = (int)doNode.SelectToken("Id");
+                        var parentId = (int)doNode.SelectToken("ParentId");
+                        xdefault.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
+                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                    }
+
+                    xswitch.Add(xdefault);
+                }
+
+                return xswitch;
+            }
+            else
+            {
+                var taskId = (int)node.SelectToken("Id");
+                var parentId = (int)node.SelectToken("ParentId");
+                var xtask = new XElement(xn + "Task", new XAttribute("id", taskId),
+                    new XElement(xn + "Parent", new XAttribute("id", parentId)));
+                return xtask;
+            }
+        }
+
         private XElement GetExecutionGraph(JToken eg)
         {
             if (eg != null && eg.Count() > 0)
@@ -1442,122 +1564,7 @@ namespace Wexflow.Server
                 {
                     foreach (var node in nodes)
                     {
-                        var ifId = (int?)node.SelectToken("IfId");
-                        var whileId = (int?)node.SelectToken("WhileId");
-                        var switchId = (int?)node.SelectToken("SwitchId");
-                        if (ifId != null)
-                        {
-                            var xif = new XElement(xn + "If", new XAttribute("id", (int)node.SelectToken("Id")),
-                                new XAttribute("parent", (int)node.SelectToken("ParentId")),
-                                new XAttribute("if", ifId));
-
-                            var xdo = new XElement(xn + "Do");
-                            var doNodes = (JArray)node.SelectToken("DoNodes");
-                            if (doNodes != null)
-                            {
-                                foreach (var doNode in doNodes)
-                                {
-                                    var taskId = (int)doNode.SelectToken("Id");
-                                    var parentId = (int)doNode.SelectToken("ParentId");
-                                    xdo.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                        new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                                }
-                            }
-                            xif.Add(xdo);
-
-                            var xelse = new XElement(xn + "Else");
-                            var elseNodes = (JArray)node.SelectToken("ElseNodes");
-                            if (elseNodes != null)
-                            {
-                                foreach (var elseNode in elseNodes)
-                                {
-                                    var taskId = (int)elseNode.SelectToken("Id");
-                                    var parentId = (int)elseNode.SelectToken("ParentId");
-                                    xelse.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                        new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                                }
-
-                                if (elseNodes.Count > 0)
-                                {
-                                    xif.Add(xelse);
-                                }
-                            }
-                            xeg.Add(xif);
-                        }
-                        else if (whileId != null)
-                        {
-                            var xwhile = new XElement(xn + "While", new XAttribute("id", (int)node.SelectToken("Id")),
-                                new XAttribute("parent", (int)node.SelectToken("ParentId")),
-                                new XAttribute("while", whileId));
-
-                            var doNodes = (JArray)node.SelectToken("Nodes");
-                            if (doNodes != null)
-                            {
-                                foreach (var doNode in doNodes)
-                                {
-                                    var taskId = (int)doNode.SelectToken("Id");
-                                    var parentId = (int)doNode.SelectToken("ParentId");
-                                    xwhile.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                        new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                                }
-                            }
-
-                            xeg.Add(xwhile);
-                        }
-                        else if (switchId != null)
-                        {
-                            var xswitch = new XElement(xn + "Switch", new XAttribute("id", (int)node.SelectToken("Id")),
-                                new XAttribute("parent", (int)node.SelectToken("ParentId")),
-                                new XAttribute("switch", switchId));
-
-                            var cases = (JArray)node.SelectToken("Cases");
-                            foreach (var @case in cases)
-                            {
-                                var value = (string)@case.SelectToken("Value");
-
-                                var xcase = new XElement(xn + "Case", new XAttribute("value", value));
-
-                                var doNodes = (JArray)@case.SelectToken("Nodes");
-                                if (doNodes != null)
-                                {
-                                    foreach (var doNode in doNodes)
-                                    {
-                                        var taskId = (int)doNode.SelectToken("Id");
-                                        var parentId = (int)doNode.SelectToken("ParentId");
-                                        xcase.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                                    }
-
-                                }
-
-                                xswitch.Add(xcase);
-                            }
-
-                            var @default = (JArray)node.SelectToken("Default");
-                            if (@default != null && @default.Count > 0)
-                            {
-                                var xdefault = new XElement(xn + "Default");
-
-                                foreach (var doNode in @default)
-                                {
-                                    var taskId = (int)doNode.SelectToken("Id");
-                                    var parentId = (int)doNode.SelectToken("ParentId");
-                                    xdefault.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                        new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                                }
-
-                                xswitch.Add(xdefault);
-                            }
-
-                            xeg.Add(xswitch);
-                        }
-                        else
-                        {
-                            var taskId = (int)node.SelectToken("Id");
-                            var parentId = (int)node.SelectToken("ParentId");
-                            xeg.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                                new XElement(xn + "Parent", new XAttribute("id", parentId))));
-                        }
+                        xeg.Add(JsonNodeToXmlNode(node));
                     }
                 }
 
@@ -1569,10 +1576,7 @@ namespace Wexflow.Server
                     var doNodes = (JArray)onSuccess.SelectToken("Nodes");
                     foreach (var doNode in doNodes)
                     {
-                        var taskId = (int)doNode.SelectToken("Id");
-                        var parentId = (int)doNode.SelectToken("ParentId");
-                        xEvent.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                        xEvent.Add(JsonNodeToXmlNode(doNode));
                     }
                     xeg.Add(xEvent);
                 }
@@ -1585,10 +1589,7 @@ namespace Wexflow.Server
                     var doNodes = (JArray)onWarning.SelectToken("Nodes");
                     foreach (var doNode in doNodes)
                     {
-                        var taskId = (int)doNode.SelectToken("Id");
-                        var parentId = (int)doNode.SelectToken("ParentId");
-                        xEvent.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                        xEvent.Add(JsonNodeToXmlNode(doNode));
                     }
                     xeg.Add(xEvent);
                 }
@@ -1601,10 +1602,7 @@ namespace Wexflow.Server
                     var doNodes = (JArray)onError.SelectToken("Nodes");
                     foreach (var doNode in doNodes)
                     {
-                        var taskId = (int)doNode.SelectToken("Id");
-                        var parentId = (int)doNode.SelectToken("ParentId");
-                        xEvent.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                        xEvent.Add(JsonNodeToXmlNode(doNode));
                     }
                     xeg.Add(xEvent);
                 }
@@ -1617,10 +1615,7 @@ namespace Wexflow.Server
                     var doNodes = (JArray)onRejected.SelectToken("Nodes");
                     foreach (var doNode in doNodes)
                     {
-                        var taskId = (int)doNode.SelectToken("Id");
-                        var parentId = (int)doNode.SelectToken("ParentId");
-                        xEvent.Add(new XElement(xn + "Task", new XAttribute("id", taskId),
-                            new XElement(xn + "Parent", new XAttribute("id", parentId))));
+                        xEvent.Add(JsonNodeToXmlNode(doNode));
                     }
                     xeg.Add(xEvent);
                 }
