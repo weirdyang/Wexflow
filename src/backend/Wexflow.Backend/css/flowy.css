@@ -41,7 +41,7 @@
     position: absolute;
     width: 100%;
     overflow: visible;
-    pointer-events: none
+    pointer-events: none;
 }
 
     .arrowblock svg {
