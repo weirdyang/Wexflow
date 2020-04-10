@@ -2240,6 +2240,10 @@ namespace Wexflow.Server
             });
         }
 
+        // TODO DisableWorkflow()
+
+        // TODO EnableWorkflow()
+
         /// <summary>
         /// Uploads a workflow from a file.
         /// </summary>

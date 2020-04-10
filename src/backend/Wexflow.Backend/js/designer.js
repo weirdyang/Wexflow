@@ -88,6 +88,7 @@
         let checkId = true;
         let removeworkflow = document.getElementById("removeworkflow");
         let transition = "all .25s cubic-bezier(.05,.03,.35,1)";
+        let browserOpen = false;
 
         flowy(canvas, drag, release, snapping, drop);
 
@@ -1942,152 +1943,158 @@
         }
 
         function browse() {
-            document.getElementById("overlay").style.display = "block";
-            Common.get(uri + "/search?s=",
-                function (workflows) {
+            if (browserOpen === false) {
+                document.getElementById("overlay").style.display = "block";
+                Common.get(uri + "/search?s=",
+                    function (workflows) {
 
-                    workflows.sort(compareById);
+                        workflows.sort(compareById);
 
-                    let workflowsToTable = function (wfs) {
-                        let items = [];
-                        for (let i = 0; i < wfs.length; i++) {
-                            let val = wfs[i];
+                        let workflowsToTable = function (wfs) {
+                            let items = [];
+                            for (let i = 0; i < wfs.length; i++) {
+                                let val = wfs[i];
 
-                            items.push("<tr>" +
-                                //"<td><input class='wf-delete' type='checkbox'></td>" +
-                                "<td class='wf-id' title='" + val.Id + "'>" + val.Id + "</td>" +
-                                "<td class='wf-n' title='" + val.Name + "'>" + val.Name + "</td>" +
-                                "<td class='wf-n' title='" + val.Description + "'>" + val.Description + "</td>" +
-                                "</tr>");
+                                items.push("<tr>" +
+                                    //"<td><input class='wf-delete' type='checkbox'></td>" +
+                                    "<td class='wf-id' title='" + val.Id + "'>" + val.Id + "</td>" +
+                                    "<td class='wf-n' title='" + val.Name + "'>" + val.Name + "</td>" +
+                                    "<td class='wf-n' title='" + val.Description + "'>" + val.Description + "</td>" +
+                                    "</tr>");
 
-                        }
-
-                        let table = "<table id='wf-workflows-table' class='table'>" +
-                            "<thead class='thead-dark'>" +
-                            "<tr>" +
-                            //"<th><input id='wf-delete-all' type='checkbox'></th>" +
-                            "<th class='wf-id'>Id</th>" +
-                            "<th class='wf-n'>Name</th>" +
-                            "<th class='wf-d'>Description</th>" +
-                            "</tr>" +
-                            "</thead>" +
-                            "<tbody>" +
-                            items.join("") +
-                            "</tbody>" +
-                            "</table>";
-
-                        return table;
-                    };
-                    let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">Ctrl+O to open this window.</small>';
-                    let browserHtml = workflowsToTable(workflows);
-
-                    let browserFooter = '<div id="openworkflow">Open</div>';
-
-                    if (exportModal) {
-                        exportModal.destroy();
-                    }
-
-                    if (modal) {
-                        modal.destroy();
-                    }
-
-                    modal = new jBox('Modal', {
-                        width: 800,
-                        height: 420,
-                        title: browserHeader,
-                        content: browserHtml,
-                        footer: browserFooter,
-                        delayOpen: 0,
-                        onOpen: function () {
-                            document.getElementById("overlay").style.display = "none";
-                        }
-                    });
-                    modal.open();
-
-                    let searchworkflows = document.getElementById("searchworkflowsinput");
-                    searchworkflows.focus();
-                    searchworkflows.select();
-                    searchworkflows.onkeyup = function (event) {
-                        event.preventDefault();
-                        if (event.keyCode === 13) { // Enter
-                            let jbox = document.getElementsByClassName("jBox-content")[0];
-
-                            Common.get(uri + "/search?s=" + searchworkflows.value,
-                                function (wfs) {
-                                    wfs.sort(compareById);
-
-                                    jbox.innerHTML = workflowsToTable(wfs);
-
-                                    // selection changed event
-                                    let workflowsTable = jbox.childNodes[0];
-                                    let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
-                                    for (let i = 0; i < rows.length; i++) {
-                                        let row = rows[i];
-
-                                        row.onclick = function () {
-                                            let selected = document.getElementsByClassName("selected");
-                                            if (selected.length > 0) {
-                                                selected[0].className = selected[0].className.replace("selected", "");
-                                            }
-                                            row.className += "selected";
-                                        };
-                                    }
-
-                                }, function () {
-                                    Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
-                                }, auth);
-                        }
-                    };
-
-                    // selection changed event
-                    let workflowsTable = document.getElementsByClassName("jBox-content")[0].childNodes[0];
-                    let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
-                    for (let i = 0; i < rows.length; i++) {
-                        let row = rows[i];
-
-                        row.onclick = function () {
-                            let selected = document.getElementsByClassName("selected");
-                            if (selected.length > 0) {
-                                selected[0].className = selected[0].className.replace("selected", "");
                             }
-                            row.className += "selected";
+
+                            let table = "<table id='wf-workflows-table' class='table'>" +
+                                "<thead class='thead-dark'>" +
+                                "<tr>" +
+                                //"<th><input id='wf-delete-all' type='checkbox'></th>" +
+                                "<th class='wf-id'>Id</th>" +
+                                "<th class='wf-n'>Name</th>" +
+                                "<th class='wf-d'>Description</th>" +
+                                "</tr>" +
+                                "</thead>" +
+                                "<tbody>" +
+                                items.join("") +
+                                "</tbody>" +
+                                "</table>";
+
+                            return table;
                         };
-                    }
+                        let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">Ctrl+O to open this window.</small>';
+                        let browserHtml = workflowsToTable(workflows);
 
-                    // open click
-                    document.getElementById("openworkflow").onclick = function () {
+                        let browserFooter = '<div id="openworkflow">Open</div>';
 
-                        let selected = document.getElementsByClassName("selected");
-                        if (selected.length === 0) {
-                            Common.toastInfo("Choose a workflow to open.");
-                        } else {
-                            let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
-
-                            // load view
-                            if (json === true) {
-                                Common.get(uri + "/json/" + id,
-                                    function (val) {
-                                        openJsonView(JSON.stringify(val, null, '\t'));
-                                    }, function () { }, auth);
-                            } else if (xml === true) {
-                                Common.get(uri + "/xml/" + id,
-                                    function (val) {
-                                        openXmlView(val);
-                                    }, function () { }, auth);
-                            } else if (graph === true) {
-                                openGraph(id);
-                            }
-
-                            // load diagram
-                            loadDiagram(id);
+                        if (exportModal) {
+                            exportModal.destroy();
                         }
-                    };
 
-                },
-                function () {
-                    document.getElementById("overlay").style.display = "none";
-                    Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
-                }, auth);
+                        if (modal) {
+                            modal.destroy();
+                        }
+
+                        modal = new jBox('Modal', {
+                            width: 800,
+                            height: 420,
+                            title: browserHeader,
+                            content: browserHtml,
+                            footer: browserFooter,
+                            delayOpen: 0,
+                            onOpen: function () {
+                                document.getElementById("overlay").style.display = "none";
+                                browserOpen = true;
+                            },
+                            onClose: function () {
+                                browserOpen = false;
+                            }
+                        });
+                        modal.open();
+
+                        let searchworkflows = document.getElementById("searchworkflowsinput");
+                        searchworkflows.focus();
+                        searchworkflows.select();
+                        searchworkflows.onkeyup = function (event) {
+                            event.preventDefault();
+                            if (event.keyCode === 13) { // Enter
+                                let jbox = document.getElementsByClassName("jBox-content")[0];
+
+                                Common.get(uri + "/search?s=" + searchworkflows.value,
+                                    function (wfs) {
+                                        wfs.sort(compareById);
+
+                                        jbox.innerHTML = workflowsToTable(wfs);
+
+                                        // selection changed event
+                                        let workflowsTable = jbox.childNodes[0];
+                                        let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+                                        for (let i = 0; i < rows.length; i++) {
+                                            let row = rows[i];
+
+                                            row.onclick = function () {
+                                                let selected = document.getElementsByClassName("selected");
+                                                if (selected.length > 0) {
+                                                    selected[0].className = selected[0].className.replace("selected", "");
+                                                }
+                                                row.className += "selected";
+                                            };
+                                        }
+
+                                    }, function () {
+                                        Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
+                                    }, auth);
+                            }
+                        };
+
+                        // selection changed event
+                        let workflowsTable = document.getElementsByClassName("jBox-content")[0].childNodes[0];
+                        let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+                        for (let i = 0; i < rows.length; i++) {
+                            let row = rows[i];
+
+                            row.onclick = function () {
+                                let selected = document.getElementsByClassName("selected");
+                                if (selected.length > 0) {
+                                    selected[0].className = selected[0].className.replace("selected", "");
+                                }
+                                row.className += "selected";
+                            };
+                        }
+
+                        // open click
+                        document.getElementById("openworkflow").onclick = function () {
+
+                            let selected = document.getElementsByClassName("selected");
+                            if (selected.length === 0) {
+                                Common.toastInfo("Choose a workflow to open.");
+                            } else {
+                                let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
+
+                                // load view
+                                if (json === true) {
+                                    Common.get(uri + "/json/" + id,
+                                        function (val) {
+                                            openJsonView(JSON.stringify(val, null, '\t'));
+                                        }, function () { }, auth);
+                                } else if (xml === true) {
+                                    Common.get(uri + "/xml/" + id,
+                                        function (val) {
+                                            openXmlView(val);
+                                        }, function () { }, auth);
+                                } else if (graph === true) {
+                                    openGraph(id);
+                                }
+
+                                // load diagram
+                                loadDiagram(id);
+                            }
+                        };
+
+                    },
+                    function () {
+                        document.getElementById("overlay").style.display = "none";
+                        Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
+                    }, auth);
+            }
         }
 
         document.getElementById("browse").onclick = function () {
