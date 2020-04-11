@@ -202,6 +202,10 @@ namespace Wexflow.Core
         /// Log messages.
         /// </summary>
         public List<string> Logs { get; private set; }
+        /// <summary>
+        /// Started on date time.
+        /// </summary>
+        public DateTime StartedOn { get; private set; }
 
         private bool _stopCalled;
         private Queue<Job> _jobsQueue;
@@ -254,6 +258,7 @@ namespace Wexflow.Core
             Hashtable = new Hashtable();
             GlobalVariables = globalVariables;
             RestVariables = new List<Variable>();
+            StartedOn = DateTime.MinValue;
             Check();
             LoadLocalVariables();
             Load(Xml);
@@ -942,6 +947,7 @@ namespace Wexflow.Core
                 {
                     try
                     {
+                        StartedOn = DateTime.Now;
                         _stopCalled = false;
                         IsRunning = true;
                         IsRejected = false;

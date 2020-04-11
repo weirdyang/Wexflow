@@ -155,7 +155,8 @@ namespace Wexflow.Server
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                 wf.IsExecutionGraphEmpty
-                               , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()))
+                               , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                               , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])))
                             .ToArray();
                     }
                     else if (user.UserProfile == Core.Db.UserProfile.Administrator)
@@ -168,7 +169,8 @@ namespace Wexflow.Server
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                                     wf.IsExecutionGraphEmpty
-                                                   , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()))
+                                                   , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                                                   , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])))
                                                 .ToArray();
                     }
                 }
@@ -216,7 +218,8 @@ namespace Wexflow.Server
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                 wf.IsExecutionGraphEmpty
-                               , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()))
+                               , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                               , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])))
                             .ToArray();
                     }
                     else if (user.UserProfile == Core.Db.UserProfile.Administrator)
@@ -230,7 +233,8 @@ namespace Wexflow.Server
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                                     wf.IsExecutionGraphEmpty
-                                                   , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()))
+                                                   , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                                                   , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])))
                                                 .ToArray();
                     }
                 }
@@ -266,6 +270,7 @@ namespace Wexflow.Server
                         wf.IsRunning, wf.IsPaused, wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                         wf.IsExecutionGraphEmpty
                         , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                        , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])
                         );
 
                     var user = WexflowServer.WexflowEngine.GetUser(username);
@@ -337,6 +342,7 @@ namespace Wexflow.Server
                             wf.IsRunning, wf.IsPaused, wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                             wf.IsExecutionGraphEmpty
                             , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                            , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])
                             );
 
                         var user = WexflowServer.WexflowEngine.GetUser(username);
@@ -402,6 +408,7 @@ namespace Wexflow.Server
                             w.IsRunning, w.IsPaused, w.Period.ToString(@"dd\.hh\:mm\:ss"), w.CronExpression,
                             w.IsExecutionGraphEmpty
                             , w.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                            , w.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])
                             ));
 
                     if (wf != null)
@@ -3144,8 +3151,7 @@ namespace Wexflow.Server
                 var auth = GetAuth(Request);
                 var qusername = auth.Username;
                 var qpassword = auth.Password;
-                //string qusername = Request.Query["qu"].ToString();
-                //string qpassword = Request.Query["qp"].ToString();
+
                 var userId = Request.Query["u"].ToString();
 
                 var res = new WorkflowInfo[] { };
@@ -3163,7 +3169,8 @@ namespace Wexflow.Server
                             (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                             wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                             wf.IsExecutionGraphEmpty
-                           , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()))
+                           , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
+                           , wf.StartedOn.ToString(WexflowServer.Config["DateTimeFormat"])))
                             .ToArray();
                     }
                     catch (Exception e)
