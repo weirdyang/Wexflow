@@ -564,6 +564,12 @@ namespace Wexflow.Core.MongoDB
             return col.Find(e => e.WorkflowId == workflowId).FirstOrDefault();
         }
 
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);
+            return col.Find(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString())).FirstOrDefault();
+        }
+
         public override void InsertEntry(Core.Db.Entry entry)
         {
             var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);

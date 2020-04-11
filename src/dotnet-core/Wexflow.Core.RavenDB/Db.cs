@@ -7,6 +7,7 @@ using Raven.Client.ServerWide;
 using Raven.Client.ServerWide.Operations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Wexflow.Core.Db;
@@ -507,6 +508,23 @@ namespace Wexflow.Core.RavenDB
             }
         }
 
+
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            using (var session = _store.OpenSession())
+            {
+                try
+                {
+                    var col = session.Query<Entry>();
+                    return col.FirstOrDefault(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()));
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
         public override DateTime GetEntryStatusDateMax()
         {
             using (var session = _store.OpenSession())
@@ -890,7 +908,7 @@ namespace Wexflow.Core.RavenDB
                     var user = col.FirstOrDefault(u => u.Username == username);
                     return user;
                 }
-                catch
+                catch (Exception e)
                 {
                     return null;
                 }
@@ -907,7 +925,7 @@ namespace Wexflow.Core.RavenDB
                     var user = col.FirstOrDefault(u => u.Id == userId);
                     return user;
                 }
-                catch
+                catch (Exception e)
                 {
                     return null;
                 }
@@ -1312,5 +1330,6 @@ namespace Wexflow.Core.RavenDB
         public override void Dispose()
         {
         }
+
     }
 }

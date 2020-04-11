@@ -508,6 +508,23 @@ namespace Wexflow.Core.RavenDB
             }
         }
 
+
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            using (var session = _store.OpenSession())
+            {
+                try
+                {
+                    var col = session.Query<Entry>();
+                    return col.FirstOrDefault(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()));
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
         public override DateTime GetEntryStatusDateMax()
         {
             using (var session = _store.OpenSession())
@@ -1323,5 +1340,6 @@ namespace Wexflow.Core.RavenDB
         public override void Dispose()
         {
         }
+
     }
 }

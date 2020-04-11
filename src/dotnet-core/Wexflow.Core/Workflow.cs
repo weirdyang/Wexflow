@@ -605,11 +605,11 @@ namespace Wexflow.Core
                     var xOnRejected = xExectionGraph.XPathSelectElement("wf:OnRejected", XmlNamespaceManager);
                     if (xOnRejected != null)
                     {
-                        var onRejectNodes = GetTaskNodes(xOnRejected);
-                        CheckStartupNode(onRejectNodes, "Startup node with parentId=-1 not found in OnError execution graph.");
-                        CheckParallelTasks(onRejectNodes, "Parallel tasks execution detected in OnError execution graph.");
-                        CheckInfiniteLoop(onRejectNodes, "Infinite loop detected in OnError execution graph.");
-                        onRejected = new GraphEvent(onRejectNodes);
+                        var onRejectedNodes = GetTaskNodes(xOnRejected);
+                        CheckStartupNode(onRejectedNodes, "Startup node with parentId=-1 not found in OnError execution graph.");
+                        CheckParallelTasks(onRejectedNodes, "Parallel tasks execution detected in OnError execution graph.");
+                        CheckInfiniteLoop(onRejectedNodes, "Infinite loop detected in OnError execution graph.");
+                        onRejected = new GraphEvent(onRejectedNodes);
                     }
 
 
@@ -911,49 +911,52 @@ namespace Wexflow.Core
             var dest = Parse(Xml);
             Load(dest);
 
-            Database.IncrementRunningCount();
-
-            var entry = Database.GetEntry(Id);
-            if (entry == null)
-            {
-                var newEntry = new Entry
-                {
-                    WorkflowId = Id,
-                    Name = Name,
-                    LaunchType = ((Db.LaunchType)(int)LaunchType),
-                    Description = Description,
-                    Status = Db.Status.Running,
-                    StatusDate = DateTime.Now
-                };
-                Database.InsertEntry(newEntry);
-            }
-            else
-            {
-                entry.Status = Db.Status.Running;
-                entry.StatusDate = DateTime.Now;
-                Database.UpdateEntry(entry.GetDbId(), entry);
-            }
-            entry = Database.GetEntry(Id);
-
-            _historyEntry = new HistoryEntry
-            {
-                WorkflowId = Id,
-                Name = Name,
-                LaunchType = ((Db.LaunchType)(int)LaunchType),
-                Description = Description
-            };
-
             var thread = new Thread(() =>
                 {
+                    var msg = string.Format("{0} Workflow started - Instance Id: {1}", LogTag, InstanceId);
+                    Logger.Info(msg);
+                    Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  INFO - " + msg);
+
+                    Database.IncrementRunningCount();
+
+                    var entry = Database.GetEntry(Id, InstanceId);
+                    if (entry == null)
+                    {
+                        var newEntry = new Entry
+                        {
+                            WorkflowId = Id,
+                            Name = Name,
+                            LaunchType = ((Db.LaunchType)(int)LaunchType),
+                            Description = Description,
+                            Status = Db.Status.Running,
+                            StatusDate = DateTime.Now,
+                            Logs = string.Join("\r\n", Logs)
+                        };
+                        Database.InsertEntry(newEntry);
+                    }
+                    else
+                    {
+                        entry.Status = Db.Status.Running;
+                        entry.StatusDate = DateTime.Now;
+                        entry.Logs = string.Join("\r\n", Logs);
+                        Database.UpdateEntry(entry.GetDbId(), entry);
+                    }
+                    entry = Database.GetEntry(Id, InstanceId);
+
+                    _historyEntry = new HistoryEntry
+                    {
+                        WorkflowId = Id,
+                        Name = Name,
+                        LaunchType = ((Db.LaunchType)(int)LaunchType),
+                        Description = Description
+                    };
+
                     try
                     {
                         StartedOn = DateTime.Now;
                         _stopCalled = false;
                         IsRunning = true;
                         IsRejected = false;
-                        var msg = string.Format("{0} Workflow started - Instance Id: {1}", LogTag, InstanceId);
-                        Logger.Info(msg);
-                        Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  INFO - " + msg);
 
                         // Create the temp folder
                         CreateTempFolder();
@@ -1088,8 +1091,8 @@ namespace Wexflow.Core
                     }
                     catch (Exception e)
                     {
-                        var msg = string.Format("An error occured while running the workflow. Error: {0}", this);
-                        Logger.Error(msg, e);
+                        var emsg = string.Format("An error occured while running the workflow. Error: {0}", this);
+                        Logger.Error(emsg, e);
                         Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  ERROR - " + msg + "\r\n" + e);
                         Database.DecrementRunningCount();
                         Database.IncrementFailedCount();

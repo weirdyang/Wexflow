@@ -553,6 +553,51 @@ namespace Wexflow.Core.SQLite
             return null;
         }
 
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var command = new SQLiteCommand("SELECT "
+                    + Entry.ColumnName_Id + ", "
+                    + Entry.ColumnName_Name + ", "
+                    + Entry.ColumnName_Description + ", "
+                    + Entry.ColumnName_LaunchType + ", "
+                    + Entry.ColumnName_Status + ", "
+                    + Entry.ColumnName_StatusDate + ", "
+                    + Entry.ColumnName_WorkflowId
+                    + " FROM " + Core.Db.Entry.DocumentName
+                    + " WHERE (" + Entry.ColumnName_WorkflowId + " = " + workflowId
+                    + " AND " + Entry.ColumnName_Logs + " LIKE '%" + jobId.ToString() + "%');", conn))
+                {
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        if (reader.Read())
+                        {
+                            var entry = new Entry
+                            {
+                                Id = (long)reader[Entry.ColumnName_Id],
+                                Name = (string)reader[Entry.ColumnName_Name],
+                                Description = (string)reader[Entry.ColumnName_Description],
+                                LaunchType = (LaunchType)((long)reader[Entry.ColumnName_LaunchType]),
+                                Status = (Status)((long)reader[Entry.ColumnName_Status]),
+                                StatusDate = DateTime.Parse((string)reader[Entry.ColumnName_StatusDate]),
+                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId])
+                            };
+
+                            return entry;
+                        }
+                    }
+                }
+
+            }
+
+            return null;
+        }
+
         public override DateTime GetEntryStatusDateMax()
         {
             using (var conn = new SQLiteConnection(_connectionString))
@@ -1758,5 +1803,6 @@ namespace Wexflow.Core.SQLite
         public override void Dispose()
         {
         }
+
     }
 }

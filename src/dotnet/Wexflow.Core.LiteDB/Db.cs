@@ -262,6 +262,12 @@ namespace Wexflow.Core.LiteDB
             return col.FindOne(e => e.WorkflowId == workflowId);
         }
 
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);
+            return col.FindOne(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()));
+        }
+
         public override void InsertEntry(Core.Db.Entry entry)
         {
             var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);

@@ -416,6 +416,19 @@ namespace Wexflow.Core.CosmosDB
             }
         }
 
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            using (var client = new DocumentClient(new Uri(_endpointUrl), _authorizationKey))
+            {
+                return
+                        client.CreateDocumentQuery<Entry>(
+                            UriFactory.CreateDocumentCollectionUri(_databaseName, Core.Db.Entry.DocumentName))
+                        .Where(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()))
+                        .AsEnumerable().ToArray()
+                        .FirstOrDefault();
+            }
+        }
+
         public override DateTime GetEntryStatusDateMax()
         {
             using (var client = new DocumentClient(new Uri(_endpointUrl), _authorizationKey))

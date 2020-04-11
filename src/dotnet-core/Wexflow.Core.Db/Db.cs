@@ -85,6 +85,7 @@ namespace Wexflow.Core.Db
         public abstract void IncrementDisabledCount();
         public abstract void IncrementRunningCount();
         public abstract Entry GetEntry(int workflowId);
+        public abstract Entry GetEntry(int workflowId, Guid jobId);
         public abstract void InsertEntry(Entry entry);
         public abstract void UpdateEntry(string id, Entry entry);
         public abstract void IncrementRejectedCount();

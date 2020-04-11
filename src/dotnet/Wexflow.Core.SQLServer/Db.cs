@@ -541,6 +541,47 @@ namespace Wexflow.Core.SQLServer
             return null;
         }
 
+        public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                var command = new SqlCommand("SELECT "
+                    + Entry.ColumnName_Id + ", "
+                    + Entry.ColumnName_Name + ", "
+                    + Entry.ColumnName_Description + ", "
+                    + Entry.ColumnName_LaunchType + ", "
+                    + Entry.ColumnName_Status + ", "
+                    + Entry.ColumnName_StatusDate + ", "
+                    + Entry.ColumnName_WorkflowId
+                    + " FROM " + Core.Db.Entry.DocumentName
+                    + " WHERE (" + Entry.ColumnName_WorkflowId + " = " + workflowId
+                    + " AND " + Entry.ColumnName_Logs + " LIKE '%" + jobId.ToString() + "%');", conn);
+
+                var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var entry = new Entry
+                    {
+                        Id = (int)reader[Entry.ColumnName_Id],
+                        Name = (string)reader[Entry.ColumnName_Name],
+                        Description = (string)reader[Entry.ColumnName_Description],
+                        LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
+                        Status = (Status)((int)reader[Entry.ColumnName_Status]),
+                        StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
+                        WorkflowId = (int)reader[Entry.ColumnName_WorkflowId]
+                    };
+
+                    return entry;
+                }
+
+            }
+
+            return null;
+        }
+
         public override DateTime GetEntryStatusDateMax()
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -1627,5 +1668,6 @@ namespace Wexflow.Core.SQLServer
         public override void Dispose()
         {
         }
+
     }
 }
