@@ -26,6 +26,8 @@
         + "<button id='wf-pause' type='button' class='btn btn-secondary btn-xs'>Suspend</button>"
         + "<button id='wf-resume' type='button' class='btn btn-secondary btn-xs'>Resume</button>"
         + "<button id='wf-stop' type='button' class='btn btn-danger btn-xs'>Stop</button>"
+        + "<button id='wf-approve' type='button' class='btn btn-primary btn-xs'>Approve</button>"
+        + "<button id='wf-reject' type='button' class='btn btn-warning btn-xs'>Reject</button>"
         + "</div>"
         + "<div id='wf-notifier'>"
         + "<input id='wf-notifier-text' type='text' name='fname' readonly>"
@@ -60,6 +62,8 @@
     var suspendButton = document.getElementById("wf-pause");
     var resumeButton = document.getElementById("wf-resume");
     var stopButton = document.getElementById("wf-stop");
+    var approveButton = document.getElementById("wf-approve");
+    var rejectButton = document.getElementById("wf-reject");
     var searchButton = document.getElementById("wf-search-action");
     var searchText = document.getElementById("wf-search-text");
     var suser = getUser();
@@ -105,6 +109,8 @@
                         Common.disableButton(suspendButton, true);
                         Common.disableButton(resumeButton, true);
                         Common.disableButton(stopButton, true);
+                        Common.disableButton(approveButton, true);
+                        Common.disableButton(rejectButton, true);
 
                         searchButton.onclick = function () {
                             loadWorkflows();
@@ -113,6 +119,8 @@
                             Common.disableButton(suspendButton, true);
                             Common.disableButton(resumeButton, true);
                             Common.disableButton(stopButton, true);
+                            Common.disableButton(approveButton, true);
+                            Common.disableButton(rejectButton, true);
                         };
 
                         searchText.onkeyup = function (event) {
@@ -125,6 +133,8 @@
                                 Common.disableButton(suspendButton, true);
                                 Common.disableButton(resumeButton, true);
                                 Common.disableButton(stopButton, true);
+                                Common.disableButton(approveButton, true);
+                                Common.disableButton(rejectButton, true);
                             }
                         };
 
@@ -235,6 +245,8 @@
                             Common.disableButton(suspendButton, true);
                             Common.disableButton(resumeButton, true);
                             Common.disableButton(stopButton, true);
+                            Common.disableButton(approveButton, true);
+                            Common.disableButton(rejectButton, true);
                             clearInterval(workflowTimer);
                         }
                         else {
@@ -261,6 +273,8 @@
                             Common.disableButton(stopButton, !(job.IsRunning && !job.IsPaused));
                             Common.disableButton(suspendButton, !(job.IsRunning && !job.IsPaused));
                             Common.disableButton(resumeButton, !job.IsPaused);
+                            Common.disableButton(approveButton, !(job.IsWaitingForApproval && job.IsApproval));
+                            Common.disableButton(rejectButton, !(job.IsWaitingForApproval && job.IsApproval));
 
                             if (job.IsApproval === true && job.IsWaitingForApproval === true && job.IsPaused === false) {
                                 notify("This job is waiting for approval...");
@@ -354,14 +368,14 @@
                                                     }
                                                 }
 
-                                                let rows = (jobsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
-                                                if (rows.length > 0) {
-                                                    var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
-                                                    hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
-                                                    hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
-                                                    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
-                                                    hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
-                                                }
+                                                //let rows = (jobsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+                                                //if (rows.length > 0) {
+                                                //    var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                                                //    hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
+                                                //    hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
+                                                //    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
+                                                //    hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
+                                                //}
 
                                                 let descriptions = jobsTable.querySelectorAll(".wf-d");
                                                 for (let i = 0; i < descriptions.length; i++) {
@@ -384,13 +398,13 @@
                                                             }
                                                         }
 
-                                                        if (rows.length > 0) {
-                                                            var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
-                                                            hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
-                                                            hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
-                                                            hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
-                                                            hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
-                                                        }
+                                                        //if (rows.length > 0) {
+                                                        //    var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                                                        //    hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
+                                                        //    hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
+                                                        //    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
+                                                        //    hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
+                                                        //}
 
                                                         let descriptions = jobsTable.querySelectorAll(".wf-d");
                                                         for (let i = 0; i < descriptions.length; i++) {
@@ -490,6 +504,48 @@
                                 updateJobButtons(selectedId, jobId, true);
                             } else {
                                 Common.toastInfo("This operation is not supported.");
+                            }
+                        },
+                        function () { }, "", auth);
+                };
+
+                approveButton.onclick = function () {
+                    Common.disableButton(approveButton, true);
+                    Common.disableButton(stopButton, true);
+                    let selectedJob = document.getElementById("wf-jobs-table").querySelector(".selected");
+                    let jobId = selectedJob.querySelector(".wf-jobId").innerHTML;
+                    let approveUri = uri + "/approve?w=" + selectedId + "&i=" + jobId;
+                    Common.post(approveUri,
+                        function (res) {
+                            if (res === true) {
+                                updateJobButtons(selectedId, jobId, true);
+                                Common.toastSuccess("The job " + jobId + " was approved.");
+                            } else {
+                                Common.disableButton(approveButton, false);
+                                Common.disableButton(stopButton, false);
+                                Common.toastError("An error occured while approving the job " + jobId + " of the workflow " + selectedId + ".");
+                            }
+                        },
+                        function () { }, "", auth);
+                };
+
+                rejectButton.onclick = function () {
+                    Common.disableButton(rejectButton, true);
+                    Common.disableButton(approveButton, true);
+                    Common.disableButton(stopButton, true);
+                    let selectedJob = document.getElementById("wf-jobs-table").querySelector(".selected");
+                    let jobId = selectedJob.querySelector(".wf-jobId").innerHTML;
+                    let rejectUri = uri + "/reject?w=" + selectedId + "&i=" + jobId;
+                    Common.post(rejectUri,
+                        function (res) {
+                            if (res === true) {
+                                updateJobButtons(selectedId, jobId, true);
+                                Common.toastSuccess("The job " + jobId + " was rejected.");
+                            } else {
+                                Common.disableButton(disapproveButton, true);
+                                Common.disableButton(approveButton, false);
+                                Common.disableButton(stopButton, false);
+                                Common.toastError("An error occured while rejecting the job " + jobId + " of the workflow " + selectedId + ".");
                             }
                         },
                         function () { }, "", auth);

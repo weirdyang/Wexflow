@@ -22,7 +22,7 @@ namespace Wexflow.Tasks.Approval
             {
                 if (Workflow.IsApproval)
                 {
-                    var trigger = Path.Combine(Workflow.ApprovalFolder, Workflow.Id.ToString(), Id.ToString(), "task.approved");
+                    var trigger = Path.Combine(Workflow.ApprovalFolder, Workflow.Id.ToString(), Workflow.InstanceId.ToString(), Id.ToString(), "task.approved");
 
                     IsWaitingForApproval = true;
                     Workflow.IsWaitingForApproval = true;
@@ -42,8 +42,8 @@ namespace Wexflow.Tasks.Approval
                     {
                         Info("This workflow has been rejected.");
                     }
-                    
-                    if(File.Exists(trigger))
+
+                    if (File.Exists(trigger))
                     {
                         File.Delete(trigger);
                     }

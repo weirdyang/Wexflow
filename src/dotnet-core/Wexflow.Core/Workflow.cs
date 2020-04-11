@@ -1117,7 +1117,6 @@ namespace Wexflow.Core
                         IsRejected = false;
                         GC.Collect();
 
-
                         JobId = ++ParallelJobId;
                         Jobs.Remove(InstanceId);
 
@@ -1676,7 +1675,7 @@ namespace Wexflow.Core
             if (IsApproval)
             {
                 var task = Tasks.Where(t => t.IsWaitingForApproval).First();
-                var dir = Path.Combine(ApprovalFolder, Id.ToString(), task.Id.ToString());
+                var dir = Path.Combine(ApprovalFolder, Id.ToString(), InstanceId.ToString(), task.Id.ToString());
                 Directory.CreateDirectory(dir);
                 File.WriteAllText(Path.Combine(dir, "task.approved"), "Task " + task.Id + " of the workflow " + Id + " approved.");
                 IsRejected = false;
