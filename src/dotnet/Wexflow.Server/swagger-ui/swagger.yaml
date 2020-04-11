@@ -683,6 +683,27 @@ paths:
      consumes:
       - "application/json"    
   
+  /disable/{id}:
+    post:
+     tags:
+     - "Designer"
+     summary: "Disables a workdlow"
+     description: ""
+     produces:
+       - "application/json"
+     parameters:
+        - name: "id"
+          in: "path"
+          description: "Workflow id"
+          required: true
+          type: "integer"
+          format: "int64"
+     responses:
+        200:
+          description: "successful operation"
+     consumes:
+      - "application/json"
+
   /upload:
     post:
      tags:
