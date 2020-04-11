@@ -89,6 +89,7 @@ namespace Wexflow.Server
             SaveXmlWorkflow();
             SaveWorkflow();
             DisableWorkflow();
+            EnableWorkflow();
             DeleteWorkflow();
             DeleteWorkflows();
             GetExecutionGraph();
@@ -2318,7 +2319,82 @@ namespace Wexflow.Server
             });
         }
 
-        // TODO EnableWorkflow()
+        /// <summary>
+        /// Disbles a workflow.
+        /// </summary>
+        private void EnableWorkflow()
+        {
+            Post(Root + "enable/{id}", args =>
+            {
+                try
+                {
+                    int workflowId = args.id;
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
+
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    var wf = WexflowServer.WexflowEngine.Workflows.FirstOrDefault(w => w.Id == workflowId);
+                    var res = false;
+
+                    if (!user.Password.Equals(password))
+                    {
+                        return GetFalseResponse();
+                    }
+
+                    if (user.UserProfile == Core.Db.UserProfile.Restricted)
+                    {
+                        return GetFalseResponse();
+                    }
+
+                    if (user.UserProfile == Core.Db.UserProfile.Administrator && wf != null)
+                    {
+                        var workflowDbId = WexflowServer.WexflowEngine.Workflows.First(w => w.Id == workflowId).DbId;
+                        var check = WexflowServer.WexflowEngine.CheckUserWorkflow(user.GetId(), workflowDbId);
+                        if (!check)
+                        {
+                            return GetFalseResponse();
+                        }
+                    }
+
+                    if (wf != null)
+                    {
+                        var xdoc = wf.XDoc;
+                        var xwfEnabled = xdoc.Root.XPathSelectElement("wf:Settings/wf:Setting[@name='enabled']",
+                        wf.XmlNamespaceManager);
+                        xwfEnabled.Attribute("value").Value = true.ToString().ToLower();
+                        var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
+
+                        if (qid != "-1")
+                        {
+                            res = true;
+                        }
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(res);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(false);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
 
         /// <summary>
         /// Uploads a workflow from a file.
