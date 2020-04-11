@@ -2065,33 +2065,12 @@
 
                         // open click
                         document.getElementById("openworkflow").onclick = function () {
-
-                            let selected = document.getElementsByClassName("selected");
-                            if (selected.length === 0) {
-                                Common.toastInfo("Choose a workflow to open.");
-                            } else {
-                                let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
-
-                                // load view
-                                if (json === true) {
-                                    Common.get(uri + "/json/" + id,
-                                        function (val) {
-                                            openJsonView(JSON.stringify(val, null, '\t'));
-                                        }, function () { }, auth);
-                                } else if (xml === true) {
-                                    Common.get(uri + "/xml/" + id,
-                                        function (val) {
-                                            openXmlView(val);
-                                        }, function () { }, auth);
-                                } else if (graph === true) {
-                                    openGraph(id);
-                                }
-
-                                // load diagram
-                                loadDiagram(id);
-                            }
+                            openWorkflow();
                         };
 
+                        document.getElementById("wf-workflows-table").ondblclick = function () {
+                            openWorkflow();
+                        };
                     },
                     function () {
                         document.getElementById("overlay").style.display = "none";
@@ -2103,6 +2082,34 @@
         document.getElementById("browse").onclick = function () {
             browse();
         };
+
+        function openWorkflow() {
+            let selected = document.getElementsByClassName("selected");
+            if (selected.length === 0) {
+                Common.toastInfo("Choose a workflow to open.");
+            } else {
+                let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
+
+                // load view
+                if (json === true) {
+                    Common.get(uri + "/json/" + id,
+                        function (val) {
+                            openJsonView(JSON.stringify(val, null, '\t'));
+                        }, function () { }, auth);
+                } else if (xml === true) {
+                    Common.get(uri + "/xml/" + id,
+                        function (val) {
+                            openXmlView(val);
+                        }, function () { }, auth);
+                } else if (graph === true) {
+                    openGraph(id);
+                }
+
+                // load diagram
+                loadDiagram(id);
+            }
+        }
+
 
         function compareById(wf1, wf2) {
             if (wf1.Id < wf2.Id) {
