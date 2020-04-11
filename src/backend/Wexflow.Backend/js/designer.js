@@ -5,7 +5,7 @@
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
     let lnkEditor = document.getElementById("lnk-editor");
-    let lnkApproval = document.getElementById("lnk-approval");
+    //let lnkApproval = document.getElementById("lnk-approval");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
     let navigation = document.getElementById("navigation");
@@ -38,7 +38,7 @@
                         lnkManager.style.display = "inline";
                         lnkDesigner.style.display = "inline";
                         lnkEditor.style.display = "inline";
-                        lnkApproval.style.display = "inline";
+                        //lnkApproval.style.display = "inline";
                         lnkUsers.style.display = "inline";
 
                         if (u.UserProfile === 0) {
