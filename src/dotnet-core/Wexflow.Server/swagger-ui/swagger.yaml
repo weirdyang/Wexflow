@@ -1316,6 +1316,8 @@ definitions:
          type: "boolean"
        IsEnabled:
          type: "boolean"
+       EnableParallelJobs:
+         type: "boolean"
        LaunchType:
          type: "integer"
          format: "int64"
