@@ -1146,7 +1146,7 @@
                         let taskId = parseInt(thisBlock.getFieldValue('TASK'));
                         let taskName = "";
                         let taskDesc = "";
-                        
+
                         for (let i = 0; i < workflow.Tasks.length; i++) {
                             let task = workflow.Tasks[i];
                             if (task.Id === taskId) {
@@ -2069,7 +2069,9 @@
                         };
 
                         document.getElementById("wf-workflows-table").ondblclick = function () {
-                            openWorkflow();
+                            if (this.querySelectorAll(".selected").length > 0) {
+                                openWorkflow();
+                            }
                         };
                     },
                     function () {
