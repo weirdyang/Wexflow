@@ -161,6 +161,8 @@
                     document.getElementById("wfapproval").checked = false;
                     document.getElementById("wfenablepj").checked = true;
 
+                    document.getElementsByClassName("wf-local-vars")[0].innerHTML = "";
+
                     workflow = {
                         "WorkflowInfo": {
                             "Id": document.getElementById("wfid").value,
