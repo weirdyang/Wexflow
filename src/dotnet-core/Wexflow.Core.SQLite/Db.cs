@@ -344,7 +344,8 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_LaunchType + ", "
                     + Entry.ColumnName_Status + ", "
                     + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId
+                    + Entry.ColumnName_WorkflowId + ", "
+                    + Entry.ColumnName_JobId
                     + " FROM " + Core.Db.Entry.DocumentName + ";", conn))
                 {
 
@@ -361,7 +362,8 @@ namespace Wexflow.Core.SQLite
                                 LaunchType = (LaunchType)((long)reader[Entry.ColumnName_LaunchType]),
                                 Status = (Status)((long)reader[Entry.ColumnName_Status]),
                                 StatusDate = DateTime.Parse((string)reader[Entry.ColumnName_StatusDate]),
-                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId])
+                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId]),
+                                JobId = (string)reader[Entry.ColumnName_JobId]
                             };
 
                             entries.Add(entry);
@@ -388,7 +390,8 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_LaunchType + ", "
                     + Entry.ColumnName_Status + ", "
                     + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId
+                    + Entry.ColumnName_WorkflowId + ", "
+                    + Entry.ColumnName_JobId
                     + " FROM " + Core.Db.Entry.DocumentName
                     + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                     + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
@@ -476,7 +479,8 @@ namespace Wexflow.Core.SQLite
                                 LaunchType = (LaunchType)((long)reader[Entry.ColumnName_LaunchType]),
                                 Status = (Status)((long)reader[Entry.ColumnName_Status]),
                                 StatusDate = DateTime.Parse((string)reader[Entry.ColumnName_StatusDate]),
-                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId])
+                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId]),
+                                JobId = (string)reader[Entry.ColumnName_JobId]
                             };
 
                             entries.Add(entry);
@@ -522,7 +526,8 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_LaunchType + ", "
                     + Entry.ColumnName_Status + ", "
                     + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId
+                    + Entry.ColumnName_WorkflowId + ", "
+                    + Entry.ColumnName_JobId
                     + " FROM " + Core.Db.Entry.DocumentName
                     + " WHERE " + Entry.ColumnName_WorkflowId + " = " + workflowId + ";", conn))
                 {
@@ -540,7 +545,8 @@ namespace Wexflow.Core.SQLite
                                 LaunchType = (LaunchType)((long)reader[Entry.ColumnName_LaunchType]),
                                 Status = (Status)((long)reader[Entry.ColumnName_Status]),
                                 StatusDate = DateTime.Parse((string)reader[Entry.ColumnName_StatusDate]),
-                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId])
+                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId]),
+                                JobId = (string)reader[Entry.ColumnName_JobId]
                             };
 
                             return entry;
@@ -566,10 +572,11 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_LaunchType + ", "
                     + Entry.ColumnName_Status + ", "
                     + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId
+                    + Entry.ColumnName_WorkflowId + ", "
+                    + Entry.ColumnName_JobId
                     + " FROM " + Core.Db.Entry.DocumentName
                     + " WHERE (" + Entry.ColumnName_WorkflowId + " = " + workflowId
-                    + " AND " + Entry.ColumnName_Logs + " LIKE '%" + jobId.ToString() + "%');", conn))
+                    + " AND " + Entry.ColumnName_JobId + " = '" + jobId.ToString() + "');", conn))
                 {
 
                     using (var reader = command.ExecuteReader())
@@ -585,7 +592,8 @@ namespace Wexflow.Core.SQLite
                                 LaunchType = (LaunchType)((long)reader[Entry.ColumnName_LaunchType]),
                                 Status = (Status)((long)reader[Entry.ColumnName_Status]),
                                 StatusDate = DateTime.Parse((string)reader[Entry.ColumnName_StatusDate]),
-                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId])
+                                WorkflowId = (int)((long)reader[Entry.ColumnName_WorkflowId]),
+                                JobId = (string)reader[Entry.ColumnName_JobId]
                             };
 
                             return entry;
@@ -1531,6 +1539,7 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_StatusDate + ", "
                     + Entry.ColumnName_Status + ", "
                     + Entry.ColumnName_WorkflowId + ", "
+                    + Entry.ColumnName_JobId + ", "
                     + Entry.ColumnName_Logs + ") VALUES("
                     + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
                     + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
@@ -1538,6 +1547,7 @@ namespace Wexflow.Core.SQLite
                     + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
                     + (int)entry.Status + ", "
                     + entry.WorkflowId + ", "
+                    + "'" + (entry.JobId ?? "") + "', "
                     + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
                     , conn))
                 {
@@ -1654,6 +1664,7 @@ namespace Wexflow.Core.SQLite
                     + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(DateTimeFormat) + "', "
                     + Entry.ColumnName_Status + " = " + (int)entry.Status + ", "
                     + Entry.ColumnName_WorkflowId + " = " + entry.WorkflowId + ", "
+                    + Entry.ColumnName_JobId + " = '" + (entry.JobId ?? "") + "', "
                     + Entry.ColumnName_Logs + " = '" + (entry.Logs ?? "").Replace("'", "''") + "'"
                     + " WHERE "
                     + Entry.ColumnName_Id + " = " + int.Parse(id) + ";"

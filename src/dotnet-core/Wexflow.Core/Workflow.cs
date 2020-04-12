@@ -925,6 +925,7 @@ namespace Wexflow.Core
                         var newEntry = new Entry
                         {
                             WorkflowId = Id,
+                            JobId = InstanceId.ToString(),
                             Name = Name,
                             LaunchType = ((Db.LaunchType)(int)LaunchType),
                             Description = Description,

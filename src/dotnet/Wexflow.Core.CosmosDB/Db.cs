@@ -423,7 +423,7 @@ namespace Wexflow.Core.CosmosDB
                 return
                         client.CreateDocumentQuery<Entry>(
                             UriFactory.CreateDocumentCollectionUri(_databaseName, Core.Db.Entry.DocumentName))
-                        .Where(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()))
+                        .Where(e => e.WorkflowId == workflowId && e.JobId == jobId.ToString())
                         .AsEnumerable().ToArray()
                         .FirstOrDefault();
             }
@@ -979,6 +979,7 @@ namespace Wexflow.Core.CosmosDB
                         Status = entry.Status,
                         StatusDate = entry.StatusDate,
                         WorkflowId = entry.WorkflowId,
+                        JobId = entry.JobId,
                         Logs = entry.Logs
                     });
             }
@@ -1068,6 +1069,7 @@ namespace Wexflow.Core.CosmosDB
                     Status = entry.Status,
                     StatusDate = entry.StatusDate,
                     WorkflowId = entry.WorkflowId,
+                    JobId = entry.JobId,
                     Logs = entry.Logs
                 },
                 id);

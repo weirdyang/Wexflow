@@ -516,7 +516,7 @@ namespace Wexflow.Core.RavenDB
                 try
                 {
                     var col = session.Query<Entry>();
-                    return col.FirstOrDefault(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()));
+                    return col.FirstOrDefault(e => e.WorkflowId == workflowId && e.JobId == jobId.ToString());
                 }
                 catch (Exception)
                 {
@@ -1164,6 +1164,7 @@ namespace Wexflow.Core.RavenDB
                     Status = entry.Status,
                     StatusDate = entry.StatusDate,
                     WorkflowId = entry.WorkflowId,
+                    JobId = entry.JobId,
                     Logs = entry.Logs
                 };
                 session.Store(ie);
@@ -1251,6 +1252,7 @@ namespace Wexflow.Core.RavenDB
                 ue.Status = entry.Status;
                 ue.StatusDate = entry.StatusDate;
                 ue.WorkflowId = entry.WorkflowId;
+                ue.JobId = entry.JobId;
                 ue.Logs = entry.Logs;
 
                 session.SaveChanges();

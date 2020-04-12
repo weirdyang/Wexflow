@@ -567,7 +567,7 @@ namespace Wexflow.Core.MongoDB
         public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
         {
             var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);
-            return col.Find(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString())).FirstOrDefault();
+            return col.Find(e => e.WorkflowId == workflowId && e.JobId == jobId.ToString()).FirstOrDefault();
         }
 
         public override void InsertEntry(Core.Db.Entry entry)
@@ -581,10 +581,12 @@ namespace Wexflow.Core.MongoDB
                 Status = entry.Status,
                 StatusDate = entry.StatusDate,
                 WorkflowId = entry.WorkflowId,
+                JobId = entry.JobId,
                 Logs = entry.Logs
             };
             col.InsertOne(ie);
             col.Indexes.CreateOne(new CreateIndexModel<Entry>(Builders<Entry>.IndexKeys.Ascending(e => e.WorkflowId)));
+            col.Indexes.CreateOne(new CreateIndexModel<Entry>(Builders<Entry>.IndexKeys.Ascending(e => e.JobId)));
             col.Indexes.CreateOne(new CreateIndexModel<Entry>(Builders<Entry>.IndexKeys.Ascending(e => e.Name)));
             col.Indexes.CreateOne(new CreateIndexModel<Entry>(Builders<Entry>.IndexKeys.Ascending(e => e.LaunchType)));
             col.Indexes.CreateOne(new CreateIndexModel<Entry>(Builders<Entry>.IndexKeys.Ascending(e => e.Description)));
@@ -602,6 +604,7 @@ namespace Wexflow.Core.MongoDB
                 .Set(e => e.Status, entry.Status)
                 .Set(e => e.StatusDate, entry.StatusDate)
                 .Set(e => e.WorkflowId, entry.WorkflowId)
+                .Set(e => e.JobId, entry.JobId)
                 .Set(e => e.Logs, entry.Logs);
 
             col.UpdateOne(e => e.Id == id, update);

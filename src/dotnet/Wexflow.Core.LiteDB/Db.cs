@@ -265,7 +265,7 @@ namespace Wexflow.Core.LiteDB
         public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
         {
             var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);
-            return col.FindOne(e => e.WorkflowId == workflowId && e.Logs.Contains(jobId.ToString()));
+            return col.FindOne(e => e.WorkflowId == workflowId && e.JobId == jobId.ToString());
         }
 
         public override void InsertEntry(Core.Db.Entry entry)
@@ -279,10 +279,12 @@ namespace Wexflow.Core.LiteDB
                 Status = entry.Status,
                 StatusDate = entry.StatusDate,
                 WorkflowId = entry.WorkflowId,
+                JobId = entry.JobId,
                 Logs = entry.Logs
             };
             col.Insert(ie);
             col.EnsureIndex(e => e.WorkflowId);
+            col.EnsureIndex(e => e.JobId);
             //col.EnsureIndex(e => e.Name, "LOWER($.Name)");
             col.EnsureIndex(e => e.Name);
             col.EnsureIndex(e => e.LaunchType);
@@ -304,6 +306,7 @@ namespace Wexflow.Core.LiteDB
                 Status = entry.Status,
                 StatusDate = entry.StatusDate,
                 WorkflowId = entry.WorkflowId,
+                JobId = entry.JobId,
                 Logs = entry.Logs
             };
             col.Update(e);
