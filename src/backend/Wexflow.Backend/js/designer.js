@@ -1686,7 +1686,9 @@
                     if (workflow.WorkflowInfo.LocalVariables.length > 0) {
                         xmlVal += '\t<LocalVariables>\r\n';
                         for (let i = 0; i < workflow.WorkflowInfo.LocalVariables.length; i++) {
-                            xmlVal += '\t\t<Variable name="' + workflow.WorkflowInfo.LocalVariables[i].Key + '" value="' + workflow.WorkflowInfo.LocalVariables[i].Value + '" />\r\n'
+                            if (workflow.WorkflowInfo.LocalVariables[i].Key !== "") {
+                                xmlVal += '\t\t<Variable name="' + workflow.WorkflowInfo.LocalVariables[i].Key + '" value="' + workflow.WorkflowInfo.LocalVariables[i].Value + '" />\r\n'
+                            }
                         }
                         xmlVal += '\t</LocalVariables>\r\n';
                     } else {
@@ -1870,6 +1872,64 @@
                     document.getElementById("wfenabled").checked = workflow.WorkflowInfo.IsEnabled;
                     document.getElementById("wfapproval").checked = workflow.WorkflowInfo.IsApproval;
                     document.getElementById("wfenablepj").checked = workflow.WorkflowInfo.EnableParallelJobs;
+
+                    // Local variables
+                    if (workflow.WorkflowInfo.LocalVariables.length > 0) {
+                        let varsHtml = "";
+                        for (let i = 0; i < workflow.WorkflowInfo.LocalVariables.length; i++) {
+                            let variable = workflow.WorkflowInfo.LocalVariables[i];
+                            let varKey = variable.Key;
+                            let varValue = variable.Value;
+                            varsHtml += "<tr>";
+                            varsHtml += "<td><input class='form-control wf-var-key' type='text' value='" + varKey + "'></td>";
+                            varsHtml += "<td class='wf-value'><input class='form-control wf-var-value' type='text' value='" + varValue + "'></td>";
+                            varsHtml += "<td><button type='button' class='wf-remove-var btn btn-danger'>Delete</button></td>";
+                            varsHtml += "</tr>";
+                        }
+                        varsHtml += "</table>";
+                        document.getElementsByClassName("wf-local-vars")[0].innerHTML = varsHtml;
+
+                        // Bind keys modifications
+                        let bindVarKey = function (index) {
+                            let wfVarKey = document.getElementsByClassName("wf-var-key")[index];
+                            wfVarKey.onkeyup = function () {
+                                workflow.WorkflowInfo.LocalVariables[index].Key = wfVarKey.value;
+                            };
+                        };
+
+                        let wfVarKeys = document.getElementsByClassName("wf-var-key");
+                        for (let i = 0; i < wfVarKeys.length; i++) {
+                            bindVarKey(i);
+                        }
+
+                        // Bind values modifications
+                        let bindVarValue = function (index) {
+                            let wfVarValue = document.getElementsByClassName("wf-var-value")[index];
+                            wfVarValue.onkeyup = function () {
+                                workflow.WorkflowInfo.LocalVariables[index].Value = wfVarValue.value;
+                            };
+                        };
+
+                        let wfVarValues = document.getElementsByClassName("wf-var-value");
+                        for (let i = 0; i < wfVarValues.length; i++) {
+                            bindVarValue(i);
+                        }
+
+                        // Bind delete variables
+                        let bindDeleteVar = function (index) {
+                            let wfVarDelete = document.getElementsByClassName("wf-remove-var")[index];
+                            wfVarDelete.onclick = function () {
+                                index = getElementIndex(wfVarDelete.parentElement.parentElement);
+                                workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                                wfVarDelete.parentElement.parentElement.remove();
+                            };
+                        };
+
+                        let wfVarDeleteBtns = document.getElementsByClassName("wf-remove-var");
+                        for (let i = 0; i < wfVarDeleteBtns.length; i++) {
+                            bindDeleteVar(i);
+                        }
+                    }
 
                     tasks = {};
                     for (let i = 0; i < workflow.Tasks.length; i++) {
@@ -2548,6 +2608,66 @@
 
         };
 
+        document.getElementById("wf-add-var").onclick = function () {
+
+            let wfVarsTable = document.getElementsByClassName("wf-local-vars")[0];
+
+            let row = wfVarsTable.insertRow(-1);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+
+            cell1.innerHTML = "<input class='form-control wf-var-key' type='text'>";
+            cell2.innerHTML = "<input class='form-control wf-var-value' type='text'>";
+            cell2.className = "wf-value";
+            cell3.innerHTML = "<button type='button' class='wf-remove-var btn btn-danger'>Delete</button>";
+
+            workflow.WorkflowInfo.LocalVariables.push({ "Key": "", "Value": "" });
+
+            goToBottom("wfproplist");
+
+            // events
+            let index = workflow.WorkflowInfo.LocalVariables.length - 1;
+
+            let wfVarKey = wfVarsTable.getElementsByClassName("wf-var-key")[index];
+            wfVarKey.onkeyup = function () {
+                let index = getElementIndex(wfVarKey.parentElement.parentElement);
+                workflow.WorkflowInfo.LocalVariables[index].Key = this.value;
+            };
+
+            let wfVarValue = wfVarsTable.getElementsByClassName("wf-var-value")[index];
+            wfVarValue.onkeyup = function () {
+                let index = getElementIndex(wfVarValue.parentElement.parentElement);
+                workflow.WorkflowInfo.LocalVariables[index].Value = this.value;
+            };
+
+            let btnVarDelete = wfVarsTable.getElementsByClassName("wf-remove-var")[index];
+            btnVarDelete.onclick = function () {
+                let index = getElementIndex(btnVarDelete.parentElement.parentElement);
+                workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                this.parentElement.parentElement.remove();
+                goToBottom("wfproplist");
+            };
+        };
+
+        function deleteRow(arr, row) {
+            arr = arr.slice(0); // make copy
+            arr.splice(row, 1);
+            return arr;
+        }
+
+        function getElementIndex(node) {
+            let index = 0;
+            while ((node = node.previousElementSibling)) {
+                index++;
+            }
+            return index;
+        }
+
+        function goToBottom(id) {
+            let element = document.getElementById(id);
+            element.scrollTop = element.scrollHeight - element.clientHeight;
+        }
     }
 
 };

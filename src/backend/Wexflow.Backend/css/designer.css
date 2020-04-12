@@ -1048,3 +1048,20 @@ margin-top: 12px;
 #blocklyDiv {
     position: absolute;
 }
+
+#wf-add-var{
+    float: right;
+}
+
+.wf-local-vars {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    border-spacing: 5px;
+    border-collapse: separate;
+}
+
+.wf-var-key, .wf-var-value, .wf-remove-var{
+    margin-right: 5px;
+}
