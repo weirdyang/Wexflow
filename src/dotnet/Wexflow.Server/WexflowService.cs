@@ -164,7 +164,9 @@ namespace Wexflow.Server
                         workflows = WexflowServer.WexflowEngine.GetUserWorkflows(user.GetId())
                                                 .ToList()
                                                 .Where(wf =>
-                                                    wf.Name.ToUpper().Contains(keywordToUpper) || wf.Description.ToUpper().Contains(keywordToUpper))
+                                                    wf.Name.ToUpper().Contains(keywordToUpper)
+                                                    || wf.Description.ToUpper().Contains(keywordToUpper)
+                                                    || wf.Id.ToString().Contains(keywordToUpper))
                                                 .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
@@ -199,8 +201,6 @@ namespace Wexflow.Server
                 var password = auth.Password;
 
                 string keywordToUpper = Request.Query["s"].ToString().ToUpper();
-                //string username = Request.Query["u"].ToString();
-                //string password = Request.Query["p"].ToString();
 
                 var workflows = new WorkflowInfo[] { };
 
@@ -213,7 +213,9 @@ namespace Wexflow.Server
                             .ToList()
                             .Where(wf =>
                                 wf.IsApproval &&
-                                (wf.Name.ToUpper().Contains(keywordToUpper) || wf.Description.ToUpper().Contains(keywordToUpper)))
+                                (wf.Name.ToUpper().Contains(keywordToUpper)
+                                || wf.Description.ToUpper().Contains(keywordToUpper))
+                                || wf.Id.ToString().Contains(keywordToUpper))
                             .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
@@ -228,7 +230,9 @@ namespace Wexflow.Server
                                                 .ToList()
                                                 .Where(wf =>
                                                     wf.IsApproval &&
-                                                    (wf.Name.ToUpper().Contains(keywordToUpper) || wf.Description.ToUpper().Contains(keywordToUpper)))
+                                                    (wf.Name.ToUpper().Contains(keywordToUpper)
+                                                    || wf.Description.ToUpper().Contains(keywordToUpper))
+                                                    || wf.Id.ToString().Contains(keywordToUpper))
                                                 .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,

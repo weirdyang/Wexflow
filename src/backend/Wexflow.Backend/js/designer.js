@@ -2042,6 +2042,13 @@
                                             };
                                         }
 
+                                        // on workflows table dbl click
+                                        document.getElementsByClassName("jBox-content")[0].childNodes[0].ondblclick = function () {
+                                            if (this.querySelectorAll(".selected").length > 0) {
+                                                openWorkflow();
+                                            }
+                                        };
+
                                     }, function () {
                                         Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
                                     }, auth);
@@ -2068,7 +2075,8 @@
                             openWorkflow();
                         };
 
-                        document.getElementById("wf-workflows-table").ondblclick = function () {
+                        // on workflows table dbl click
+                        document.getElementsByClassName("jBox-content")[0].childNodes[0].ondblclick = function () {
                             if (this.querySelectorAll(".selected").length > 0) {
                                 openWorkflow();
                             }
