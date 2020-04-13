@@ -1106,3 +1106,7 @@ margin-top: 12px;
 .wf-setting-name{
     width: 150px;
 }
+
+.wf-setting-value{
+    width: 285px;
+}

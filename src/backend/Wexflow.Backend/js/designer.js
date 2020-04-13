@@ -556,7 +556,7 @@
                                     let cell2_1 = row2.insertCell(0);
 
                                     let sIndex = tasks[index].Settings.length;
-                                    cell2_1.innerHTML = '<input class="wf-setting-index" type="hidden" value="' + sIndex + '"><input class="form-control wf-setting-value inputtext" value="" type="text" />';
+                                    cell2_1.innerHTML = '<input class="wf-setting-index" type="hidden" value="' + sIndex + '"><input class="form-control wf-setting-value" value="" type="text" />';
                                     cell2_1.colSpan = 2;
 
                                     // Bind onchange
@@ -640,7 +640,7 @@
                                             taskSettings += "</tr>";
                                             taskSettings += "<tr>";
                                             taskSettings += "<td colspan='2'>";
-                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value inputtext" value="' + settingValue + '" type="text" />';
+                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value" value="' + settingValue + '" type="text" />';
                                             taskSettings += "</td>";
                                             taskSettings += "</tr>";
                                         }
@@ -745,7 +745,7 @@
                                             taskSettings += "</tr>";
                                             taskSettings += "<tr>";
                                             taskSettings += "<td colspan='2'>";
-                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value inputtext" value="' + settingValue + '" type="text" />';
+                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value" value="' + settingValue + '" type="text" />';
                                             taskSettings += "</td>";
                                             taskSettings += "</tr>";
                                         }
