@@ -1,13 +1,13 @@
 swagger: "2.0"
 info:
-  description: "Wexflow's RESTful API."
+  description: "Wexflow API."
   version: "5.4"
   title: "Swagger Wexflow"
   contact:
     email: "akram.elassas@gmail.com"
   license:
     name: "MIT"
-    url: "https://opensource.org/licenses/MIT"
+    url: "https://github.com/aelassas/Wexflow/wiki/License"
 host: "localhost:8000"
 basePath: "/wexflow"
 tags:
