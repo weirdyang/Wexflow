@@ -928,11 +928,6 @@ margin-top: 12px;
     height: calc(100% - 50px);
     overflow-y: auto;
     overflow-x: auto;
-    position: absolute;
-}
-
-.jBox-content {
-    overflow: hidden;
 }
 
 .wf-workflows-table .wf-id {

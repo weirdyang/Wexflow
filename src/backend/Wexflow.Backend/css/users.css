@@ -78,6 +78,8 @@
     overflow: auto;
 }
 
+/* table */
+
 #users-table .thead-dark {
     background: #272727;
     color: #EEEEEE;

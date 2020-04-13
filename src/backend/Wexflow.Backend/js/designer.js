@@ -2277,6 +2277,8 @@
                             title: browserHeader,
                             content: browserHtml,
                             footer: browserFooter,
+                            overlay: true,
+                            isolateScroll: false,
                             delayOpen: 0,
                             onOpen: function () {
                                 document.getElementById("overlay").style.display = "none";
@@ -2434,6 +2436,8 @@
                 width: 800,
                 height: 120,
                 title: "Export",
+                overlay: true,
+                isolateScroll: false,
                 content: document.getElementById("exportmodal").innerHTML,
                 footer: footer,
                 delayOpen: 0
