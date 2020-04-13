@@ -914,36 +914,57 @@ margin-top: 12px;
 }
 
 /* wf-workflows-table */
-#wf-workflows-table .wf-id {
-    width: 45px;
+.wf-workflows-table {
+    display: block;
+    table-layout: fixed;
+    margin: 0;
 }
 
-#wf-workflows-table .wf-n {
-    width: 200px;
+.wf-workflows-table thead, tbody {
+    display: block;
 }
 
-#wf-workflows-table .wf-d {
-    width: 200px;
+.wf-workflows-table tbody {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+    overflow-x: auto;
+    position: absolute;
 }
 
-#wf-workflows-table tbody tr:hover {
+.jBox-content{
+    overflow: hidden;
+}
+
+.wf-workflows-table .wf-id {
+    width: 65px;
+}
+
+.wf-workflows-table .wf-n {
+    width: 300px;
+}
+
+.wf-workflows-table .wf-d {
+    width: 500px;
+}
+
+.wf-workflows-table tbody tr:hover {
     cursor: pointer;
 }
 
-#wf-workflows-table .selected, #wf-workflows-table .selected:hover {
+.wf-workflows-table .selected, .wf-workflows-table .selected:hover {
     background-color: #ffb347;
 }
 
-#wf-workflows-table .thead-dark {
+.wf-workflows-table .thead-dark {
     background: #272727;
     color: #EEEEEE;
 }
 
-#wf-workflows-table tbody tr:hover {
+.wf-workflows-table tbody tr:hover {
     background: #EEEEEE;
 }
 
-#wf-workflows-table .selected, #wf-workflows #wf-workflows-table .selected:hover {
+.wf-workflows-table .selected, #wf-workflows .wf-workflows-table .selected:hover {
     background-color: #ffb347;
 }
 

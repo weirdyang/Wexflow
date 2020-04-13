@@ -124,12 +124,6 @@
                     flowy.deleteBlocks();
                     removeworkflow.style.display = "none";
 
-                    //document.getElementById("leftcard").style.left = "0";
-                    //leftcardHidden = false;
-                    //canvas.style.left = leftcardwidth + "px";
-                    //canvas.style.width = "calc(100% - " + leftcardwidth + "px)";
-                    //closecardimg.src = "assets/closeleft.png";
-
                     document.getElementById("leftcard").style.left = -leftcardwidth + "px";
                     closecardimg.src = "assets/openleft.png";
                     leftcardHidden = true;
@@ -327,7 +321,7 @@
             for (let j = 0; j < blocks.length; j++) {
                 let block = blocks[j];
                 let left = parseInt(block.attr[1].style.split(";")[0].replace("left:", "").replace(" ", "").replace("px", ""));
-                html += "<div class='blockelem noselect block' style='left: " + left + "px; top: " + (25 + blockspace * j) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + block.data[0].value + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + block.data[1].value + "'><input type='hidden' name='blockid' class='blockid' value='" + j + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + block.data[0].value + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + block.data[1].value + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
+                html += "<div class='blockelem noselect block' style='left: " + left + "px; top: " + (25 + blockspace * j) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + block.data[0].value + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + block.data[1].value + "'><input type='hidden' name='blockid' class='blockid' value='" + j + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + (tasks[j].Id + ". " + tasks[j].Name) + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + block.data[1].value + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
                 if (j < blocks.length - 1) {
                     //html += "<div class='arrowblock' style='left: " + (left + 139) + "px; top: " + (125 + arrowspace * j) + "px;'><input type='hidden' class='arrowid' value='" + (j + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path><path d='M15 75H25L20 80L15 75Z' fill='#6CA5EC'></path></svg></div>";
                     html += "<div class='arrowblock' style='left: " + (left + 139) + "px; top: " + (125 + arrowspace * j) + "px;'><input type='hidden' class='arrowid' value='" + (j + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path></svg></div>";
@@ -683,6 +677,11 @@
                                             tasks[index].Id = parseInt(this.value);
 
                                             updateTasks();
+
+                                            // update blockelem name
+                                            if (tempblock) {
+                                                tempblock.getElementsByClassName("blockyname")[0].innerHTML = tasks[index].Id + ". " + tasks[index].Name;
+                                            }
                                         };
 
                                         document.getElementById("taskdescription").onkeyup = function () {
@@ -791,6 +790,11 @@
                                             tasks[index].Id = parseInt(this.value);
 
                                             updateTasks();
+
+                                            // update blockelem name
+                                            if (tempblock) {
+                                                tempblock.getElementsByClassName("blockyname")[0].innerHTML = tasks[index].Id + ". " + tasks[index].Name;
+                                            }
                                         };
 
                                         document.getElementById("taskdescription").onkeyup = function () {
@@ -1022,7 +1026,7 @@
                             for (let j = 0; j < blocks.length; j++) {
                                 let block = blocks[j];
                                 let left = parseInt(block.attr[1].style.split(";")[0].replace("left:", "").replace(" ", "").replace("px", ""));
-                                html += "<div class='blockelem noselect block' style='left: " + left + "px; top: " + (25 + blockspace * j) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + block.data[0].value + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + block.data[1].value + "'><input type='hidden' name='blockid' class='blockid' value='" + j + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + block.data[0].value + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + block.data[1].value + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
+                                html += "<div class='blockelem noselect block' style='left: " + left + "px; top: " + (25 + blockspace * j) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + block.data[0].value + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + block.data[1].value + "'><input type='hidden' name='blockid' class='blockid' value='" + j + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + (tasks[j].Id + ". " + tasks[j].Name) + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + block.data[1].value + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
                                 if (j < blocks.length - 1) {
                                     //html += "<div class='arrowblock' style='left: " + (left + 139) + "px; top: " + (125 + arrowspace * j) + "px;'><input type='hidden' class='arrowid' value='" + (j + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path><path d='M15 75H25L20 80L15 75Z' fill='#6CA5EC'></path></svg></div>";
                                     html += "<div class='arrowblock' style='left: " + (left + 139) + "px; top: " + (125 + arrowspace * j) + "px;'><input type='hidden' class='arrowid' value='" + (j + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path></svg></div>";
@@ -2170,7 +2174,7 @@
                     let arrowspace = 180;
                     for (let i = 0; i < workflow.Tasks.length; i++) {
                         let task = workflow.Tasks[i];
-                        canvashtml += "<div class='blockelem noselect block' style='left: 500px; top: " + (25 + blockspace * i) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + task.Name + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + task.Description + "'><input type='hidden' name='blockid' class='blockid' value='" + i + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + task.Name + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + task.Description + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
+                        canvashtml += "<div class='blockelem noselect block' style='left: 500px; top: " + (25 + blockspace * i) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + task.Name + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + task.Description + "'><input type='hidden' name='blockid' class='blockid' value='" + i + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + task.Id + ". " + task.Name + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + task.Description + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
                         if (i < workflow.Tasks.length - 1) {
                             //canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path><path d='M15 75H25L20 80L15 75Z' fill='#6CA5EC'></path></svg></div>";
                             canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path></svg></div>";
@@ -2233,12 +2237,12 @@
                                     //"<td><input class='wf-delete' type='checkbox'></td>" +
                                     "<td class='wf-id' title='" + val.Id + "'>" + val.Id + "</td>" +
                                     "<td class='wf-n' title='" + val.Name + "'>" + val.Name + "</td>" +
-                                    "<td class='wf-n' title='" + val.Description + "'>" + val.Description + "</td>" +
+                                    "<td class='wf-d' title='" + val.Description + "'>" + val.Description + "</td>" +
                                     "</tr>");
 
                             }
 
-                            let table = "<table id='wf-workflows-table' class='table'>" +
+                            let table = "<table class='wf-workflows-table table'>" +
                                 "<thead class='thead-dark'>" +
                                 "<tr>" +
                                 //"<th><input id='wf-delete-all' type='checkbox'></th>" +
@@ -2326,9 +2330,22 @@
                             }
                         };
 
-                        // selection changed event
                         let workflowsTable = document.getElementsByClassName("jBox-content")[0].childNodes[0];
-                        let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+
+                        let rows = workflowsTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                        if (rows.length > 0) {
+                            let hrow = workflowsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                            hrow.querySelector(".wf-id").style.width = rows[0].querySelector(".wf-id").offsetWidth + "px";
+                            hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
+                            hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
+                        }
+
+                        let descriptions = workflowsTable.querySelectorAll(".wf-d");
+                        for (let i = 0; i < descriptions.length; i++) {
+                            descriptions[i].style.width = workflowsTable.offsetWidth - 215 + "px";
+                        }
+
+                        // selection changed event
                         for (let i = 0; i < rows.length; i++) {
                             let row = rows[i];
 
