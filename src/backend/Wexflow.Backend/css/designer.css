@@ -617,7 +617,7 @@ color: #393C44;
 }
 
 #wfpropwrap {
-    position: absolute;
+    position: fixed;
     right: -331px;
     top: 115px;
     width: 311px;
