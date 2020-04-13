@@ -2086,8 +2086,10 @@
                             let varValue = variable.Value;
                             varsHtml += "<tr>";
                             varsHtml += "<td><input class='form-control wf-var-key' type='text' value='" + varKey + "'></td>";
-                            varsHtml += "<td class='wf-value'><input class='form-control wf-var-value' type='text' value='" + varValue + "'></td>";
                             varsHtml += "<td><button type='button' class='wf-remove-var btn btn-danger'>Delete</button></td>";
+                            varsHtml += "</tr>";
+                            varsHtml += "<tr>";
+                            varsHtml += "<td class='wf-value' colspan='2'><input class='form-control wf-var-value' type='text' value='" + varValue + "'></td>";
                             varsHtml += "</tr>";
                         }
                         varsHtml += "</table>";
@@ -2125,8 +2127,9 @@
                             wfVarDelete.onclick = function () {
                                 let res = confirm("Are you sure you want to delete this variable?");
                                 if (res === true) {
-                                    index = getElementIndex(wfVarDelete.parentElement.parentElement);
+                                    index = parseInt(getElementIndex(wfVarDelete.parentElement.parentElement) / 2);
                                     workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                                    wfVarDelete.parentNode.parentNode.nextSibling.remove();
                                     wfVarDelete.parentElement.parentElement.remove();
                                 }
                                 return false;
@@ -2820,15 +2823,17 @@
 
             let wfVarsTable = document.getElementsByClassName("wf-local-vars")[0];
 
-            let row = wfVarsTable.insertRow(-1);
-            let cell1 = row.insertCell(0);
-            let cell2 = row.insertCell(1);
-            let cell3 = row.insertCell(2);
+            let row1 = wfVarsTable.insertRow(-1);
+            let cell1_1 = row1.insertCell(0);
+            let cell1_2 = row1.insertCell(1);
+            let row2 = wfVarsTable.insertRow(-1);
+            let cell2_1 = row2.insertCell(0);
 
-            cell1.innerHTML = "<input class='form-control wf-var-key' type='text'>";
-            cell2.innerHTML = "<input class='form-control wf-var-value' type='text'>";
-            cell2.className = "wf-value";
-            cell3.innerHTML = "<button type='button' class='wf-remove-var btn btn-danger'>Delete</button>";
+            cell1_1.innerHTML = "<input class='form-control wf-var-key' type='text'>";
+            cell1_2.innerHTML = "<button type='button' class='wf-remove-var btn btn-danger'>Delete</button>";
+            cell2_1.innerHTML = "<input class='form-control wf-var-value' type='text'>";
+            cell2_1.className = "wf-value";
+            cell2_1.colSpan = 2;
 
             workflow.WorkflowInfo.LocalVariables.push({ "Key": "", "Value": "" });
 
@@ -2839,13 +2844,13 @@
 
             let wfVarKey = wfVarsTable.getElementsByClassName("wf-var-key")[index];
             wfVarKey.onkeyup = function () {
-                let index = getElementIndex(wfVarKey.parentElement.parentElement);
+                let index = parseInt(getElementIndex(wfVarValue.parentElement.parentElement) / 2);
                 workflow.WorkflowInfo.LocalVariables[index].Key = this.value;
             };
 
             let wfVarValue = wfVarsTable.getElementsByClassName("wf-var-value")[index];
             wfVarValue.onkeyup = function () {
-                let index = getElementIndex(wfVarValue.parentElement.parentElement);
+                let index = parseInt(getElementIndex(wfVarValue.parentElement.parentElement) / 2);
                 workflow.WorkflowInfo.LocalVariables[index].Value = this.value;
             };
 
@@ -2853,8 +2858,9 @@
             btnVarDelete.onclick = function () {
                 let res = confirm("Are you sure you want to delete this variable?");
                 if (res === true) {
-                    let index = getElementIndex(btnVarDelete.parentElement.parentElement);
+                    let index = parseInt(getElementIndex(wfVarValue.parentElement.parentElement) / 2);
                     workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                    this.parentNode.parentNode.nextSibling.remove();
                     this.parentElement.parentElement.remove();
                     goToBottom("wfproplist");
                 }
