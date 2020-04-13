@@ -294,6 +294,14 @@
                 document.getElementById("entries").innerHTML = table;
 
                 var entriesTable = document.getElementById("entries-table");
+
+                entriesTable.getElementsByTagName("tbody")[0].style.height = (document.getElementById("entries").offsetHeight - 35) + "px";
+
+                var descriptions = entriesTable.querySelectorAll(".desc");
+                for (i = 0; i < descriptions.length; i++) {
+                    descriptions[i].style.width = entriesTable.offsetWidth - 620 + "px";
+                }
+
                 var rows = (entriesTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
                 for (var j = 0; j < rows.length; j++) {
                     rows[j].onclick = function () {
