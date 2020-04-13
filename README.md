@@ -39,10 +39,6 @@ Just to give you an idea of what Wexflow does, this is a screenshot from the [de
 
 ![Designer](https://aelassas.github.io/wexflow/images/wbo-designer-5.3-2.png)
 
-The editor allows you to edit your workflows through its WYSIWYG form based editor or its JSON editor or its XML editor:
-
-![Designer](https://aelassas.github.io/wexflow/images/wbo-designer-5.3.png)
-
 The history allows you to track your workflow jobs in the system and have detailed information about each job:
 
 ![History](https://aelassas.github.io/wexflow/images/wbo-history-5.3.png)
