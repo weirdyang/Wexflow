@@ -504,10 +504,8 @@
 
                     // task settings
                     let taskname = tempblock.getElementsByClassName("blockelemtype")[0].value;
-                    let proplist = document.getElementById("proplist");
 
                     document.getElementById("header2").innerHTML = "Task Settings&nbsp;<span id='taskdoc' class='badge' title='Open task documentation'>doc</span>";
-                    proplist.innerHTML = '<p class="inputlabel">Id</p><input id="taskid" class="form-control inputtext" type="text" /><p class="inputlabel">Description</p><input id="taskdescription" class="form-control inputtext" type="text" /><p class="inputlabel">Enabled</p><input id="taskenabled" class="form-check-input inputtext" type="checkbox" checked />';
                     document.getElementById("taskdoc").onclick = function () {
                         let url = "https://github.com/aelassas/Wexflow/wiki/" + taskname;
                         openInNewTab(url);
@@ -531,91 +529,294 @@
                         };
                     }
 
+                    document.getElementById("taskid").value = tasks[index].Id;
+                    document.getElementById("taskdescription").value = tasks[index].Description;
+                    document.getElementById("taskenabled").checked = tasks[index].IsEnabled;
+
                     updateTasks();
 
                     if (isNaN(index) === false) {
-                        Common.get(uri + "/settings/" + taskname,
-                            function (defaultSettings) {
+                        // Add setting
+                        let newSettingButton = document.getElementsByClassName("wf-new-setting")[0];
+                        newSettingButton.onclick = function () {
+                            Common.get(uri + "/settings/" + taskname,
+                                function (settings) {
+                                    let settingsTable = document.getElementById("task-settings-table");
 
-                                if (tasks[index]) {
-                                    let settings = tasks[index].Settings;
-                                    let tasksettings = "";
+                                    let row1 = settingsTable.insertRow();
+                                    let cell1_1 = row1.insertCell(0);
+                                    let cell1_2 = row1.insertCell(1);
 
-                                    // Add non empty settings
+                                    let cell1Html = "<select class='form-control wf-setting-name'>";
+                                    cell1Html += "<option value=''></option>";
                                     for (let i = 0; i < settings.length; i++) {
-                                        let settingName = settings[i].Name;
-                                        let settingValue = settings[i].Value;
+                                        let settingName = settings[i];
+                                        cell1Html += "<option value='" + settingName + "'" + ">" + settingName + "</option>";
+                                    }
+                                    cell1Html += "</select>";
+                                    cell1_1.innerHTML = cell1Html;
 
-                                        tasksettings += '<p class="wf-setting-name">' + settingName + '</p><input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value inputtext" value="' + settingValue + '" type="text" />';
+                                    cell1_2.innerHTML = '<button type="button" class="wf-remove-setting btn btn-danger">Delete</button>';
+
+                                    let row2 = settingsTable.insertRow();
+                                    let cell2_1 = row2.insertCell(0);
+
+                                    let sIndex = tasks[index].Settings.length;
+                                    cell2_1.innerHTML = '<input class="wf-setting-index" type="hidden" value="' + sIndex + '"><input class="form-control wf-setting-value inputtext" value="" type="text" />';
+                                    cell2_1.colSpan = 2;
+
+                                    // Bind onchange
+                                    let settingNameSelect = settingsTable.getElementsByClassName("wf-setting-name")[sIndex];
+                                    settingNameSelect.onchange = function () {
+                                        if (this.value != "") {
+                                            tasks[index].Settings.push({
+                                                "Name": this.value,
+                                                "Value": "",
+                                                "Attributes": []
+                                            });
+                                        }
+                                        return false;
                                     }
 
-                                    // Add empty settings
-                                    for (let i = 0; i < defaultSettings.length; i++) {
-                                        let sindex = settings.length;
-                                        let found = false;
-                                        for (let j = 0; j < settings.length; j++) {
-                                            if (defaultSettings[i] === settings[j].Name) {
-                                                found = true;
-                                                break;
-                                            }
+                                    // Bind onkeyup events
+                                    let settingValueInput = settingsTable.getElementsByClassName("wf-setting-value")[sIndex];
+                                    settingValueInput.onkeyup = function () {
+                                        if (tasks[index].Settings[sIndex]) {
+                                            // Calculate index from DOM
+                                            let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
+                                            tasks[index].Settings[innerIndex].Value = this.value;
                                         }
-                                        if (found === false) {
-                                            tasksettings += '<p class="wf-setting-name">' + defaultSettings[i] + '</p><input class="wf-setting-index" type="hidden" value="' + sindex + '"><input class="form-control wf-setting-value inputtext" value="" type="text" />';
-                                            if (!tasks[index].Settings[sindex]) {
-                                                tasks[index].Settings.push({
-                                                    "Name": defaultSettings[i],
-                                                    "Value": "",
-                                                    "Attributes": []
-                                                });
-                                            }
-                                            sindex++;
-                                        }
+                                        return false;
                                     }
 
-                                    proplist.innerHTML = proplist.innerHTML + tasksettings;
-
-                                    document.getElementById("taskid").value = tasks[index].Id;
-                                    document.getElementById("taskdescription").value = tasks[index].Description;
-                                    document.getElementById("taskenabled").checked = tasks[index].IsEnabled;
-
-                                    document.getElementById("taskid").onkeyup = function () {
-                                        tasks[index].Id = parseInt(this.value);
-
-                                        updateTasks();
-                                    };
-
-                                    document.getElementById("taskdescription").onkeyup = function () {
-                                        tasks[index].Description = this.value;
-
-                                        updateTasks();
-
-                                        // update blockelem description
-                                        if (tempblock) {
-                                            tempblock.getElementsByClassName("blockyinfo")[0].innerHTML = this.value;
+                                    // Bind remove event
+                                    let deleteButton = settingsTable.getElementsByClassName("wf-remove-setting")[sIndex];
+                                    deleteButton.onclick = function () {
+                                        let res = confirm("Are you sure you want to remove this setting?");
+                                        if (res === true) {
+                                            // Calculate index from DOM
+                                            let innerIndex = parseInt(this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-index").value);
+                                            tasks[index].Settings = deleteRow(tasks[index].Settings, innerIndex);
+                                            // update indexes
+                                            let indexes = this.parentNode.parentNode.parentNode.querySelectorAll(".wf-setting-index");
+                                            for (let i = innerIndex; i < indexes.length; i++) {
+                                                indexes[i].value = parseInt(indexes[i].value) - 1;
+                                            }
+                                            this.parentNode.parentNode.nextSibling.remove();
+                                            this.parentNode.parentNode.remove();
                                         }
-                                    };
+                                        return false;
+                                    }
 
-                                    document.getElementById("taskenabled").onchange = function () {
-                                        tasks[index].IsEnabled = this.checked;
+                                    goToBottom("proplist");
+                                }, function () {
+                                    Common.toastError("An error occured while retrieving settings.");
+                                }, auth);
 
-                                        updateTasks();
-                                    };
+                            return false;
+                        };
 
-                                    let settingValues = document.getElementsByClassName("wf-setting-value");
-                                    for (let i = 0; i < settingValues.length; i++) {
-                                        let settingValue = settingValues[i];
+                        if (checkId === true) {
+                            Common.get(uri + "/settings/" + taskname,
+                                function (defaultSettings) {
 
-                                        settingValue.onkeyup = function () {
-                                            let sindex = this.previousElementSibling.value;
-                                            tasks[index].Settings[sindex].Value = this.value;
+                                    if (tasks[index]) {
+
+                                        if (defaultSettings.length > 0) {
+                                            newSettingButton.style.display = "inline-block";
+                                        } else {
+                                            newSettingButton.style.display = "none";
+                                        }
+
+                                        let settings = tasks[index].Settings;
+                                        let taskSettings = "";
+
+                                        // Add non empty settings
+                                        for (let i = 0; i < settings.length; i++) {
+                                            let settingName = settings[i].Name;
+                                            let settingValue = settings[i].Value;
+
+                                            taskSettings += "<tr>";
+                                            taskSettings += "<td>";
+                                            taskSettings += '<p class="wf-setting-name">' + settingName + "</p>";
+                                            taskSettings += "</td>";
+                                            taskSettings += "<td>";
+                                            taskSettings += '<button type="button" class="wf-remove-setting btn btn-danger">Delete</button>';
+                                            taskSettings += "</td>";
+                                            taskSettings += "</tr>";
+                                            taskSettings += "<tr>";
+                                            taskSettings += "<td colspan='2'>";
+                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value inputtext" value="' + settingValue + '" type="text" />';
+                                            taskSettings += "</td>";
+                                            taskSettings += "</tr>";
+                                        }
+
+                                        document.getElementById("task-settings-table").innerHTML = taskSettings;
+
+                                        document.getElementById("taskid").value = tasks[index].Id;
+                                        document.getElementById("taskdescription").value = tasks[index].Description;
+                                        document.getElementById("taskenabled").checked = tasks[index].IsEnabled;
+
+                                        // Remove setting
+                                        let deleteButtons = document.getElementsByClassName("wf-remove-setting");
+                                        for (let i = 0; i < deleteButtons.length; i++) {
+                                            let deleteButton = deleteButtons[i];
+                                            deleteButton.onclick = function () {
+                                                // Calculate index from DOM
+                                                let res = confirm("Are you sure you want to remove this setting?");
+                                                if (res === true) {
+                                                    let innerIndex = parseInt(this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-index").value);
+                                                    tasks[index].Settings = deleteRow(tasks[index].Settings, innerIndex);
+                                                    // update indexes
+                                                    let indexes = this.parentNode.parentNode.parentNode.querySelectorAll(".wf-setting-index");
+                                                    for (let i = innerIndex; i < indexes.length; i++) {
+                                                        indexes[i].value = parseInt(indexes[i].value) - 1;
+                                                    }
+                                                    this.parentNode.parentNode.nextSibling.remove();
+                                                    this.parentNode.parentNode.remove();
+                                                }
+                                                return false;
+                                            };
+                                        }
+
+                                        document.getElementById("taskid").onkeyup = function () {
+                                            tasks[index].Id = parseInt(this.value);
+
                                             updateTasks();
                                         };
+
+                                        document.getElementById("taskdescription").onkeyup = function () {
+                                            tasks[index].Description = this.value;
+
+                                            updateTasks();
+
+                                            // update blockelem description
+                                            if (tempblock) {
+                                                tempblock.getElementsByClassName("blockyinfo")[0].innerHTML = this.value;
+                                            }
+                                        };
+
+                                        document.getElementById("taskenabled").onchange = function () {
+                                            tasks[index].IsEnabled = this.checked;
+
+                                            updateTasks();
+                                        };
+
+                                        let settingValues = document.getElementsByClassName("wf-setting-value");
+                                        for (let i = 0; i < settingValues.length; i++) {
+                                            let settingValue = settingValues[i];
+
+                                            settingValue.onkeyup = function () {
+                                                let sindex = this.previousElementSibling.value;
+                                                tasks[index].Settings[sindex].Value = this.value;
+                                                updateTasks();
+                                            };
+                                        }
                                     }
-                                }
-                            },
-                            function () {
-                                Common.toastError("An error occured while retrieving settings.");
-                            }, auth);
+                                },
+                                function () {
+                                    Common.toastError("An error occured while retrieving settings.");
+                                }, auth);
+                        } else {
+                            Common.get(uri + "/settings/" + taskname,
+                                function (defaultSettings) {
+
+                                    if (tasks[index]) {
+                                        let settings = tasks[index].Settings;
+                                        let taskSettings = "";
+
+                                        if (defaultSettings.length > 0) {
+                                            newSettingButton.style.display = "inline-block";
+                                        } else {
+                                            newSettingButton.style.display = "none";
+                                        }
+
+                                        // Add task settings
+                                        for (let i = 0; i < settings.length; i++) {
+                                            let settingName = settings[i].Name;
+                                            let settingValue = settings[i].Value;
+
+                                            taskSettings += "<tr>";
+                                            taskSettings += "<td>";
+                                            taskSettings += '<p class="wf-setting-name">' + settingName + "</p>";
+                                            taskSettings += "</td>";
+                                            taskSettings += "<td>";
+                                            taskSettings += '<button type="button" class="wf-remove-setting btn btn-danger">Delete</button>';
+                                            taskSettings += "</td>";
+                                            taskSettings += "</tr>";
+                                            taskSettings += "<tr>";
+                                            taskSettings += "<td colspan='2'>";
+                                            taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value inputtext" value="' + settingValue + '" type="text" />';
+                                            taskSettings += "</td>";
+                                            taskSettings += "</tr>";
+                                        }
+
+                                        document.getElementById("task-settings-table").innerHTML = taskSettings;
+
+                                        // Bind onkeyup
+                                        let settingValues = document.getElementsByClassName("wf-setting-value");
+                                        for (let i = 0; i < settingValues.length; i++) {
+                                            let settingValue = settingValues[i];
+
+                                            settingValue.onkeyup = function () {
+                                                let sindex = this.previousElementSibling.value;
+                                                tasks[index].Settings[sindex].Value = this.value;
+                                                updateTasks();
+                                            };
+                                        }
+
+                                        // Bind onremove
+                                        let deleteButtons = document.getElementsByClassName("wf-remove-setting");
+                                        for (let i = 0; i < deleteButtons.length; i++) {
+                                            let deleteButton = deleteButtons[i];
+                                            deleteButton.onclick = function () {
+                                                let res = confirm("Are you sure you want to remove this setting?");
+                                                if (res === true) {
+                                                    // Calculate index from DOM
+                                                    let innerIndex = parseInt(this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-index").value);
+                                                    tasks[index].Settings = deleteRow(tasks[index].Settings, innerIndex);
+                                                    // update indexes
+                                                    let indexes = this.parentNode.parentNode.parentNode.querySelectorAll(".wf-setting-index");
+                                                    for (let i = innerIndex; i < indexes.length; i++) {
+                                                        indexes[i].value = parseInt(indexes[i].value) - 1;
+                                                    }
+                                                    this.parentNode.parentNode.nextSibling.remove();
+                                                    this.parentNode.parentNode.remove();
+                                                }
+                                                return false;
+                                            };
+                                        }
+
+                                        document.getElementById("taskid").onkeyup = function () {
+                                            tasks[index].Id = parseInt(this.value);
+
+                                            updateTasks();
+                                        };
+
+                                        document.getElementById("taskdescription").onkeyup = function () {
+                                            tasks[index].Description = this.value;
+
+                                            updateTasks();
+
+                                            // update blockelem description
+                                            if (tempblock) {
+                                                tempblock.getElementsByClassName("blockyinfo")[0].innerHTML = this.value;
+                                            }
+                                        };
+
+                                        document.getElementById("taskenabled").onchange = function () {
+                                            tasks[index].IsEnabled = this.checked;
+
+                                            updateTasks();
+                                        };
+
+                                    }
+                                },
+                                function () {
+                                    Common.toastError("An error occured while retrieving settings.");
+                                }, auth);
+
+                        }
                     }
                 }
             }

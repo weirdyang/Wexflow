@@ -1065,3 +1065,23 @@ margin-top: 12px;
 .wf-var-key, .wf-var-value, .wf-remove-var{
     margin-right: 5px;
 }
+
+#task-settings-table{
+    width: 100%;
+}
+
+.wf-new-setting {
+    margin-bottom: 5px;
+    display: none;
+}
+
+.wf-remove-setting {
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.wf-setting-name{
+    width: 150px;
+}
