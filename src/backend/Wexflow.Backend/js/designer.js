@@ -2077,6 +2077,7 @@
                     document.getElementById("wfenablepj").checked = workflow.WorkflowInfo.EnableParallelJobs;
 
                     // Local variables
+                    document.getElementsByClassName("wf-local-vars")[0].innerHTML = "";
                     if (workflow.WorkflowInfo.LocalVariables.length > 0) {
                         let varsHtml = "";
                         for (let i = 0; i < workflow.WorkflowInfo.LocalVariables.length; i++) {
