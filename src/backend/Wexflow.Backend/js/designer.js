@@ -566,15 +566,15 @@
                                     cell2_1.colSpan = 2;
 
                                     // Bind onchange
+                                    tasks[index].Settings.push({
+                                        "Name": "",
+                                        "Value": "",
+                                        "Attributes": []
+                                    });
+
                                     let settingNameSelect = settingsTable.getElementsByClassName("wf-setting-name")[sIndex];
                                     settingNameSelect.onchange = function () {
-                                        if (this.value != "") {
-                                            tasks[index].Settings.push({
-                                                "Name": this.value,
-                                                "Value": "",
-                                                "Attributes": []
-                                            });
-                                        }
+                                        tasks[index].Settings[sIndex].Name = this.value;
                                         return false;
                                     }
 
@@ -1904,9 +1904,9 @@
                             xmlVal += '\t\t<Task id="' + task.Id + '" name="' + task.Name + '" description="' + task.Description + '" enabled="' + task.IsEnabled + '">\r\n';
                             for (let j = 0; j < task.Settings.length; j++) {
                                 let setting = task.Settings[j];
-                                if (setting.Value !== "") {
-                                    xmlVal += '\t\t\t<Setting name="' + setting.Name + '" value="' + setting.Value + '" />\r\n';
-                                }
+                                //if (setting.Value !== "") {
+                                xmlVal += '\t\t\t<Setting name="' + setting.Name + '" value="' + setting.Value + '" />\r\n';
+                                //}
                             }
                             xmlVal += '\t\t</Task>\r\n';
                         }
