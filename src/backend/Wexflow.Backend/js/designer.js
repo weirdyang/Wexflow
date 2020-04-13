@@ -2123,9 +2123,13 @@
                         let bindDeleteVar = function (index) {
                             let wfVarDelete = document.getElementsByClassName("wf-remove-var")[index];
                             wfVarDelete.onclick = function () {
-                                index = getElementIndex(wfVarDelete.parentElement.parentElement);
-                                workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
-                                wfVarDelete.parentElement.parentElement.remove();
+                                let res = confirm("Are you sure you want to delete this variable?");
+                                if (res === true) {
+                                    index = getElementIndex(wfVarDelete.parentElement.parentElement);
+                                    workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                                    wfVarDelete.parentElement.parentElement.remove();
+                                }
+                                return false;
                             };
                         };
 
@@ -2847,10 +2851,14 @@
 
             let btnVarDelete = wfVarsTable.getElementsByClassName("wf-remove-var")[index];
             btnVarDelete.onclick = function () {
-                let index = getElementIndex(btnVarDelete.parentElement.parentElement);
-                workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
-                this.parentElement.parentElement.remove();
-                goToBottom("wfproplist");
+                let res = confirm("Are you sure you want to delete this variable?");
+                if (res === true) {
+                    let index = getElementIndex(btnVarDelete.parentElement.parentElement);
+                    workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                    this.parentElement.parentElement.remove();
+                    goToBottom("wfproplist");
+                }
+                return false;
             };
         };
 
