@@ -1905,7 +1905,6 @@
         };
 
         document.getElementById("rightswitch").onclick = function () {
-
             Common.get(uri + "/graphXml/" + (workflow.WorkflowInfo.Id ? workflow.WorkflowInfo.Id : 0), function (val) {
                 function getXml() {
                     let graph = val;
@@ -2468,9 +2467,87 @@
                                     Common.post(uri + "/deleteWorkflows", function (res) {
                                         if (res === true) {
                                             Common.toastSuccess("Workflows deleted with success.");
-                                            workflowsToDelete = [];
-                                            // Reload workfows
 
+                                            if (workflowsToDelete.includes(workflows[workflow.WorkflowInfo.Id].DbId)) {
+                                                checkId = true;
+                                                flowy.deleteBlocks();
+                                                removeworkflow.style.display = "none";
+
+                                                document.getElementById("leftcard").style.left = -leftcardwidth + "px";
+                                                closecardimg.src = "assets/openleft.png";
+                                                leftcardHidden = true;
+
+                                                document.getElementById("wfpropwrap").style.right = -wfpropwidth + "px";
+                                                wfpropHidden = true;
+                                                closewfcardimg.src = "assets/closeleft.png";
+                                                wfclose.style.right = "0";
+
+                                                if (rightcard === true) {
+                                                    rightcard = false;
+                                                    document.getElementById("properties").classList.remove("expanded");
+                                                    setTimeout(function () {
+                                                        document.getElementById("propwrap").classList.remove("itson");
+                                                    }, 300);
+                                                    if (tempblock) {
+                                                        tempblock.classList.remove("selectedblock");
+                                                    }
+                                                }
+
+                                                document.getElementById("wfid").value = "";
+
+                                                document.getElementById("wfname").value = "";
+                                                document.getElementById("wfdesc").value = "";
+                                                document.getElementById("wflaunchtype").value = "";
+                                                document.getElementById("wfperiod").value = "";
+                                                document.getElementById("wfcronexp").value = "";
+                                                document.getElementById("wfenabled").checked = true;
+                                                document.getElementById("wfapproval").checked = false;
+                                                document.getElementById("wfenablepj").checked = true;
+
+                                                document.getElementsByClassName("wf-local-vars")[0].innerHTML = "";
+
+                                                workflow = {
+                                                    "WorkflowInfo": {
+                                                        "Id": document.getElementById("wfid").value,
+                                                        "Name": document.getElementById("wfname").value,
+                                                        "Description": document.getElementById("wfdesc").value,
+                                                        "LaunchType": launchTypeReverse(document.getElementById("wflaunchtype").value),
+                                                        "Period": document.getElementById("wfperiod").value,
+                                                        "CronExpression": document.getElementById("wfcronexp").value,
+                                                        "IsEnabled": document.getElementById("wfenabled").checked,
+                                                        "IsApproval": document.getElementById("wfapproval").checked,
+                                                        "EnableParallelJobs": document.getElementById("wfenablepj").checked,
+                                                        "LocalVariables": []
+                                                    },
+                                                    "Tasks": []
+                                                }
+                                                tasks = {};
+
+                                                if (json || xml || graph) {
+                                                    document.getElementById("code-container").style.display = "none";
+                                                    document.getElementById("blocklyArea").style.display = "none";
+                                                    json = false;
+                                                    xml = false;
+                                                    graph = false;
+                                                }
+
+                                                leftcard.style.display = "block";
+                                                propwrap.style.display = "block";
+                                                wfclose.style.display = "block";
+                                                wfpropwrap.style.display = "block";
+                                                canvas.style.display = "block";
+                                                code.style.display = "none";
+
+                                                document.getElementById("leftswitch").style.backgroundColor = "#F0F0F0";
+                                                document.getElementById("graphswitch").style.backgroundColor = "transparent";
+                                                document.getElementById("middleswitch").style.backgroundColor = "transparent";
+                                                document.getElementById("rightswitch").style.backgroundColor = "transparent";
+                                                diag = true;
+                                            }
+
+                                            workflowsToDelete = [];
+
+                                            // Reload workfows
                                             let jbox = document.getElementsByClassName("jBox-content")[0];
 
                                             Common.get(uri + "/search?s=" + searchworkflows.value,
