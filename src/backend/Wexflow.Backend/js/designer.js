@@ -2,12 +2,17 @@
     "use strict";
 
     let uri = Common.trimEnd(Settings.Uri, "/");
+    let lnkDashoard = document.getElementById("lnk-dashboard");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
     //let lnkEditor = document.getElementById("lnk-editor");
     //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkHistory = document.getElementById("lnk-history");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let btnLogout = document.getElementById("btn-logout");
+    let lnkAbout = document.getElementById("lnk-about");
+    let lnkHelp = document.getElementById("lnk-help");
     let navigation = document.getElementById("navigation");
     let leftcard = document.getElementById("leftcard");
     let propwrap = document.getElementById("propwrap");
@@ -52,11 +57,10 @@
                         wfpropwrap.style.display = "block";
                         canvas.style.display = "block";
 
-                        let btnLogout = document.getElementById("btn-logout");
-                        btnLogout.onclick = function () {
-                            deleteUser();
-                            Common.redirectToLoginPage();
-                        };
+                        //btnLogout.onclick = function () {
+                        //    deleteUser();
+                        //    Common.redirectToLoginPage();
+                        //};
 
                         btnLogout.innerHTML = "Logout (" + u.Username + ")";
 
@@ -95,6 +99,92 @@
         let initialWorkflow = null;
         let jsonEditorChanged = false;
         let xmlEditorChanged = false;
+
+        lnkDashoard.onclick = function () {
+            let lnk = "dashboard.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkManager.onclick = function () {
+            let lnk = "manager.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkDesigner.onclick = function () {
+            let lnk = "designer.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkHistory.onclick = function () {
+            let lnk = "history.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkUsers.onclick = function () {
+            let lnk = "users.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkProfiles.onclick = function () {
+            let lnk = "profiles.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        btnLogout.onclick = function () {
+
+            let redirect = function () {
+                deleteUser();
+                Common.redirectToLoginPage();
+            }
+
+            saveChanges(function () {
+                redirect();
+            }, function () {
+                redirect();
+            });
+        };
+
+        lnkAbout.onclick = function () {
+            let lnk = "https://wexflow.github.io";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkHelp.onclick = function () {
+            let lnk = "https://github.com/aelassas/Wexflow/wiki";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
 
         flowy(canvas, drag, release, snapping, drop);
 
@@ -2650,168 +2740,184 @@
         };
 
         function openWorkflow() {
-            let selected = document.getElementsByClassName("selected");
-            if (selected.length === 0) {
+            if (document.getElementsByClassName("selected").length === 0) {
                 Common.toastInfo("Choose a workflow to open.");
             } else {
-                let id = selected[0].getElementsByClassName("wf-id")[0].innerHTML;
-                let workflowChanged = _.isEqual(initialWorkflow, workflow) === false && initialWorkflow !== null;
+                saveChanges();
+            }
+        }
 
-                if (openSavePopup === true || workflowChanged === true || (json === true && jsonEditorChanged === true) || (xml === true && xmlEditorChanged === true)) {
-                    let res = confirm("Save changes?");
-                    if (res === true) {
-                        let wfid = document.getElementById("wfid").value;
+        function saveChanges(onSave, onCancel) {
+            let selected = document.getElementsByClassName("selected");
 
-                        if (diag === true) {
-                            updateTasks();
+            let id = (selected.length > 0 ? parseInt(selected[0].getElementsByClassName("wf-id")[0].innerHTML) : -1);
+            let workflowChanged = _.isEqual(initialWorkflow, workflow) === false && initialWorkflow !== null;
 
-                            let saveFunc = function () {
-                                Common.post(uri + "/save", function (res) {
-                                    if (res === true) {
-                                        checkId = false;
-                                        removeworkflow.style.display = "block";
-                                        // load diagram
+            if (openSavePopup === true || workflowChanged === true || (json === true && jsonEditorChanged === true) || (xml === true && xmlEditorChanged === true)) {
+                let res = confirm("Save changes?");
+                if (res === true) {
+                    let wfid = document.getElementById("wfid").value;
+
+                    if (diag === true || graph === true) {
+                        updateTasks();
+
+                        let saveFunc = function () {
+                            Common.post(uri + "/save", function (res) {
+                                if (res === true) {
+                                    checkId = false;
+                                    removeworkflow.style.display = "block";
+                                    // load diagram
+                                    if (id > -1) {
                                         loadDiagram(id);
-                                        Common.toastSuccess("workflow " + wfid + " saved and loaded with success from diagram view.");
-                                    } else {
-                                        Common.toastError("An error occured while saving the workflow " + wfid + " from diagram view.");
+                                        if (graph === true) {
+                                            openGraph(id);
+                                        }
                                     }
-                                }, function () {
+                                    Common.toastSuccess("workflow " + wfid + " saved and loaded with success from diagram view.");
+
+                                    if (onSave) {
+                                        onSave();
+                                    }
+                                } else {
                                     Common.toastError("An error occured while saving the workflow " + wfid + " from diagram view.");
-                                }, workflow, auth);
-                            };
+                                }
+                            }, function () {
+                                Common.toastError("An error occured while saving the workflow " + wfid + " from diagram view.");
+                            }, workflow, auth);
+                        };
 
-                            let wfIdStr = document.getElementById("wfid").value;
-                            if (isInt(wfIdStr)) {
-                                let workflowId = parseInt(wfIdStr);
+                        let wfIdStr = document.getElementById("wfid").value;
+                        if (isInt(wfIdStr)) {
+                            let workflowId = parseInt(wfIdStr);
 
-                                if (checkId === true) {
-                                    Common.get(uri + "/isWorkflowIdValid/" + workflowId,
-                                        function (res) {
-                                            if (res === true) {
-                                                if (document.getElementById("wfname").value === "") {
-                                                    Common.toastInfo("Enter a name for this workflow.");
+                            if (checkId === true) {
+                                Common.get(uri + "/isWorkflowIdValid/" + workflowId,
+                                    function (res) {
+                                        if (res === true) {
+                                            if (document.getElementById("wfname").value === "") {
+                                                Common.toastInfo("Enter a name for this workflow.");
+                                            } else {
+                                                let lt = document.getElementById("wflaunchtype").value;
+                                                if (lt === "") {
+                                                    Common.toastInfo("Select a launchType for this workflow.");
                                                 } else {
-                                                    let lt = document.getElementById("wflaunchtype").value;
-                                                    if (lt === "") {
-                                                        Common.toastInfo("Select a launchType for this workflow.");
+                                                    if (lt === "periodic" && document.getElementById("wfperiod").value === "") {
+                                                        Common.toastInfo("Enter a period for this workflow.");
                                                     } else {
-                                                        if (lt === "periodic" && document.getElementById("wfperiod").value === "") {
-                                                            Common.toastInfo("Enter a period for this workflow.");
+                                                        if (lt === "cron" && document.getElementById("wfcronexp").value === "") {
+                                                            Common.toastInfo("Enter a cron expression for this workflow.");
                                                         } else {
-                                                            if (lt === "cron" && document.getElementById("wfcronexp").value === "") {
-                                                                Common.toastInfo("Enter a cron expression for this workflow.");
+
+                                                            // Period validation
+                                                            if (lt === "periodic" && document.getElementById("wfperiod").value !== "") {
+                                                                let period = document.getElementById("wfperiod").value;
+                                                                Common.get(uri + "/isPeriodValid/" + period,
+                                                                    function (res) {
+                                                                        if (res === true) {
+                                                                            saveFunc();
+                                                                        } else {
+                                                                            Common.toastInfo("The period format is not valid. The valid format is: dd.hh:mm:ss");
+                                                                        }
+                                                                    },
+                                                                    function () { }, auth
+                                                                );
+                                                            } // Cron expression validation
+                                                            else if (lt === "cron" && document.getElementById("wfcronexp").value !== "") {
+                                                                let expression = document.getElementById("wfcronexp").value;
+                                                                let expressionEncoded = encodeURIComponent(expression);
+
+                                                                Common.get(uri + "/isCronExpressionValid?e=" + expressionEncoded,
+                                                                    function (res) {
+                                                                        if (res === true) {
+                                                                            saveFunc();
+                                                                        } else {
+                                                                            if (confirm("The cron expression format is not valid.\nRead the documentation?")) {
+                                                                                openInNewTab("https://github.com/aelassas/Wexflow/wiki/Cron-scheduling");
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    function () { }, auth
+                                                                );
                                                             } else {
-
-                                                                // Period validation
-                                                                if (lt === "periodic" && document.getElementById("wfperiod").value !== "") {
-                                                                    let period = document.getElementById("wfperiod").value;
-                                                                    Common.get(uri + "/isPeriodValid/" + period,
-                                                                        function (res) {
-                                                                            if (res === true) {
-                                                                                saveFunc();
-                                                                            } else {
-                                                                                Common.toastInfo("The period format is not valid. The valid format is: dd.hh:mm:ss");
-                                                                            }
-                                                                        },
-                                                                        function () { }, auth
-                                                                    );
-                                                                } // Cron expression validation
-                                                                else if (lt === "cron" && document.getElementById("wfcronexp").value !== "") {
-                                                                    let expression = document.getElementById("wfcronexp").value;
-                                                                    let expressionEncoded = encodeURIComponent(expression);
-
-                                                                    Common.get(uri + "/isCronExpressionValid?e=" + expressionEncoded,
-                                                                        function (res) {
-                                                                            if (res === true) {
-                                                                                saveFunc();
-                                                                            } else {
-                                                                                if (confirm("The cron expression format is not valid.\nRead the documentation?")) {
-                                                                                    openInNewTab("https://github.com/aelassas/Wexflow/wiki/Cron-scheduling");
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        function () { }, auth
-                                                                    );
-                                                                } else {
-                                                                    saveFunc();
-                                                                }
-
+                                                                saveFunc();
                                                             }
+
                                                         }
                                                     }
                                                 }
-                                            } else {
-                                                Common.toastInfo("The workflow id is already in use. Enter another one.");
                                             }
-                                        },
-                                        function () { }, auth
-                                    );
-                                } else {
-
-                                    if (document.getElementById("wfname").value === "") {
-                                        Common.toastInfo("Enter a name for this workflow.");
-                                    } else {
-                                        let lt = document.getElementById("wflaunchtype").value;
-                                        if (lt === "") {
-                                            Common.toastInfo("Select a launchType for this workflow.");
                                         } else {
-                                            if (lt === "periodic" && document.getElementById("wfperiod").value === "") {
-                                                Common.toastInfo("Enter a period for this workflow.");
+                                            Common.toastInfo("The workflow id is already in use. Enter another one.");
+                                        }
+                                    },
+                                    function () { }, auth
+                                );
+                            } else {
+
+                                if (document.getElementById("wfname").value === "") {
+                                    Common.toastInfo("Enter a name for this workflow.");
+                                } else {
+                                    let lt = document.getElementById("wflaunchtype").value;
+                                    if (lt === "") {
+                                        Common.toastInfo("Select a launchType for this workflow.");
+                                    } else {
+                                        if (lt === "periodic" && document.getElementById("wfperiod").value === "") {
+                                            Common.toastInfo("Enter a period for this workflow.");
+                                        } else {
+                                            if (lt === "cron" && document.getElementById("wfcronexp").value === "") {
+                                                Common.toastInfo("Enter a cron expression for this workflow.");
                                             } else {
-                                                if (lt === "cron" && document.getElementById("wfcronexp").value === "") {
-                                                    Common.toastInfo("Enter a cron expression for this workflow.");
+
+                                                // Period validation
+                                                if (lt === "periodic" && document.getElementById("wfperiod").value !== "") {
+                                                    let period = document.getElementById("wfperiod").value;
+                                                    Common.get(uri + "/isPeriodValid/" + period,
+                                                        function (res) {
+                                                            if (res === true) {
+                                                                saveFunc();
+                                                            } else {
+                                                                Common.toastInfo("The period format is not valid. The valid format is: dd.hh:mm:ss");
+                                                            }
+                                                        },
+                                                        function () { }, auth
+                                                    );
+                                                } // Cron expression validation
+                                                else if (lt === "cron" && document.getElementById("wfcronexp").value !== "") {
+                                                    let expression = document.getElementById("wfcronexp").value;
+                                                    let expressionEncoded = encodeURIComponent(expression);
+
+                                                    Common.get(uri + "/isCronExpressionValid?e=" + expressionEncoded,
+                                                        function (res) {
+                                                            if (res === true) {
+                                                                saveFunc();
+                                                            } else {
+                                                                if (confirm("The cron expression format is not valid.\nRead the documentation?")) {
+                                                                    openInNewTab("https://github.com/aelassas/Wexflow/wiki/Cron-scheduling");
+                                                                }
+                                                            }
+                                                        },
+                                                        function () { }, auth
+                                                    );
                                                 } else {
-
-                                                    // Period validation
-                                                    if (lt === "periodic" && document.getElementById("wfperiod").value !== "") {
-                                                        let period = document.getElementById("wfperiod").value;
-                                                        Common.get(uri + "/isPeriodValid/" + period,
-                                                            function (res) {
-                                                                if (res === true) {
-                                                                    saveFunc();
-                                                                } else {
-                                                                    Common.toastInfo("The period format is not valid. The valid format is: dd.hh:mm:ss");
-                                                                }
-                                                            },
-                                                            function () { }, auth
-                                                        );
-                                                    } // Cron expression validation
-                                                    else if (lt === "cron" && document.getElementById("wfcronexp").value !== "") {
-                                                        let expression = document.getElementById("wfcronexp").value;
-                                                        let expressionEncoded = encodeURIComponent(expression);
-
-                                                        Common.get(uri + "/isCronExpressionValid?e=" + expressionEncoded,
-                                                            function (res) {
-                                                                if (res === true) {
-                                                                    saveFunc();
-                                                                } else {
-                                                                    if (confirm("The cron expression format is not valid.\nRead the documentation?")) {
-                                                                        openInNewTab("https://github.com/aelassas/Wexflow/wiki/Cron-scheduling");
-                                                                    }
-                                                                }
-                                                            },
-                                                            function () { }, auth
-                                                        );
-                                                    } else {
-                                                        saveFunc();
-                                                    }
-
+                                                    saveFunc();
                                                 }
+
                                             }
                                         }
                                     }
-
                                 }
 
-                            } else {
-                                Common.toastInfo("Enter a valid workflow id.");
                             }
 
-                        } else if (json === true) {
-                            let json = JSON.parse(editor.getValue());
-                            Common.post(uri + "/save", function (res) {
-                                if (res === true) {
+                        } else {
+                            Common.toastInfo("Enter a valid workflow id.");
+                        }
+
+                    } else if (json === true) {
+                        let json = JSON.parse(editor.getValue());
+                        Common.post(uri + "/save", function (res) {
+                            if (res === true) {
+                                if (id > -1) {
                                     Common.get(uri + "/json/" + id,
                                         function (val) {
                                             openJsonView(JSON.stringify(val, null, '\t'));
@@ -2820,20 +2926,24 @@
                                             removeworkflow.style.display = "block";
                                             Common.toastSuccess("workflow " + wfid + " saved and loaded with success from JSON view.");
                                         }, function () { }, auth);
-
-                                } else {
-                                    Common.toastError("An error occured while saving the workflow " + wfid + " from JSON view.");
                                 }
-                            }, function () {
+                                if (onSave) {
+                                    onSave();
+                                }
+                            } else {
                                 Common.toastError("An error occured while saving the workflow " + wfid + " from JSON view.");
-                            }, json, auth);
-                        } else if (xml === true) {
-                            let json = {
-                                workflowId: workflow.WorkflowInfo.Id,
-                                xml: editor.getValue()
-                            };
-                            Common.post(uri + "/saveXml", function (res) {
-                                if (res === true) {
+                            }
+                        }, function () {
+                            Common.toastError("An error occured while saving the workflow " + wfid + " from JSON view.");
+                        }, json, auth);
+                    } else if (xml === true) {
+                        let json = {
+                            workflowId: workflow.WorkflowInfo.Id,
+                            xml: editor.getValue()
+                        };
+                        Common.post(uri + "/saveXml", function (res) {
+                            if (res === true) {
+                                if (id > -1) {
                                     Common.get(uri + "/xml/" + id,
                                         function (val) {
                                             openXmlView(val);
@@ -2842,15 +2952,21 @@
                                             removeworkflow.style.display = "block";
                                             Common.toastSuccess("workflow " + wfid + " saved and loaded with success from XML view.");
                                         }, function () { }, auth);
-                                } else {
-                                    Common.toastError("An error occured while saving the workflow " + wfid + " from XML view.");
                                 }
-                            }, function () {
+
+                                if (onSave) {
+                                    onSave();
+                                }
+                            } else {
                                 Common.toastError("An error occured while saving the workflow " + wfid + " from XML view.");
-                            }, json, auth);
-                        }
-                    } else {
-                        // load view
+                            }
+                        }, function () {
+                            Common.toastError("An error occured while saving the workflow " + wfid + " from XML view.");
+                        }, json, auth);
+                    }
+                } else {
+                    // load view
+                    if (id > -1) {
                         if (json === true) {
                             Common.get(uri + "/json/" + id,
                                 function (val) {
@@ -2870,8 +2986,14 @@
                         // load diagram
                         loadDiagram(id);
                     }
-                } else {
-                    // load view
+
+                    if (onCancel) {
+                        onCancel();
+                    }
+                }
+            } else {
+                // load view
+                if (id > -1) {
                     if (json === true) {
                         Common.get(uri + "/json/" + id,
                             function (val) {
@@ -2891,7 +3013,12 @@
                     // load diagram
                     loadDiagram(id);
                 }
+
+                if (onCancel) {
+                    onCancel();
+                }
             }
+
         }
 
         function compareById(wf1, wf2) {
