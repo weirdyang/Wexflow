@@ -151,7 +151,7 @@
                     document.getElementById("wfname").value = "";
                     document.getElementById("wfdesc").value = "";
                     document.getElementById("wflaunchtype").value = "";
-                    document.getElementById("wfperiod").onkeyup = "";
+                    document.getElementById("wfperiod").value = "";
                     document.getElementById("wfcronexp").value = "";
                     document.getElementById("wfenabled").checked = true;
                     document.getElementById("wfapproval").checked = false;
@@ -424,7 +424,7 @@
                             document.getElementById("wfname").value = "";
                             document.getElementById("wfdesc").value = "";
                             document.getElementById("wflaunchtype").value = "";
-                            document.getElementById("wfperiod").onkeyup = "";
+                            document.getElementById("wfperiod").value = "";
                             document.getElementById("wfcronexp").value = "";
                             document.getElementById("wfenabled").checked = true;
                             document.getElementById("wfapproval").checked = false;
@@ -2076,7 +2076,7 @@
                     document.getElementById("wfname").value = workflow.WorkflowInfo.Name;
                     document.getElementById("wfdesc").value = workflow.WorkflowInfo.Description;
                     document.getElementById("wflaunchtype").value = launchType(workflow.WorkflowInfo.LaunchType);
-                    document.getElementById("wfperiod").onkeyup = workflow.WorkflowInfo.Period;
+                    document.getElementById("wfperiod").value = workflow.WorkflowInfo.Period;
                     document.getElementById("wfcronexp").value = workflow.WorkflowInfo.CronExpression;
                     document.getElementById("wfenabled").checked = workflow.WorkflowInfo.IsEnabled;
                     document.getElementById("wfapproval").checked = workflow.WorkflowInfo.IsApproval;
