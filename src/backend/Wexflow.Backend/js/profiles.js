@@ -102,7 +102,7 @@
                     + "<thead class='thead-dark'>"
                     + "<tr>"
                     + "<th id='th-id'>Id</th>"
-                    + "<th id='th-username'>Username&nbsp;&nbsp;🔺</th>"
+                    + "<th id='th-username' class='username'>Username&nbsp;&nbsp;🔺</th>"
                     //+ "<th>Profile</th>"
                     + "</tr>"
                     + "</thead>"
@@ -112,6 +112,20 @@
                     + "</table>";
 
                 divUsersTable.innerHTML = table;
+                var usersTable = document.getElementById("wf-users-table");
+
+                usersTable.getElementsByTagName("tbody")[0].style.height = (divUsersTable.offsetHeight - 35) + "px";
+
+                var rows = usersTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                if (rows.length > 0) {
+                    var hrow = usersTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    hrow.querySelector(".username").style.width = rows[0].querySelector(".username").offsetWidth + "px";
+                }
+
+                var usernames = usersTable.querySelectorAll(".username");
+                for (i = 0; i < usernames.length; i++) {
+                    usernames[i].style.width = usersTable.offsetWidth + "px";
+                }
 
                 var thUsername = document.getElementById("th-username");
                 thUsername.onclick = function () {
@@ -129,9 +143,6 @@
                     thUsername.innerHTML = "Username&nbsp;&nbsp;🔻";
                 }
 
-                var usersTable = document.getElementById("wf-users-table");
-
-                var rows = (usersTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
                 for (var j = 0; j < rows.length; j++) {
 
                     var row = rows[j];
@@ -213,12 +224,34 @@
                 divWorkflows.innerHTML = table;
 
                 var workflowsTable = document.getElementById("wf-workflows-table");
-                var descriptions = document.getElementsByClassName("wf-d");
+
+                workflowsTable.getElementsByTagName("tbody")[0].style.height = (divWorkflows.offsetHeight - 45) + "px";
+
+                var descriptions = workflowsTable.querySelectorAll(".wf-d");
                 for (i = 0; i < descriptions.length; i++) {
-                    descriptions[i].style.width = workflowsTable.offsetWidth - (45 + 200 + 100 + 75 + 16 * 5 + 17) + "px";
+                    descriptions[i].style.width = workflowsTable.offsetWidth - 515 + "px";
                 }
 
-                var rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+                var enabledFields = workflowsTable.querySelectorAll(".wf-e");
+                for (i = 0; i < enabledFields.length; i++) {
+                    enabledFields[i].style.width = 75 + "px";
+                }
+
+                var approvalFields = workflowsTable.querySelectorAll(".wf-a");
+                for (i = 0; i < approvalFields.length; i++) {
+                    approvalFields[i].style.width = 75 + "px";
+                }
+
+                var rows = workflowsTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                if (rows.length > 0) {
+                    var hrow = workflowsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    hrow.querySelector(".wf-id").style.width = rows[0].querySelector(".wf-id").offsetWidth + "px";
+                    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
+                    hrow.querySelector(".wf-e").style.width = rows[0].querySelector(".wf-e").offsetWidth + "px";
+                    hrow.querySelector(".wf-a").style.width = rows[0].querySelector(".wf-a").offsetWidth + "px";
+                    hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
+                }
+
                 for (i = 0; i < rows.length; i++) {
                     var row = rows[i];
                     var checkBox = row.getElementsByClassName("wf-check")[0].firstChild;

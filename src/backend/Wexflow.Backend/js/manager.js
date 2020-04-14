@@ -209,11 +209,12 @@
                     + "</tbody>"
                     + "</table>";
 
-                document.getElementById("wf-workflows").innerHTML = table;
-                document.getElementById("wf-workflows-table").style.width = document.getElementById("wf-workflows").offsetWidth + 100 + "px";
-                document.getElementById("wf-workflows-table").style.height = document.getElementById("wf-workflows").offsetHeight + "px";
+                let divWorkflows = document.getElementById("wf-workflows");
+                divWorkflows.innerHTML = table;
 
                 var workflowsTable = document.getElementById("wf-workflows-table");
+
+                workflowsTable.getElementsByTagName("tbody")[0].style.height = (divWorkflows.offsetHeight - 45) + "px";
 
                 var rows = workflowsTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
                 if (rows.length > 0) {
