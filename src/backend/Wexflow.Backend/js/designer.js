@@ -96,6 +96,7 @@
         let workflows = {};
         let workflowsToDelete = [];
         let openSavePopup = false;
+        let workflowDeleted = false;
         let initialWorkflow = null;
         let jsonEditorChanged = false;
         let xmlEditorChanged = false;
@@ -217,6 +218,7 @@
                 function (res) {
 
                     openSavePopup = true;
+                    workflowDeleted = false;
                     checkId = true;
                     flowy.deleteBlocks();
                     removeworkflow.style.display = "none";
@@ -511,6 +513,7 @@
                     function (res) {
                         if (res === true) {
                             Common.toastSuccess("Workflow " + workflowId + " deleted with success.");
+                            workflowDeleted = true;
 
                             flowy.deleteBlocks();
                             closeTaskSettings();
@@ -1196,6 +1199,7 @@
                             if (res === true) {
                                 initialWorkflow = JSON.parse(JSON.stringify(workflow));
                                 checkId = false;
+                                openSavePopup = false;
                                 removeworkflow.style.display = "block";
                                 Common.toastSuccess("workflow " + wfid + " saved and loaded with success from diagram view.");
                             } else {
@@ -1337,6 +1341,8 @@
                     let json = JSON.parse(editor.getValue());
                     Common.post(uri + "/save", function (res) {
                         if (res === true) {
+                            checkId = false;
+                            openSavePopup = false;
                             loadDiagram(workflow.WorkflowInfo.Id);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
@@ -1354,6 +1360,8 @@
                     };
                     Common.post(uri + "/saveXml", function (res) {
                         if (res === true) {
+                            checkId = false;
+                            openSavePopup = false;
                             loadDiagram(workflow.WorkflowInfo.Id);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
@@ -2560,6 +2568,8 @@
 
                                             if (workflowsToDelete.includes(workflows[workflow.WorkflowInfo.Id].DbId)) {
                                                 checkId = true;
+                                                openSavePopup = false;
+                                                workflowDeleted = true;
                                                 flowy.deleteBlocks();
                                                 removeworkflow.style.display = "none";
 
@@ -2743,7 +2753,13 @@
             if (document.getElementsByClassName("selected").length === 0) {
                 Common.toastInfo("Choose a workflow to open.");
             } else {
-                saveChanges();
+                saveChanges(function () {
+                    workflowDeleted = false;
+                    openSavePopup = false;
+                }, function () {
+                    workflowDeleted = false;
+                    openSavePopup = false;
+                });
             }
         }
 
@@ -2753,7 +2769,7 @@
             let id = (selected.length > 0 ? parseInt(selected[0].getElementsByClassName("wf-id")[0].innerHTML) : -1);
             let workflowChanged = _.isEqual(initialWorkflow, workflow) === false && initialWorkflow !== null;
 
-            if (openSavePopup === true || workflowChanged === true || (json === true && jsonEditorChanged === true) || (xml === true && xmlEditorChanged === true)) {
+            if (openSavePopup === true || (workflowDeleted === false && workflowChanged === true) || (json === true && jsonEditorChanged === true) || (xml === true && xmlEditorChanged === true)) {
                 let res = confirm("Save changes?");
                 if (res === true) {
                     let wfid = document.getElementById("wfid").value;
