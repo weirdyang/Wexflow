@@ -2441,7 +2441,6 @@
 
                         // delete click
                         document.getElementById("deleteworkflows").onclick = function () {
-                            console.log(workflowsToDelete);
                             if (workflowsToDelete.length > 0) {
                                 var confirmRes = confirm("Are you sure you want to delete selected workflows?");
                                 if (confirmRes === true) {
