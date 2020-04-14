@@ -140,6 +140,7 @@
     <Content Include="js\forgot-password.min.js" />
     <Content Include="js\history.min.js" />
     <Content Include="js\jquery.toast.min.js" />
+    <Content Include="js\lodash.min.js" />
     <Content Include="js\manager.min.js" />
     <Content Include="js\mode-json.js" />
     <Content Include="js\mode-xml.js" />

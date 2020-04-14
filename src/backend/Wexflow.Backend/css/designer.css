@@ -977,7 +977,7 @@ margin-top: 12px;
     vertical-align: top;
     text-align: center;
     line-height: 38px;
-    margin-right: 5px;
+    margin-right: 20px;
     transition: all .2s cubic-bezier(.05,.03,.35,1);
     float: right;
 }
@@ -1001,7 +1001,7 @@ margin-top: 12px;
     vertical-align: top;
     text-align: center;
     line-height: 38px;
-    margin-right: 20px;
+    margin-right: 5px;
     transition: all .2s cubic-bezier(.05,.03,.35,1);
     float: right;
 }
