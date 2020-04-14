@@ -297,12 +297,22 @@
 
                 entriesTable.getElementsByTagName("tbody")[0].style.height = (document.getElementById("entries").offsetHeight - 35) + "px";
 
+                var rows = entriesTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                if (rows.length > 0) {
+                    var hrow = entriesTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    hrow.querySelector(".status").style.width = rows[0].querySelector(".status").offsetWidth + "px";
+                    hrow.querySelector(".date").style.width = rows[0].querySelector(".date").offsetWidth + "px";
+                    hrow.querySelector(".id").style.width = rows[0].querySelector(".id").offsetWidth + "px";
+                    hrow.querySelector(".name").style.width = rows[0].querySelector(".name").offsetWidth + "px";
+                    hrow.querySelector(".lt").style.width = rows[0].querySelector(".lt").offsetWidth + "px";
+                    hrow.querySelector(".desc").style.width = rows[0].querySelector(".desc").offsetWidth + "px";
+                }
+
                 var descriptions = entriesTable.querySelectorAll(".desc");
                 for (i = 0; i < descriptions.length; i++) {
                     descriptions[i].style.width = entriesTable.offsetWidth - 620 + "px";
                 }
 
-                var rows = (entriesTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
                 for (var j = 0; j < rows.length; j++) {
                     rows[j].onclick = function () {
                         var selected = document.getElementsByClassName("selected");
