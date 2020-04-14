@@ -89,6 +89,8 @@
         let removeworkflow = document.getElementById("removeworkflow");
         let transition = "all .25s cubic-bezier(.05,.03,.35,1)";
         let browserOpen = false;
+        let workflows = {};
+        var workflowsToDelete = [];
 
         flowy(canvas, drag, release, snapping, drop);
 
@@ -2224,17 +2226,18 @@
             if (browserOpen === false) {
                 document.getElementById("overlay").style.display = "block";
                 Common.get(uri + "/search?s=",
-                    function (workflows) {
+                    function (data) {
 
-                        workflows.sort(compareById);
+                        data.sort(compareById);
 
                         let workflowsToTable = function (wfs) {
+                            workflows = {};
                             let items = [];
                             for (let i = 0; i < wfs.length; i++) {
                                 let val = wfs[i];
-
+                                workflows[val.Id] = val;
                                 items.push("<tr>" +
-                                    //"<td><input class='wf-delete' type='checkbox'></td>" +
+                                    "<td><input class='wf-delete' type='checkbox'></td>" +
                                     "<td class='wf-id' title='" + val.Id + "'>" + val.Id + "</td>" +
                                     "<td class='wf-n' title='" + val.Name + "'>" + val.Name + "</td>" +
                                     "<td class='wf-d' title='" + val.Description + "'>" + val.Description + "</td>" +
@@ -2245,7 +2248,7 @@
                             let table = "<table class='wf-workflows-table table'>" +
                                 "<thead class='thead-dark'>" +
                                 "<tr>" +
-                                //"<th><input id='wf-delete-all' type='checkbox'></th>" +
+                                "<th><input id='wf-delete-all' type='checkbox'></th>" +
                                 "<th class='wf-id'>Id</th>" +
                                 "<th class='wf-n'>Name</th>" +
                                 "<th class='wf-d'>Description</th>" +
@@ -2259,9 +2262,9 @@
                             return table;
                         };
                         let browserHeader = '<div id="searchworkflows"><img src="assets/search.svg"><input id="searchworkflowsinput" type="text" placeholder="Search workflows"></div><small style="float: right;">Ctrl+O to open this window.</small>';
-                        let browserHtml = workflowsToTable(workflows);
+                        let browserHtml = workflowsToTable(data);
 
-                        let browserFooter = '<div id="openworkflow">Open</div>';
+                        let browserFooter = '<div id="deleteworkflows">Delete</div><div id="openworkflow">Open</div>';
 
                         if (exportModal) {
                             exportModal.destroy();
@@ -2317,12 +2320,47 @@
                                                 }
                                                 row.className += "selected";
                                             };
+
+                                            var deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                                            deleteWorkflowCheckBox.onchange = function () {
+                                                var currentRow = this.parentElement.parentElement;
+                                                var workflowId = parseInt(currentRow.getElementsByClassName("wf-id")[0].innerHTML);
+                                                var dbId = workflows[workflowId].DbId;
+                                                if (this.checked === true) {
+                                                    workflowsToDelete.push(dbId);
+                                                } else {
+                                                    var dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                                    if (dbIdIndex > -1) {
+                                                        workflowsToDelete.splice(dbIdIndex, 1);
+                                                    }
+                                                }
+                                            };
                                         }
 
                                         // on workflows table dbl click
                                         document.getElementsByClassName("jBox-content")[0].childNodes[0].ondblclick = function () {
                                             if (this.querySelectorAll(".selected").length > 0) {
                                                 openWorkflow();
+                                            }
+                                        };
+
+                                        let checkBoxDeleteAll = workflowsTable.querySelector("#wf-delete-all");
+                                        checkBoxDeleteAll.onclick = function () {
+                                            for (let i = 0; i < rows.length; i++) {
+                                                let row = rows[i];
+                                                let workflowId = parseInt(row.getElementsByClassName("wf-id")[0].innerHTML);
+                                                let dbId = workflows[workflowId].DbId;
+                                                let deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                                                if (deleteWorkflowCheckBox.checked === false) {
+                                                    deleteWorkflowCheckBox.checked = true;
+                                                    workflowsToDelete.push(dbId);
+                                                } else {
+                                                    deleteWorkflowCheckBox.checked = false;
+                                                    let dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                                    if (dbIdIndex > -1) {
+                                                        workflowsToDelete.splice(dbIdIndex, 1);
+                                                    }
+                                                }
                                             }
                                         };
 
@@ -2358,11 +2396,142 @@
                                 }
                                 row.className += "selected";
                             };
+
+                            var deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                            deleteWorkflowCheckBox.onchange = function () {
+                                var currentRow = this.parentElement.parentElement;
+                                var workflowId = parseInt(currentRow.getElementsByClassName("wf-id")[0].innerHTML);
+                                var dbId = workflows[workflowId].DbId;
+                                if (this.checked === true) {
+                                    workflowsToDelete.push(dbId);
+                                } else {
+                                    var dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                    if (dbIdIndex > -1) {
+                                        workflowsToDelete.splice(dbIdIndex, 1);
+                                    }
+                                }
+                            };
                         }
+
+                        // wf-delete-all select
+                        let checkBoxDeleteAll = workflowsTable.querySelector("#wf-delete-all");
+                        checkBoxDeleteAll.onclick = function () {
+                            for (let i = 0; i < rows.length; i++) {
+                                let row = rows[i];
+                                let workflowId = parseInt(row.getElementsByClassName("wf-id")[0].innerHTML);
+                                let dbId = workflows[workflowId].DbId;
+                                let deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                                if (deleteWorkflowCheckBox.checked === false) {
+                                    deleteWorkflowCheckBox.checked = true;
+                                    workflowsToDelete.push(dbId);
+                                } else {
+                                    deleteWorkflowCheckBox.checked = false;
+                                    let dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                    if (dbIdIndex > -1) {
+                                        workflowsToDelete.splice(dbIdIndex, 1);
+                                    }
+                                }
+                            }
+                        };
 
                         // open click
                         document.getElementById("openworkflow").onclick = function () {
                             openWorkflow();
+                        };
+
+                        // delete click
+                        document.getElementById("deleteworkflows").onclick = function () {
+                            console.log(workflowsToDelete);
+                            if (workflowsToDelete.length > 0) {
+                                var confirmRes = confirm("Are you sure you want to delete selected workflows?");
+                                if (confirmRes === true) {
+                                    Common.post(uri + "/deleteWorkflows", function (res) {
+                                        if (res === true) {
+                                            Common.toastSuccess("Workflows deleted with success.");
+                                            workflowsToDelete = [];
+                                            // Reload workfows
+
+                                            let jbox = document.getElementsByClassName("jBox-content")[0];
+
+                                            Common.get(uri + "/search?s=" + searchworkflows.value,
+                                                function (wfs) {
+                                                    wfs.sort(compareById);
+
+                                                    jbox.innerHTML = workflowsToTable(wfs);
+
+                                                    // selection changed event
+                                                    let workflowsTable = jbox.childNodes[0];
+                                                    let rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
+                                                    for (let i = 0; i < rows.length; i++) {
+                                                        let row = rows[i];
+
+                                                        row.onclick = function () {
+                                                            let selected = document.getElementsByClassName("selected");
+                                                            if (selected.length > 0) {
+                                                                selected[0].className = selected[0].className.replace("selected", "");
+                                                            }
+                                                            row.className += "selected";
+                                                        };
+
+                                                        var deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                                                        deleteWorkflowCheckBox.onchange = function () {
+                                                            var currentRow = this.parentElement.parentElement;
+                                                            var workflowId = parseInt(currentRow.getElementsByClassName("wf-id")[0].innerHTML);
+                                                            var dbId = workflows[workflowId].DbId;
+                                                            if (this.checked === true) {
+                                                                workflowsToDelete.push(dbId);
+                                                            } else {
+                                                                var dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                                                if (dbIdIndex > -1) {
+                                                                    workflowsToDelete.splice(dbIdIndex, 1);
+                                                                }
+                                                            }
+                                                        };
+                                                    }
+
+                                                    // on workflows table dbl click
+                                                    document.getElementsByClassName("jBox-content")[0].childNodes[0].ondblclick = function () {
+                                                        if (this.querySelectorAll(".selected").length > 0) {
+                                                            openWorkflow();
+                                                        }
+                                                    };
+
+                                                    let checkBoxDeleteAll = workflowsTable.querySelector("#wf-delete-all");
+                                                    checkBoxDeleteAll.onclick = function () {
+                                                        for (let i = 0; i < rows.length; i++) {
+                                                            let row = rows[i];
+                                                            let workflowId = parseInt(row.getElementsByClassName("wf-id")[0].innerHTML);
+                                                            let dbId = workflows[workflowId].DbId;
+                                                            let deleteWorkflowCheckBox = row.getElementsByClassName("wf-delete")[0];
+                                                            if (deleteWorkflowCheckBox.checked === false) {
+                                                                deleteWorkflowCheckBox.checked = true;
+                                                                workflowsToDelete.push(dbId);
+                                                            } else {
+                                                                deleteWorkflowCheckBox.checked = false;
+                                                                let dbIdIndex = workflowsToDelete.indexOf(dbId);
+                                                                if (dbIdIndex > -1) {
+                                                                    workflowsToDelete.splice(dbIdIndex, 1);
+                                                                }
+                                                            }
+                                                        }
+                                                    };
+
+                                                }, function () {
+                                                    Common.toastError("An error occured while retrieving workflows. Check that wexflow server is running correctly.");
+                                                }, auth);
+
+                                        } else {
+                                            Common.toastError("An error occured while deleting workflows.");
+                                        }
+                                    }, function () {
+                                        Common.toastError("An error occured while deleting workflows.");
+                                    }, {
+                                        "WorkflowsToDelete": workflowsToDelete
+                                    }, auth);
+                                }
+                            } else {
+                                Common.toastInfo("Select workflows to delete");
+                            }
                         };
 
                         // on workflows table dbl click

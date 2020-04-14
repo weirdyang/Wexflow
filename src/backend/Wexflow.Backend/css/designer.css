@@ -761,10 +761,10 @@ color: #393C44;
     background-color: #d9534f;
 }
 
-    #removeblock:hover {
-        cursor: pointer;
-        opacity: .5;
-    }
+#removeblock:hover {
+    cursor: pointer;
+    opacity: .5;
+}
 
 #removeworkflow {
     border-radius: 5px;
@@ -784,10 +784,10 @@ color: #393C44;
     display: none;
 }
 
-    #removeworkflow:hover {
-        cursor: pointer;
-        opacity: .5;
-    }
+#removeworkflow:hover {
+    cursor: pointer;
+    opacity: .5;
+}
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -977,15 +977,39 @@ margin-top: 12px;
     vertical-align: top;
     text-align: center;
     line-height: 38px;
+    margin-right: 5px;
+    transition: all .2s cubic-bezier(.05,.03,.35,1);
+    float: right;
+}
+
+#openworkflow:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+#deleteworkflows {
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 14px;
+    color: #FFF;
+    background-color: #d9534f;
+    border-radius: 5px;
+    width: 143px;
+    height: 38px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    line-height: 38px;
     margin-right: 20px;
     transition: all .2s cubic-bezier(.05,.03,.35,1);
     float: right;
 }
 
-    #openworkflow:hover {
-        cursor: pointer;
-        opacity: .7;
-    }
+#deleteworkflows:hover {
+    cursor: pointer;
+    opacity: .7;
+}
 
 #exportmodal {
     display: none;
