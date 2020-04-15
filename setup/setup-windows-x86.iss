@@ -225,7 +225,7 @@ Source: "..\src\dotnet\Wexflow.Tasks.FilesLoaderEx\FilesLoaderEx.xml"; DestDir: 
 Source: "..\src\dotnet\Wexflow.Tasks.FilesJoiner\FilesJoiner.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Tasks.Twilio\Twilio.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 
-Source: "..\LICENSE"; DestDir: "{app}\"; Flags: ignoreversion
+Source: "..\LICENSE.txt"; DestDir: "{app}\"; Flags: ignoreversion
 
 ; Wexflow's configuration
 Source: "..\samples\dotnet\Wexflow\*"; DestDir: "C:\Wexflow\"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall

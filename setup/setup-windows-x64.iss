@@ -116,7 +116,6 @@ Source: "..\src\backend\Wexflow.Backend\js\blockly_compressed.js"; DestDir: "{ap
 Source: "..\src\backend\Wexflow.Backend\js\blocks_compressed.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 Source: "..\src\backend\Wexflow.Backend\js\en.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 
-
 Source: "..\src\backend\Wexflow.Backend\js\designer.min.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 
 Source: "..\src\backend\Wexflow.Backend\js\history.min.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
@@ -231,7 +230,7 @@ Source: "..\src\dotnet\Wexflow.Tasks.FilesLoaderEx\FilesLoaderEx.xml"; DestDir: 
 Source: "..\src\dotnet\Wexflow.Tasks.FilesJoiner\FilesJoiner.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Tasks.Twilio\Twilio.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 
-Source: "..\LICENSE"; DestDir: "{app}\"; Flags: ignoreversion
+Source: "..\LICENSE.txt"; DestDir: "{app}\"; Flags: ignoreversion
 
 ; Wexflow's configuration
 Source: "..\samples\dotnet\Wexflow\*"; DestDir: "C:\Wexflow\"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
