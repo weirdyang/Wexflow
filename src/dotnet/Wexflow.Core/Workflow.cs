@@ -1563,7 +1563,7 @@ namespace Wexflow.Core
                     IsWaitingForApproval = false;
                     Database.DecrementRunningCount();
                     Database.IncrementStoppedCount();
-                    var entry = Database.GetEntry(Id);
+                    var entry = Database.GetEntry(Id, InstanceId);
                     entry.Status = Db.Status.Stopped;
                     entry.StatusDate = DateTime.Now;
                     entry.Logs = logs;
@@ -1611,7 +1611,7 @@ namespace Wexflow.Core
                     IsPaused = true;
                     Database.IncrementPendingCount();
                     Database.DecrementRunningCount();
-                    var entry = Database.GetEntry(Id);
+                    var entry = Database.GetEntry(Id, InstanceId);
                     entry.Status = Db.Status.Pending;
                     entry.StatusDate = DateTime.Now;
                     Database.UpdateEntry(entry.GetDbId(), entry);
@@ -1642,7 +1642,7 @@ namespace Wexflow.Core
 #pragma warning restore 618
                     Database.IncrementRunningCount();
                     Database.DecrementPendingCount();
-                    var entry = Database.GetEntry(Id);
+                    var entry = Database.GetEntry(Id, InstanceId);
                     entry.Status = Db.Status.Running;
                     entry.StatusDate = DateTime.Now;
                     Database.UpdateEntry(entry.GetDbId(), entry);
