@@ -1201,6 +1201,8 @@
                                 checkId = false;
                                 openSavePopup = false;
                                 removeworkflow.style.display = "block";
+                                jsonEditorChanged = false;
+                                xmlEditorChanged = false;
                                 Common.toastSuccess("workflow " + wfid + " saved and loaded with success from diagram view.");
                             } else {
                                 Common.toastError("An error occured while saving the workflow " + wfid + " from diagram view.");
@@ -1346,6 +1348,7 @@
                             loadDiagram(workflow.WorkflowInfo.Id);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
+                            jsonEditorChanged = false;
                             Common.toastSuccess("workflow " + wfid + " saved and loaded with success from JSON view.");
                         } else {
                             Common.toastError("An error occured while saving the workflow " + wfid + " from JSON view.");
@@ -1365,6 +1368,7 @@
                             loadDiagram(workflow.WorkflowInfo.Id);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
+                            xmlEditorChanged = false;
                             Common.toastSuccess("workflow " + wfid + " saved and loaded with success from XML view.");
                         } else {
                             Common.toastError("An error occured while saving the workflow " + wfid + " from XML view.");
@@ -1804,6 +1808,7 @@
 
             editor.on("change", function (e) {
                 jsonEditorChanged = true;
+                xmlEditorChanged = false;
             });
         }
 
@@ -1999,6 +2004,7 @@
 
             editor.on("change", function (e) {
                 xmlEditorChanged = true;
+                jsonEditorChanged = false;
             });
         };
 
