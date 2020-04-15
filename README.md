@@ -17,7 +17,7 @@ You can find the documentation [here](https://github.com/aelassas/Wexflow/wiki).
 
 ## What's New?
 
-Check out the new [version 5.3](https://github.com/aelassas/Wexflow/releases/tag/v5.3). This version includes a brand new [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer) with drag and drop features and snapping, JSON and XML import, JSON and XML export, suppport for XSLT 3.0, support for IMAP, bug fixes, performance enhancements and under the hood updates.
+Check out the new [version 5.4](https://github.com/aelassas/Wexflow/releases/tag/v5.4). This version includes new features in the [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer) such as autosaving, multi settings, multi delete, shortcuts, local variables and much more, support for parallel jobs in the manager, support for parallel jobs for approval workflows, bug fixes, performance enhancements, and under the hood updates.
 
 ## Wexflow
 
@@ -37,7 +37,11 @@ Wexflow comes with a powerful backend, so you can search and filter among all yo
 
 Just to give you an idea of what Wexflow does, this is a screenshot from the [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer). Using the designer, we get a nice visual overview of the dependency graph of the workflow. Each node represents a task which has to be run:
 
-![Designer](https://aelassas.github.io/wexflow/images/wbo-designer-5.3-2.png)
+![Designer](https://aelassas.github.io/wexflow/images/wbo-designer-5.4.png)
+
+The graph view gives you a nice overview of the dependency graph of the workflow too:
+
+![Designer](https://aelassas.github.io/wexflow/images/wbo-designer-5.4-graph.png)
 
 The history allows you to track your workflow jobs in the system and have detailed information about each job:
 
