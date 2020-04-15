@@ -107,6 +107,10 @@ Source: "..\src\backend\Wexflow.Backend\js\ext-settings_menu.js"; DestDir: "{app
 Source: "..\src\backend\Wexflow.Backend\js\theme-*.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 ;Source: "..\src\backend\Wexflow.Backend\js\editor.min.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 
+Source: "..\src\backend\Wexflow.Backend\js\blockly_compressed.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
+Source: "..\src\backend\Wexflow.Backend\js\blocks_compressed.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
+Source: "..\src\backend\Wexflow.Backend\js\en.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
+
 Source: "..\src\backend\Wexflow.Backend\js\designer.min.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion
 
 Source: "..\src\backend\Wexflow.Backend\js\history.min.js"; DestDir: "{app}\Backend\js"; Flags: ignoreversion

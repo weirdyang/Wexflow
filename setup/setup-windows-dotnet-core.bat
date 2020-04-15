@@ -74,6 +74,10 @@ copy "..\src\backend\Wexflow.Backend\js\ext-settings_menu.js" %dstDir%\%backend%
 copy "..\src\backend\Wexflow.Backend\js\theme-*.js" %dstDir%\%backend%\js
 ::copy "..\src\backend\Wexflow.Backend\js\editor.min.js" %dstDir%\%backend%\js
 
+copy "..\src\backend\Wexflow.Backend\js\blockly_compressed.js" %dstDir%\%backend%\js
+copy "..\src\backend\Wexflow.Backend\js\blocks_compressed.js" %dstDir%\%backend%\js
+copy "..\src\backend\Wexflow.Backend\js\en.js" %dstDir%\%backend%\js
+
 copy "..\src\backend\Wexflow.Backend\js\designer.min.js" %dstDir%\%backend%\js
 
 copy "..\src\backend\Wexflow.Backend\js\history.min.js" %dstDir%\%backend%\js

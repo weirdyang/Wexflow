@@ -1,4 +1,4 @@
-﻿Common = {
+﻿let Common = {
 
     redirectToLoginPage: function () {
         window.location.replace("index.html");
