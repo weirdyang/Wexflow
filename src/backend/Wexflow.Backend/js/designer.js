@@ -2565,8 +2565,7 @@
                                     Common.post(uri + "/deleteWorkflows", function (res) {
                                         if (res === true) {
                                             Common.toastSuccess("Workflows deleted with success.");
-
-                                            if (workflowsToDelete.includes(workflows[workflow.WorkflowInfo.Id].DbId)) {
+                                            if (isNaN(parseInt(workflow.WorkflowInfo.Id)) === false && workflows[workflow.WorkflowInfo.Id] && workflowsToDelete.includes(workflows[workflow.WorkflowInfo.Id].DbId)) {
                                                 checkId = true;
                                                 openSavePopup = false;
                                                 workflowDeleted = true;
