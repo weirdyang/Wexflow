@@ -17,7 +17,7 @@ You can find the documentation [here](https://github.com/aelassas/Wexflow/wiki).
 
 ## What's New?
 
-Check out the new [version 5.4](https://github.com/aelassas/Wexflow/releases/tag/v5.4). This version includes new features in the [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer) such as auto-saving, multi settings, multi delete, shortcuts, local variables and much more, support for parallel jobs in the manager, support for parallel jobs for approval workflows, bug fixes, performance enhancements, and under the hood updates.
+Check out the new [version 5.4](https://github.com/aelassas/Wexflow/releases/tag/v5.4). This version includes new features in the [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer) such as auto-saving, multi settings, multi delete, shortcuts, local variables and much more, support for parallel jobs in the manager, support for parallel jobs for approval workflows, support for parallel jobs in the dashboard, bug fixes, performance enhancements, and under the hood updates.
 
 ## Wexflow
 
