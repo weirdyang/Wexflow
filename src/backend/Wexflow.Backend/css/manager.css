@@ -176,7 +176,7 @@
 #wf-jobs {
     position: absolute;
     top: 75px;
-    bottom: 365px;
+    bottom: calc(100% - 250px);
     right: 10px;
     left: 10px;
     overflow: hidden;

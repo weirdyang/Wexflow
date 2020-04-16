@@ -323,8 +323,6 @@
                         this.className += "selected";
 
                         let jobsTable = document.getElementById("wf-jobs-table");
-                        jobsTable.style.width = document.getElementById("wf-jobs").offsetWidth + 100 + "px";
-                        jobsTable.style.height = document.getElementById("wf-jobs").offsetHeight + "px";
                         jobsTable.getElementsByTagName("tbody")[0].style.height = (document.getElementById("wf-jobs").offsetHeight - 45) + "px";
 
                         clearInterval(workflowTimer);
