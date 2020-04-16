@@ -165,7 +165,7 @@
 
                 var profiles = usersTable.querySelectorAll(".userprofile");
                 for (i = 0; i < profiles.length; i++) {
-                    profiles[i].style.width = usersTable.offsetWidth - 90 + "px";
+                    profiles[i].style.width = usersTable.offsetWidth - 60 + "px";
                 }
 
                 thUsername = document.getElementById("th-username");
