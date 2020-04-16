@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Wexflow</id>
-    <version>5.5.0</version>
+    <version>5.4.1</version>
     <title>Wexflow</title>
     <authors>Akram El Assas</authors>
     <owners>akram.elassas</owners>
@@ -14,29 +14,41 @@
     <releaseNotes>Bug fixes, performance enhancements and under the hood updates.</releaseNotes>
     <copyright>Copyright (c) 2017-2020 Akram El Assas.</copyright>
     <tags>Wexflow Workflow</tags>
+    <dependencies>
+      <group targetFramework="net461">
+        <dependency id="log4net" version="2.0.8" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" />
+        <dependency id="Quartz" version="3.0.7" />
+      </group>
+      <group targetFramework="netcoreapp3.1">
+        <dependency id="log4net" version="2.0.8" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" />
+        <dependency id="Quartz" version="3.0.7" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
-    <file src="..\..\..\LICENSE.txt" target="" />
+    <file src="..\..\..\LICENSE.txt" />
 
-    <file src=".\bin\Debug\Wexflow.Core.Db.dll" target="lib\net461\Wexflow.Core.Db.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.LiteDB.dll" target="lib\net461\Wexflow.Core.LiteDB.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.MongoDB.dll" target="lib\net461\Wexflow.Core.MongoDB.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.RavenDB.dll" target="lib\net461\Wexflow.Core.RavenDB.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.CosmosDB.dll" target="lib\net461\Wexflow.Core.CosmosDB.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.PostgreSQL.dll" target="lib\net461\Wexflow.Core.PostgreSQL.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.SQLServer.dll" target="lib\net461\Wexflow.Core.SQLServer.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.MySQL.dll" target="lib\net461\Wexflow.Core.MySQL.dll"/>
-    <file src=".\bin\Debug\Wexflow.Core.SQLite.dll" target="lib\net461\Wexflow.Core.SQLite.dll"/>
+    <file src=".\bin\Debug\Wexflow.Core.Db.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.LiteDB.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.MongoDB.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.RavenDB.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.CosmosDB.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.PostgreSQL.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.SQLServer.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.MySQL.dll" target="lib\net461" />
+    <file src=".\bin\Debug\Wexflow.Core.SQLite.dll" target="lib\net461" />
 
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.dll" target="lib\netcoreapp3.1\Wexflow.Core.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.Db.dll" target="lib\netcoreapp3.1\Wexflow.Core.Db.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.LiteDB.dll" target="lib\netcoreapp3.1\Wexflow.Core.LiteDB.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.MongoDB.dll" target="lib\netcoreapp3.1\Wexflow.Core.MongoDB.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.RavenDB.dll" target="lib\netcoreapp3.1\Wexflow.Core.RavenDB.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.CosmosDB.dll" target="lib\netcoreapp3.1\Wexflow.Core.CosmosDB.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.PostgreSQL.dll" target="lib\netcoreapp3.1\Wexflow.Core.PostgreSQL.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.SQLServer.dll" target="lib\netcoreapp3.1\Wexflow.Core.SQLServer.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.MySQL.dll" target="lib\netcoreapp3.1\Wexflow.Core.MySQL.dll"/>
-    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.SQLite.dll" target="lib\netcoreapp3.1\Wexflow.Core.SQLite.dll"/>
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.Db.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.LiteDB.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.MongoDB.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.RavenDB.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.CosmosDB.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.PostgreSQL.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.SQLServer.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.MySQL.dll" target="lib\netcoreapp3.1" />
+    <file src="..\..\..\src\dotnet-core\Wexflow.Core\bin\Debug\netcoreapp3.1\Wexflow.Core.SQLite.dll" target="lib\netcoreapp3.1" />
   </files>
 </package>
