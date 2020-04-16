@@ -1,6 +1,6 @@
 ![Logo](https://aelassas.github.io/wexflow/images/wd-logo-4.jpg)
 
-[![Downloads](https://img.shields.io/github/downloads/aelassas/Wexflow/total.svg)](https://wexflow.github.io/stats)
+[![Financial Contributors on Open Collective](https://opencollective.com/Wexflow/all/badge.svg?label=financial+contributors)](https://opencollective.com/Wexflow) [![Downloads](https://img.shields.io/github/downloads/aelassas/Wexflow/total.svg)](https://wexflow.github.io/stats)
 [![Nuget](https://img.shields.io/nuget/v/Wexflow)](https://www.nuget.org/packages/Wexflow)
 
 ## Download
@@ -125,3 +125,33 @@ Check out the available [built-in tasks](https://github.com/aelassas/Wexflow/wik
 |Bitrise (iOS)|macOS | [![Build Status](https://app.bitrise.io/app/f8006552bdd4ee80/status.svg?token=Yd_71TrG-cqFvEC1oV5teQ)](https://app.bitrise.io/app/f8006552bdd4ee80)|
 |CircleCI (iOS)|macOS | [![CircleCI](https://circleci.com/gh/aelassas/Wexflow.svg?style=shield)](https://circleci.com/gh/aelassas/Wexflow)|
 |FOSSA| Linux | [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faelassas%2FWexflow.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Faelassas%2FWexflow?ref=badge_shield)|
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/aelassas/Wexflow/graphs/contributors"><img src="https://opencollective.com/Wexflow/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/Wexflow/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/Wexflow"><img src="https://opencollective.com/Wexflow/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/Wexflow/contribute)]
+
+<a href="https://opencollective.com/Wexflow/organization/0/website"><img src="https://opencollective.com/Wexflow/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/1/website"><img src="https://opencollective.com/Wexflow/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/2/website"><img src="https://opencollective.com/Wexflow/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/3/website"><img src="https://opencollective.com/Wexflow/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/4/website"><img src="https://opencollective.com/Wexflow/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/5/website"><img src="https://opencollective.com/Wexflow/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/6/website"><img src="https://opencollective.com/Wexflow/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/7/website"><img src="https://opencollective.com/Wexflow/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/8/website"><img src="https://opencollective.com/Wexflow/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/Wexflow/organization/9/website"><img src="https://opencollective.com/Wexflow/organization/9/avatar.svg"></a>
