@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Wexflow</id>
-    <version>5.4.1</version>
+    <version>5.4.2</version>
     <title>Wexflow</title>
     <authors>Akram El Assas</authors>
     <owners>akram.elassas</owners>
@@ -30,6 +30,7 @@
   <files>
     <file src="..\..\..\LICENSE.txt" />
 
+    <file src=".\bin\Debug\Wexflow.Core.dll" target="lib\net461" />
     <file src=".\bin\Debug\Wexflow.Core.Db.dll" target="lib\net461" />
     <file src=".\bin\Debug\Wexflow.Core.LiteDB.dll" target="lib\net461" />
     <file src=".\bin\Debug\Wexflow.Core.MongoDB.dll" target="lib\net461" />
