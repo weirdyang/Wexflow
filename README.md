@@ -1,6 +1,6 @@
 ![Logo](https://aelassas.github.io/wexflow/images/wd-logo-4.jpg)
 
-[![Financial Contributors on Open Collective](https://opencollective.com/Wexflow/all/badge.svg?label=financial+contributors)](https://opencollective.com/Wexflow) [![Downloads](https://img.shields.io/github/downloads/aelassas/Wexflow/total.svg)](https://wexflow.github.io/stats)
+[![Downloads](https://img.shields.io/github/downloads/aelassas/Wexflow/total.svg)](https://wexflow.github.io/stats)
 [![Nuget](https://img.shields.io/nuget/v/Wexflow)](https://www.nuget.org/packages/Wexflow)
 
 ## Download
