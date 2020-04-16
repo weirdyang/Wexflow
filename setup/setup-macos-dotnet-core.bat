@@ -1,6 +1,6 @@
 ::@echo off
 
-set version=5.4
+set version=5.5
 set dst=wexflow
 set zip=wexflow-%version%-macos-dotnet-core.zip
 set dstDir=.\%dst%
