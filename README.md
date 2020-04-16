@@ -130,7 +130,7 @@ Check out the available [built-in tasks](https://github.com/aelassas/Wexflow/wik
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/aelassas/Wexflow/blob/master/.github/CONTRIBUTING.md)].
 <a href="https://github.com/aelassas/Wexflow/graphs/contributors"><img src="https://opencollective.com/Wexflow/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors
