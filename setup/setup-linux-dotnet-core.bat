@@ -117,6 +117,10 @@ copy dotnet-core\linux\MySQL\appsettings.json %dstDir%\Wexflow.Scripts.MySQL
 dotnet publish ..\src\dotnet-core\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLite
 copy dotnet-core\linux\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
 
+:: Firebird script
+dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
+copy dotnet-core\linux\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
+
 :: Wexflow.Clients.CommandLine
 dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 

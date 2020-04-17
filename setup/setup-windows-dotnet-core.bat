@@ -125,6 +125,11 @@ dotnet publish ..\src\dotnet-core\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.
 copy dotnet-core\windows\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
 copy dotnet-core\windows\install-SQLite.bat %dstDir%
 
+:: Firebird script
+dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
+copy dotnet-core\windows\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
+copy dotnet-core\windows\install-Firebird.bat %dstDir%
+
 :: Wexflow.Clients.CommandLine
 dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
