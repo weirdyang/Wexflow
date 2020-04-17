@@ -1,5 +1,4 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
-using FirebirdSql.Data.Isql;
 
 namespace Wexflow.Core.Firebird
 {
