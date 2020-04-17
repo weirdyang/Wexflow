@@ -495,6 +495,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wexflow.Scripts.Firebird", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Core.Firebird", "src\dotnet-core\Wexflow.Core.Firebird\Wexflow.Core.Firebird.csproj", "{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Scripts.Firebird", "src\dotnet-core\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj", "{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -4203,6 +4205,22 @@ Global
 		{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295}.Release|x64.Build.0 = Release|Any CPU
 		{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295}.Release|x86.ActiveCfg = Release|Any CPU
 		{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295}.Release|x86.Build.0 = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|x64.Build.0 = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Debug|x86.Build.0 = Debug|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|x64.ActiveCfg = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|x64.Build.0 = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|x86.ActiveCfg = Release|Any CPU
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4451,6 +4469,7 @@ Global
 		{DDE24357-EDD6-4718-93B3-21AF7FCB78E2} = {6AF980AE-0A8F-4F6F-A387-2C3C21A30710}
 		{57048E2F-8482-4903-80E0-0F5F0674D55F} = {8DC7E289-5A6B-4170-92D3-5B1CFE7E0F04}
 		{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295} = {70481AA7-1FB5-4F5B-AFE8-07C9E819CF1F}
+		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B} = {16281492-0F39-4C01-9FAA-281650F28ADB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {694D69C8-AA13-4F54-BAAA-5B967F1A8F9C}
