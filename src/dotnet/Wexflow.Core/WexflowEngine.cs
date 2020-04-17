@@ -48,7 +48,11 @@ namespace Wexflow.Core
         /// <summary>
         /// SQLite
         /// </summary>
-        SQLite
+        SQLite,
+        /// <summary>
+        /// Firebird
+        /// </summary>
+        Firebird
     }
 
     /// <summary>
@@ -169,6 +173,9 @@ namespace Wexflow.Core
                     break;
                 case DbType.SQLite:
                     Database = new SQLite.Db(ConnectionString);
+                    break;
+                case DbType.Firebird:
+                    Database = new Firebird.Db(ConnectionString);
                     break;
             }
 
