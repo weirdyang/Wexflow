@@ -52,7 +52,11 @@ namespace Wexflow.Core
         /// <summary>
         /// Firebird
         /// </summary>
-        Firebird
+        Firebird,
+        /// <summary>
+        /// Oracle
+        /// </summary>
+        Oracle
     }
 
     /// <summary>
@@ -171,6 +175,9 @@ namespace Wexflow.Core
                     break;
                 case DbType.Firebird:
                     Database = new Firebird.Db(ConnectionString);
+                    break;
+                case DbType.Oracle:
+                    Database = new Oracle.Db(ConnectionString);
                     break;
             }
 

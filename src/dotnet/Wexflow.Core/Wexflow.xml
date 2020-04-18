@@ -30,5 +30,5 @@
   <!-- Firebird -->
   <!--<Setting name="connectionString" value="User=SYSDBA;Password=password;Database=D:\softs\firebird\data\WEXFLOW.FDB;DataSource=localhost;Port=3050;Dialect=3;Charset=NONE;Role=;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;Packet Size=8192;ServerType=0;" />-->
   <!-- Oracle -->
-  <!--<Setting name="connectionString" value="Data Source=WEXFLOW;User Id=SYSTEM;Password=password;" />-->
+  <!--<Setting name="connectionString" value="Data Source=localhost:1521/wexflow;User Id=SYSTEM;Password=password;" />-->
 </Wexflow>
