@@ -172,6 +172,10 @@
       <Project>{e7d38365-9ce1-45be-bdcd-c63a94921e27}</Project>
       <Name>Wexflow.Core.MySQL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Core.Oracle\Wexflow.Core.Oracle.csproj">
+      <Project>{51c99bd8-8190-4198-9216-c5acb2b56057}</Project>
+      <Name>Wexflow.Core.Oracle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.PostgreSQL\Wexflow.Core.PostgreSQL.csproj">
       <Project>{f6070c45-b535-489d-99fb-86f6c9175257}</Project>
       <Name>Wexflow.Core.PostgreSQL</Name>
