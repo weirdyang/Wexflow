@@ -1601,6 +1601,7 @@ namespace Wexflow.Core.Oracle
             var chunkSize = 4000;
             var builder = new StringBuilder();
             var chunks = ToChuncks(xml, chunkSize).ToArray();
+
             for (var i = 0; i < chunks.Length; i++)
             {
                 var chunk = chunks[i];
@@ -1610,6 +1611,7 @@ namespace Wexflow.Core.Oracle
                     builder.Append(" || ");
                 }
             }
+
             var xmlVal = builder.ToString();
 
             return xmlVal;
