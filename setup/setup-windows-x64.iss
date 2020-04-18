@@ -320,6 +320,11 @@ Source: "..\src\dotnet\Wexflow.Scripts.Firebird\bin\x64\Release\Wexflow.Scripts.
 Source: ".\dotnet\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.exe.config"; DestDir: "{app}\Wexflow.Scripts.Firebird"; Flags: ignoreversion recursesubdirs
 Source: "..\src\dotnet\Wexflow.Scripts.Firebird\bin\x64\Release\*.dll"; DestDir: "{app}\Wexflow.Scripts.Firebird"; Flags: ignoreversion recursesubdirs
 
+; Wexflow.Scripts.Oracle
+Source: "..\src\dotnet\Wexflow.Scripts.Oracle\bin\x64\Release\Wexflow.Scripts.Oracle.exe"; DestDir: "{app}\Wexflow.Scripts.Oracle"; Flags: ignoreversion recursesubdirs
+Source: ".\dotnet\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.exe.config"; DestDir: "{app}\Wexflow.Scripts.Oracle"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Scripts.Oracle\bin\x64\Release\*.dll"; DestDir: "{app}\Wexflow.Scripts.Oracle"; Flags: ignoreversion recursesubdirs
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -339,6 +344,7 @@ Name: "{commonprograms}\{#MyAppName}\Install SQL Server samples"; Filename: "{ap
 Name: "{commonprograms}\{#MyAppName}\Install MySQL samples"; Filename: "{app}\Wexflow.Scripts.MySQL\Wexflow.Scripts.MySQL.exe";
 Name: "{commonprograms}\{#MyAppName}\Install SQLite samples"; Filename: "{app}\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.exe";
 Name: "{commonprograms}\{#MyAppName}\Install Firebird samples"; Filename: "{app}\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.exe";
+Name: "{commonprograms}\{#MyAppName}\Install Oracle samples"; Filename: "{app}\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.exe";
 Name: "{commonprograms}\{#MyAppName}\Uninstall"; Filename: "{uninstallexe}";
 
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\Manager\{#MyAppExeName}"; Tasks: desktopicon
