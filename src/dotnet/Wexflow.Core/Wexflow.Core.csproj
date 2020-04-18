@@ -164,6 +164,10 @@
       <Project>{2bbb9f04-49d7-49a7-a065-4b2c81e66307}</Project>
       <Name>Wexflow.Core.LiteDB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Core.MariaDB\Wexflow.Core.MariaDB.csproj">
+      <Project>{5bd0e054-0f10-4721-99b6-652da2472422}</Project>
+      <Name>Wexflow.Core.MariaDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.MongoDB\Wexflow.Core.MongoDB.csproj">
       <Project>{18fddb89-d389-4f8f-b878-d874fef8b99e}</Project>
       <Name>Wexflow.Core.MongoDB</Name>

@@ -56,7 +56,11 @@ namespace Wexflow.Core
         /// <summary>
         /// Oracle
         /// </summary>
-        Oracle
+        Oracle,
+        /// <summary>
+        /// MariaDB
+        /// </summary>
+        MariaDB
     }
 
     /// <summary>
@@ -183,6 +187,9 @@ namespace Wexflow.Core
                     break;
                 case DbType.Oracle:
                     Database = new Oracle.Db(ConnectionString);
+                    break;
+                case DbType.MariaDB:
+                    Database = new MariaDB.Db(ConnectionString);
                     break;
             }
 
