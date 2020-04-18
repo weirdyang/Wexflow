@@ -121,6 +121,10 @@ copy dotnet-core\macos\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
 dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
 copy dotnet-core\macos\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
 
+:: Oracle script
+dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
+copy dotnet-core\macos\Oracle\appsettings.json %dstDir%\Wexflow.Scripts.Oracle
+
 :: Wexflow.Clients.CommandLine
 dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
