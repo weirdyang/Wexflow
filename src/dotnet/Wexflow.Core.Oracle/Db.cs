@@ -1,5 +1,6 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Wexflow.Core.Db;
@@ -1586,15 +1587,44 @@ namespace Wexflow.Core.Oracle
             }
         }
 
+        private IEnumerable<string> ToChuncks(string str, int maxChunkSize)
+        {
+            for (int i = 0; i < str.Length; i += maxChunkSize)
+            {
+                yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
+            }
+        }
+
+        private string ToCLOB(Core.Db.Workflow workflow)
+        {
+            var xml = (workflow.Xml ?? "").Replace("'", "''");
+            var chunkSize = 4000;
+            var builder = new StringBuilder();
+            var chunks = ToChuncks(xml, chunkSize).ToArray();
+            for (var i = 0; i < chunks.Length; i++)
+            {
+                var chunk = chunks[i];
+                builder.Append("TO_CLOB(").Append("'").Append(chunk).Append("')");
+                if (i < chunks.Length - 1)
+                {
+                    builder.Append(" || ");
+                }
+            }
+            var xmlVal = builder.ToString();
+
+            return xmlVal;
+        }
+
         public override string InsertWorkflow(Core.Db.Workflow workflow)
         {
             using (var conn = new OracleConnection(_connectionString))
             {
                 conn.Open();
+                var xml = ToCLOB(workflow);
 
                 using (var command = new OracleCommand("INSERT INTO " + Core.Db.Workflow.DocumentName + "("
                     + Workflow.ColumnName_Xml + ") VALUES("
-                    + "'" + (workflow.Xml ?? "").Replace("'", "''") + "'" + ") RETURNING " + Workflow.ColumnName_Id + " INTO :id"
+                    + xml + ") RETURNING " + Workflow.ColumnName_Id + " INTO :id"
                     , conn))
                 {
                     command.Parameters.Add(new OracleParameter
@@ -1703,8 +1733,10 @@ namespace Wexflow.Core.Oracle
             {
                 conn.Open();
 
+                var xml = ToCLOB(workflow);
+
                 using (var command = new OracleCommand("UPDATE " + Core.Db.Workflow.DocumentName + " SET "
-                    + Workflow.ColumnName_Xml + " = '" + (workflow.Xml ?? "").Replace("'", "''") + "'"
+                    + Workflow.ColumnName_Xml + " = " + xml
                     + " WHERE "
                     + User.ColumnName_Id + " = " + int.Parse(dbId)
                     , conn))

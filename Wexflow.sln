@@ -499,6 +499,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Scripts.Firebird", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wexflow.Core.Oracle", "src\dotnet\Wexflow.Core.Oracle\Wexflow.Core.Oracle.csproj", "{51C99BD8-8190-4198-9216-C5ACB2B56057}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wexflow.Scripts.Oracle", "src\dotnet\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj", "{C93784C2-B1DA-4685-944B-1948FBCE0223}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -4239,6 +4241,22 @@ Global
 		{51C99BD8-8190-4198-9216-C5ACB2B56057}.Release|x64.Build.0 = Release|Any CPU
 		{51C99BD8-8190-4198-9216-C5ACB2B56057}.Release|x86.ActiveCfg = Release|Any CPU
 		{51C99BD8-8190-4198-9216-C5ACB2B56057}.Release|x86.Build.0 = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|x64.Build.0 = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Debug|x86.Build.0 = Debug|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|x64.ActiveCfg = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|x64.Build.0 = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|x86.ActiveCfg = Release|Any CPU
+		{C93784C2-B1DA-4685-944B-1948FBCE0223}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4489,6 +4507,7 @@ Global
 		{FDC3B4D7-99C7-4775-8DD9-9F1ACF373295} = {70481AA7-1FB5-4F5B-AFE8-07C9E819CF1F}
 		{090BC690-6D7E-4ED9-A0C7-69FB6057D83B} = {16281492-0F39-4C01-9FAA-281650F28ADB}
 		{51C99BD8-8190-4198-9216-C5ACB2B56057} = {6AF980AE-0A8F-4F6F-A387-2C3C21A30710}
+		{C93784C2-B1DA-4685-944B-1948FBCE0223} = {8DC7E289-5A6B-4170-92D3-5B1CFE7E0F04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {694D69C8-AA13-4F54-BAAA-5B967F1A8F9C}
