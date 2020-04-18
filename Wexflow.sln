@@ -509,6 +509,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wexflow.Core.MariaDB", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wexflow.Scripts.MariaDB", "src\dotnet\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj", "{FDE3E964-E032-4D96-881B-C2281155E278}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Core.MariaDB", "src\dotnet-core\Wexflow.Core.MariaDB\Wexflow.Core.MariaDB.csproj", "{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -4329,6 +4331,22 @@ Global
 		{FDE3E964-E032-4D96-881B-C2281155E278}.Release|x64.Build.0 = Release|Any CPU
 		{FDE3E964-E032-4D96-881B-C2281155E278}.Release|x86.ActiveCfg = Release|Any CPU
 		{FDE3E964-E032-4D96-881B-C2281155E278}.Release|x86.Build.0 = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|x64.Build.0 = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4584,6 +4602,7 @@ Global
 		{18291C4B-5E48-43CC-8CD8-35CCBAE1BF30} = {16281492-0F39-4C01-9FAA-281650F28ADB}
 		{5BD0E054-0F10-4721-99B6-652DA2472422} = {6AF980AE-0A8F-4F6F-A387-2C3C21A30710}
 		{FDE3E964-E032-4D96-881B-C2281155E278} = {8DC7E289-5A6B-4170-92D3-5B1CFE7E0F04}
+		{1B12B9AA-B027-4619-9F6A-C580A5C97C3A} = {70481AA7-1FB5-4F5B-AFE8-07C9E819CF1F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {694D69C8-AA13-4F54-BAAA-5B967F1A8F9C}
