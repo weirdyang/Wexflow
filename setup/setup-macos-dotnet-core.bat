@@ -125,6 +125,10 @@ copy dotnet-core\macos\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebi
 dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
 copy dotnet-core\macos\Oracle\appsettings.json %dstDir%\Wexflow.Scripts.Oracle
 
+:: MariaDB script
+dotnet publish ..\src\dotnet-core\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MariaDB
+copy dotnet-core\macos\MariaDB\appsettings.json %dstDir%\Wexflow.Scripts.MariaDB
+
 :: Wexflow.Clients.CommandLine
 dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
