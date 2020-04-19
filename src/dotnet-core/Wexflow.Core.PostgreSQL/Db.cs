@@ -8,6 +8,8 @@ namespace Wexflow.Core.PostgreSQL
 {
     public class Db : Core.Db.Db
     {
+        private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+
         private string _connectionString;
         private string _server;
         private string _userId;
@@ -311,7 +313,7 @@ namespace Wexflow.Core.PostgreSQL
                         Email = (string)reader[User.ColumnName_Email],
                         UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
                         CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                        ModifiedOn = (DateTime)reader[User.ColumnName_ModifiedOn]
+                        ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
                     };
 
                     admins.Add(admin);
@@ -383,7 +385,7 @@ namespace Wexflow.Core.PostgreSQL
                     + " FROM " + Core.Db.Entry.DocumentName
                     + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                     + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from + "'::timestamp AND '" + to + "'::timestamp)"
+                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "'::timestamp AND '" + to.ToString(DateTimeFormat) + "'::timestamp)"
                     + " ORDER BY ");
 
                 switch (eo)
@@ -486,7 +488,7 @@ namespace Wexflow.Core.PostgreSQL
                     + " FROM " + Core.Db.Entry.DocumentName
                     + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                     + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from + "'::timestamp AND '" + to + "'::timestamp);", conn);
+                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "'::timestamp AND '" + to.ToString(DateTimeFormat) + "'::timestamp);", conn);
 
                 var count = (long)command.ExecuteScalar();
 
@@ -770,7 +772,7 @@ namespace Wexflow.Core.PostgreSQL
                     + " FROM " + Core.Db.HistoryEntry.DocumentName
                     + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                     + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from + "'::timestamp AND '" + to + "'::timestamp)"
+                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "'::timestamp AND '" + to.ToString(DateTimeFormat) + "'::timestamp)"
                     + " ORDER BY ");
 
                 switch (heo)
@@ -889,7 +891,7 @@ namespace Wexflow.Core.PostgreSQL
                     + " FROM " + Core.Db.HistoryEntry.DocumentName
                     + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                     + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from + "'::timestamp AND '" + to + "'::timestamp);", conn);
+                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "'::timestamp AND '" + to.ToString(DateTimeFormat) + "'::timestamp);", conn);
 
                 var count = (long)command.ExecuteScalar();
 
@@ -1038,7 +1040,7 @@ namespace Wexflow.Core.PostgreSQL
                         Email = (string)reader[User.ColumnName_Email],
                         UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
                         CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                        ModifiedOn = (DateTime)reader[User.ColumnName_ModifiedOn]
+                        ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
                     };
 
                     return user;
@@ -1077,7 +1079,7 @@ namespace Wexflow.Core.PostgreSQL
                         Email = (string)reader[User.ColumnName_Email],
                         UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
                         CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                        ModifiedOn = (DateTime)reader[User.ColumnName_ModifiedOn]
+                        ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
                     };
 
                     return user;
@@ -1117,7 +1119,7 @@ namespace Wexflow.Core.PostgreSQL
                         Email = (string)reader[User.ColumnName_Email],
                         UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
                         CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                        ModifiedOn = (DateTime)reader[User.ColumnName_ModifiedOn]
+                        ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
                     };
 
                     users.Add(user);
@@ -1159,7 +1161,7 @@ namespace Wexflow.Core.PostgreSQL
                         Email = (string)reader[User.ColumnName_Email],
                         UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
                         CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                        ModifiedOn = (DateTime)reader[User.ColumnName_ModifiedOn]
+                        ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
                     };
 
                     users.Add(user);
@@ -1416,7 +1418,7 @@ namespace Wexflow.Core.PostgreSQL
                     + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
                     + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
                     + (int)entry.LaunchType + ", "
-                    + "'" + entry.StatusDate + "'" + ", "
+                    + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
                     + (int)entry.Status + ", "
                     + entry.WorkflowId + ", "
                     + "'" + (entry.JobId ?? "") + "', "
@@ -1444,7 +1446,7 @@ namespace Wexflow.Core.PostgreSQL
                     + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
                     + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
                     + (int)entry.LaunchType + ", "
-                    + "'" + entry.StatusDate + "'" + ", "
+                    + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
                     + (int)entry.Status + ", "
                     + entry.WorkflowId + ", "
                     + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
@@ -1471,8 +1473,8 @@ namespace Wexflow.Core.PostgreSQL
                     + "'" + (user.Password ?? "").Replace("'", "''") + "'" + ", "
                     + (int)user.UserProfile + ", "
                     + "'" + (user.Email ?? "").Replace("'", "''") + "'" + ", "
-                    + "'" + DateTime.Now + "'" + ", "
-                    + "'" + user.ModifiedOn + "'" + ");"
+                    + "'" + DateTime.Now.ToString(DateTimeFormat) + "'" + ", "
+                    + (user.ModifiedOn == DateTime.MinValue ? "NULL" : "'" + user.ModifiedOn.ToString(DateTimeFormat) + "'") + ");"
                     , conn);
 
                 command.ExecuteNonQuery();
@@ -1523,7 +1525,7 @@ namespace Wexflow.Core.PostgreSQL
                     + Entry.ColumnName_Name + " = '" + (entry.Name ?? "").Replace("'", "''") + "', "
                     + Entry.ColumnName_Description + " = '" + (entry.Description ?? "").Replace("'", "''") + "', "
                     + Entry.ColumnName_LaunchType + " = " + (int)entry.LaunchType + ", "
-                    + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate + "', "
+                    + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(DateTimeFormat) + "', "
                     + Entry.ColumnName_Status + " = " + (int)entry.Status + ", "
                     + Entry.ColumnName_WorkflowId + " = " + entry.WorkflowId + ", "
                     + Entry.ColumnName_JobId + " = '" + (entry.JobId ?? "") + "', "
@@ -1563,8 +1565,8 @@ namespace Wexflow.Core.PostgreSQL
                     + User.ColumnName_Password + " = '" + (user.Password ?? "").Replace("'", "''") + "', "
                     + User.ColumnName_UserProfile + " = " + (int)user.UserProfile + ", "
                     + User.ColumnName_Email + " = '" + user.Email + "', "
-                    + User.ColumnName_CreatedOn + " = '" + user.CreatedOn + "', "
-                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now + "'"
+                    + User.ColumnName_CreatedOn + " = '" + user.CreatedOn.ToString(DateTimeFormat) + "', "
+                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
                     + " WHERE "
                     + User.ColumnName_Id + " = " + int.Parse(id) + ";"
                     , conn);
@@ -1583,7 +1585,7 @@ namespace Wexflow.Core.PostgreSQL
                     + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "', "
                     + User.ColumnName_UserProfile + " = " + (int)up + ", "
                     + User.ColumnName_Email + " = '" + (email ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now + "'"
+                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
                     + " WHERE "
                     + User.ColumnName_Id + " = " + int.Parse(userId) + ";"
                     , conn);
