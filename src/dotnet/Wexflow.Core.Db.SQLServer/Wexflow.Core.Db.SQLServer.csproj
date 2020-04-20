@@ -7,8 +7,8 @@
     <ProjectGuid>{23A7C9D1-D796-4152-AF5A-24EC6BFE90FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.SQLServer</RootNamespace>
-    <AssemblyName>Wexflow.Core.SQLServer</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.SQLServer</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.SQLServer</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

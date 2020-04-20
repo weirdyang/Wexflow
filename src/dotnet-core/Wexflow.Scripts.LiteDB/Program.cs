@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
-using Wexflow.Core.LiteDB;
+using Wexflow.Core.Db.LiteDB;
 using Wexflow.Scripts.Core;
 
 namespace Wexflow.Scripts.LiteDB

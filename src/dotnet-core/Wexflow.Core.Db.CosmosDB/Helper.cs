@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Wexflow.Core.CosmosDB
+namespace Wexflow.Core.Db.CosmosDB
 {
     public class Helper
     {

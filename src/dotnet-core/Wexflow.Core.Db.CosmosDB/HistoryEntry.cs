@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.CosmosDB
+﻿namespace Wexflow.Core.Db.CosmosDB
 {
     public class HistoryEntry : Core.Db.HistoryEntry
     {

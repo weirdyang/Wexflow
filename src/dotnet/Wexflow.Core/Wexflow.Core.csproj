@@ -152,10 +152,6 @@
       <Project>{2311d99b-0524-40c5-a647-6b2200f15a47}</Project>
       <Name>Wexflow.Core.Db.CosmosDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
-      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
-      <Name>Wexflow.Core.Db</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.Db.Firebird\Wexflow.Core.Db.Firebird.csproj">
       <Project>{dde24357-edd6-4718-93b3-21af7fcb78e2}</Project>
       <Name>Wexflow.Core.Db.Firebird</Name>
@@ -195,6 +191,10 @@
     <ProjectReference Include="..\Wexflow.Core.Db.SQLServer\Wexflow.Core.Db.SQLServer.csproj">
       <Project>{23a7c9d1-d796-4152-af5a-24ec6bfe90fa}</Project>
       <Name>Wexflow.Core.Db.SQLServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
+      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
+      <Name>Wexflow.Core.Db</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

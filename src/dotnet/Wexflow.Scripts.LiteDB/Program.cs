@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Wexflow.Core.LiteDB;
+using Wexflow.Core.Db.LiteDB;
 using Wexflow.Scripts.Core;
 
 namespace Wexflow.Scripts.LiteDB

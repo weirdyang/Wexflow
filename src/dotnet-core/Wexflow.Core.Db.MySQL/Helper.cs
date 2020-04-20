@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace Wexflow.Core.MySQL
+namespace Wexflow.Core.Db.MySQL
 {
     public class Helper
     {

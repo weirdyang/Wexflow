@@ -7,8 +7,8 @@
     <ProjectGuid>{5BD0E054-0F10-4721-99B6-652DA2472422}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.MariaDB</RootNamespace>
-    <AssemblyName>Wexflow.Core.MariaDB</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.MariaDB</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.MariaDB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

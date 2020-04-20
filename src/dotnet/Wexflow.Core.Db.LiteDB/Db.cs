@@ -3,9 +3,8 @@ using LiteDB.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.LiteDB
+namespace Wexflow.Core.Db.LiteDB
 {
     public class Db : Core.Db.Db
     {

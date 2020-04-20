@@ -7,8 +7,8 @@
     <ProjectGuid>{DDE24357-EDD6-4718-93B3-21AF7FCB78E2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.Firebird</RootNamespace>
-    <AssemblyName>Wexflow.Core.Firebird</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.Firebird</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.Firebird</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

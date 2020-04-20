@@ -7,8 +7,8 @@
     <ProjectGuid>{19673281-BD4A-4587-9D7C-3472E605F426}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.SQLite</RootNamespace>
-    <AssemblyName>Wexflow.Core.SQLite</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.SQLite</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.SQLite</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

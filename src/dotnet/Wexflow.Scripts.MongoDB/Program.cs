@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Wexflow.Core.MongoDB;
+using Wexflow.Core.Db.MongoDB;
 using Wexflow.Scripts.Core;
 
 namespace Wexflow.Scripts.MongoDB

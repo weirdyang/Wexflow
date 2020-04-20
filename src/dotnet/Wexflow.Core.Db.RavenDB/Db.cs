@@ -10,9 +10,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.RavenDB
+namespace Wexflow.Core.Db.RavenDB
 {
     public class Db : Core.Db.Db
     {

@@ -4,9 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Xml.Linq;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.SQLServer
+namespace Wexflow.Core.Db.SQLServer
 {
     public class Db : Core.Db.Db
     {

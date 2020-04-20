@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.RavenDB
+﻿namespace Wexflow.Core.Db.RavenDB
 {
     public class Entry : Core.Db.Entry
     {

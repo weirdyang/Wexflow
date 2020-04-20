@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.PostgreSQL
+namespace Wexflow.Core.Db.PostgreSQL
 {
     public class Db : Core.Db.Db
     {

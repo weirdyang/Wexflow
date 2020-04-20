@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.PostgreSQL
+﻿namespace Wexflow.Core.Db.PostgreSQL
 {
     public class UserWorkflow : Core.Db.UserWorkflow
     {

@@ -1,11 +1,10 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.Oracle
+namespace Wexflow.Core.Db.Oracle
 {
     public class Db : Core.Db.Db
     {

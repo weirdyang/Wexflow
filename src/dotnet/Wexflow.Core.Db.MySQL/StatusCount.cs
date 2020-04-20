@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.MySQL
+﻿namespace Wexflow.Core.Db.MySQL
 {
     public class StatusCount : Core.Db.StatusCount
     {

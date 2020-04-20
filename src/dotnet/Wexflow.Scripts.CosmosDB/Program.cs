@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Wexflow.Core.CosmosDB;
+using Wexflow.Core.Db.CosmosDB;
 
 namespace Wexflow.Scripts.CosmosDB
 {

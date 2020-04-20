@@ -7,8 +7,8 @@
     <ProjectGuid>{E7D38365-9CE1-45BE-BDCD-C63A94921E27}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.MySQL</RootNamespace>
-    <AssemblyName>Wexflow.Core.MySQL</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.MySQL</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.MySQL</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

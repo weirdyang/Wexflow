@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.MariaDB
+﻿namespace Wexflow.Core.Db.MariaDB
 {
     public class User : Core.Db.User
     {

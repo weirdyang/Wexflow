@@ -7,8 +7,8 @@
     <ProjectGuid>{18FDDB89-D389-4F8F-B878-D874FEF8B99E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.MongoDB</RootNamespace>
-    <AssemblyName>Wexflow.Core.MongoDB</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.MongoDB</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.MongoDB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

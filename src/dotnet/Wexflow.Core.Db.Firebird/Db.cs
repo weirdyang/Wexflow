@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.Firebird
+namespace Wexflow.Core.Db.Firebird
 {
     public class Db : Core.Db.Db
     {

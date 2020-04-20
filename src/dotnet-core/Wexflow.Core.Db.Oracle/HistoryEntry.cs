@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.Oracle
+﻿namespace Wexflow.Core.Db.Oracle
 {
     public class HistoryEntry : Core.Db.HistoryEntry
     {

@@ -1,7 +1,7 @@
 ﻿using System.Data.SQLite;
 using System.IO;
 
-namespace Wexflow.Core.SQLite
+namespace Wexflow.Core.Db.SQLite
 {
     public class Helper
     {

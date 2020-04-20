@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.MySQL
+namespace Wexflow.Core.Db.MySQL
 {
     public class Db : Core.Db.Db
     {

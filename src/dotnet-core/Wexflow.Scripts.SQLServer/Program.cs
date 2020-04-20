@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using Wexflow.Core.SQLServer;
+using Wexflow.Core.Db.SQLServer;
 
 namespace Wexflow.Scripts.SQLServer
 {

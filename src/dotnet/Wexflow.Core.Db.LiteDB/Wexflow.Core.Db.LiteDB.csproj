@@ -7,8 +7,8 @@
     <ProjectGuid>{2BBB9F04-49D7-49A7-A065-4B2C81E66307}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.LiteDB</RootNamespace>
-    <AssemblyName>Wexflow.Core.LiteDB</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.LiteDB</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.LiteDB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

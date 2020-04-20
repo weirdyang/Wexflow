@@ -58,13 +58,13 @@
     <EmbeddedResource Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
-      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
-      <Name>Wexflow.Core.Db</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.Db.MariaDB\Wexflow.Core.Db.MariaDB.csproj">
       <Project>{5bd0e054-0f10-4721-99b6-652da2472422}</Project>
       <Name>Wexflow.Core.Db.MariaDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
+      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
+      <Name>Wexflow.Core.Db</Name>
     </ProjectReference>
     <ProjectReference Include="..\Wexflow.Scripts.Core\Wexflow.Scripts.Core.csproj">
       <Project>{61a3d5e0-6d95-43ee-bec5-2dc10771735f}</Project>

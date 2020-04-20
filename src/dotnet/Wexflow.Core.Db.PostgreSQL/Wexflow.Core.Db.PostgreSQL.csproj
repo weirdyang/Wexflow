@@ -7,8 +7,8 @@
     <ProjectGuid>{F6070C45-B535-489D-99FB-86F6C9175257}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.PostgreSQL</RootNamespace>
-    <AssemblyName>Wexflow.Core.PostgreSQL</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.PostgreSQL</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.PostgreSQL</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

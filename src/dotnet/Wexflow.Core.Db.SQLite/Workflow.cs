@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.SQLite
+﻿namespace Wexflow.Core.Db.SQLite
 {
     public class Workflow : Core.Db.Workflow
     {

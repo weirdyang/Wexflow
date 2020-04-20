@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.CosmosDB
+namespace Wexflow.Core.Db.CosmosDB
 {
     public class Db : Core.Db.Db
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{15A456E4-6992-4586-97AA-4F0279434DE5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.RavenDB</RootNamespace>
-    <AssemblyName>Wexflow.Core.RavenDB</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.RavenDB</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.RavenDB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

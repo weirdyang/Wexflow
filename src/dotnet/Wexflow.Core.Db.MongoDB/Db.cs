@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.MongoDB
+namespace Wexflow.Core.Db.MongoDB
 {
     public class Db : Core.Db.Db
     {

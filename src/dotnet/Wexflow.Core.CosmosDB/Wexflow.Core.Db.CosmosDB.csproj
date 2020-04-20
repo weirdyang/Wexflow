@@ -7,8 +7,8 @@
     <ProjectGuid>{2311D99B-0524-40C5-A647-6B2200F15A47}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.CosmosDB</RootNamespace>
-    <AssemblyName>Wexflow.Core.CosmosDB</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.CosmosDB</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.CosmosDB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

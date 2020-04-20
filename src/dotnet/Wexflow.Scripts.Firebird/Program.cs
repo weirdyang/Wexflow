@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Wexflow.Core.Firebird;
+using Wexflow.Core.Db.Firebird;
 
 namespace Wexflow.Scripts.Firebird
 {

@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.Firebird
+﻿namespace Wexflow.Core.Db.Firebird
 {
     public class HistoryEntry : Core.Db.HistoryEntry
     {

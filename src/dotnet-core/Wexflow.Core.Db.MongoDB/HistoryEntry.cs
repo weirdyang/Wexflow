@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Wexflow.Core.MongoDB
+namespace Wexflow.Core.Db.MongoDB
 {
     public class HistoryEntry : Core.Db.HistoryEntry
     {

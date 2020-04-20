@@ -7,8 +7,8 @@
     <ProjectGuid>{51C99BD8-8190-4198-9216-C5ACB2B56057}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wexflow.Core.Oracle</RootNamespace>
-    <AssemblyName>Wexflow.Core.Oracle</AssemblyName>
+    <RootNamespace>Wexflow.Core.Db.Oracle</RootNamespace>
+    <AssemblyName>Wexflow.Core.Db.Oracle</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

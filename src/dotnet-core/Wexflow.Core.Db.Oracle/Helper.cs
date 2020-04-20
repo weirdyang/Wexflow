@@ -1,6 +1,6 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 
-namespace Wexflow.Core.Oracle
+namespace Wexflow.Core.Db.Oracle
 {
     public class Helper
     {

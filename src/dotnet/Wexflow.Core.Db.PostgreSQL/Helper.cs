@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 
-namespace Wexflow.Core.PostgreSQL
+namespace Wexflow.Core.Db.PostgreSQL
 {
     public class Helper
     {

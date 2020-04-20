@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using Wexflow.Core.PostgreSQL;
+using Wexflow.Core.Db.PostgreSQL;
 
 namespace Wexflow.Scripts.PostgreSQL
 {

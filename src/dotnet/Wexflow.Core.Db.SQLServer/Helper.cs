@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 
-namespace Wexflow.Core.SQLServer
+namespace Wexflow.Core.Db.SQLServer
 {
     public class Helper
     {

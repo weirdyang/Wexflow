@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using Wexflow.Core.Oracle;
+using Wexflow.Core.Db.Oracle;
 
 namespace Wexflow.Scripts.Oracle
 {

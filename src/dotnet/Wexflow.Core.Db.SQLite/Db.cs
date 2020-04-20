@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Text;
-using Wexflow.Core.Db;
 
-namespace Wexflow.Core.SQLite
+namespace Wexflow.Core.Db.SQLite
 {
     public class Db : Core.Db.Db
     {

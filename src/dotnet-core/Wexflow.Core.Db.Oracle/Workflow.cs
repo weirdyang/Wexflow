@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.Oracle
+﻿namespace Wexflow.Core.Db.Oracle
 {
     public class Workflow : Core.Db.Workflow
     {

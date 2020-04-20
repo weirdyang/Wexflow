@@ -58,13 +58,13 @@
     <EmbeddedResource Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
-      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
-      <Name>Wexflow.Core.Db</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.Db.Oracle\Wexflow.Core.Db.Oracle.csproj">
       <Project>{51c99bd8-8190-4198-9216-c5acb2b56057}</Project>
       <Name>Wexflow.Core.Db.Oracle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
+      <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
+      <Name>Wexflow.Core.Db</Name>
     </ProjectReference>
     <ProjectReference Include="..\Wexflow.Scripts.Core\Wexflow.Scripts.Core.csproj">
       <Project>{61a3d5e0-6d95-43ee-bec5-2dc10771735f}</Project>

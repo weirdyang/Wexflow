@@ -1,4 +1,4 @@
-﻿namespace Wexflow.Core.SQLServer
+﻿namespace Wexflow.Core.Db.SQLServer
 {
     public class User : Core.Db.User
     {

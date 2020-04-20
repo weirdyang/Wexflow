@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Wexflow.Core.MariaDB;
+using Wexflow.Core.Db.MariaDB;
 
 namespace Wexflow.Scripts.MariaDB
 {

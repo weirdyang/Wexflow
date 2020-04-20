@@ -154,37 +154,37 @@ namespace Wexflow.Core
             switch (DbType)
             {
                 case DbType.CosmosDB:
-                    Database = new CosmosDB.Db(ConnectionString);
+                    Database = new Db.CosmosDB.Db(ConnectionString);
                     break;
                 case DbType.MongoDB:
-                    Database = new MongoDB.Db(ConnectionString);
+                    Database = new Db.MongoDB.Db(ConnectionString);
                     break;
                 case DbType.LiteDB:
-                    Database = new LiteDB.Db(ConnectionString);
+                    Database = new Db.LiteDB.Db(ConnectionString);
                     break;
                 case DbType.RavenDB:
-                    Database = new RavenDB.Db(ConnectionString);
+                    Database = new Db.RavenDB.Db(ConnectionString);
                     break;
                 case DbType.PostgreSQL:
-                    Database = new PostgreSQL.Db(ConnectionString);
+                    Database = new Db.PostgreSQL.Db(ConnectionString);
                     break;
                 case DbType.SQLServer:
-                    Database = new SQLServer.Db(ConnectionString);
+                    Database = new Db.SQLServer.Db(ConnectionString);
                     break;
                 case DbType.MySQL:
-                    Database = new MySQL.Db(ConnectionString);
+                    Database = new Db.MySQL.Db(ConnectionString);
                     break;
                 case DbType.SQLite:
-                    Database = new SQLite.Db(ConnectionString);
+                    Database = new Db.SQLite.Db(ConnectionString);
                     break;
                 case DbType.Firebird:
-                    Database = new Firebird.Db(ConnectionString);
+                    Database = new Db.Firebird.Db(ConnectionString);
                     break;
                 case DbType.Oracle:
-                    Database = new Oracle.Db(ConnectionString);
+                    Database = new Db.Oracle.Db(ConnectionString);
                     break;
                 case DbType.MariaDB:
-                    Database = new MariaDB.Db(ConnectionString);
+                    Database = new Db.MariaDB.Db(ConnectionString);
                     break;
             }
 

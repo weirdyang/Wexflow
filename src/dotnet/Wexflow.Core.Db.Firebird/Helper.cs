@@ -1,6 +1,6 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
 
-namespace Wexflow.Core.Firebird
+namespace Wexflow.Core.Db.Firebird
 {
     public class Helper
     {

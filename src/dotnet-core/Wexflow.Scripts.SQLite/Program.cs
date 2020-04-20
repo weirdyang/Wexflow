@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using Wexflow.Core.SQLite;
+using Wexflow.Core.Db.SQLite;
 
 namespace Wexflow.Scripts.SQLite
 {
