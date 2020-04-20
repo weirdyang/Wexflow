@@ -9,13 +9,13 @@ namespace Wexflow.Core.Db.MariaDB
     {
         private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
-        private string _connectionString;
-        private string _server;
-        private int _port;
-        private string _user;
-        private string _password;
-        private string _database;
-        private Helper _helper;
+        private readonly string _connectionString;
+        private readonly string _server;
+        private readonly int _port;
+        private readonly string _user;
+        private readonly string _password;
+        private readonly string _database;
+        private readonly Helper _helper;
 
         public Db(string connectionString) : base(connectionString)
         {

@@ -7,7 +7,7 @@ namespace Wexflow.Scripts.RavenDB
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {

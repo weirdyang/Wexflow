@@ -6,7 +6,7 @@ namespace Wexflow.Scripts.SQLite
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {

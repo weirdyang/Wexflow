@@ -614,8 +614,10 @@ namespace Wexflow.Core
                     }
                     else if (wf.LaunchType == LaunchType.Periodic)
                     {
-                        IDictionary<string, object> map = new Dictionary<string, object>();
-                        map.Add("workflow", wf);
+                        IDictionary<string, object> map = new Dictionary<string, object>
+                        {
+                            { "workflow", wf }
+                        };
 
                         string jobIdentity = "Workflow Job " + wf.Id;
                         IJobDetail jobDetail = JobBuilder.Create<WorkflowJob>()
@@ -641,8 +643,10 @@ namespace Wexflow.Core
                     }
                     else if (wf.LaunchType == LaunchType.Cron)
                     {
-                        IDictionary<string, object> map = new Dictionary<string, object>();
-                        map.Add("workflow", wf);
+                        IDictionary<string, object> map = new Dictionary<string, object>
+                        {
+                            { "workflow", wf }
+                        };
 
                         string jobIdentity = "Workflow Job " + wf.Id;
                         IJobDetail jobDetail = JobBuilder.Create<WorkflowJob>()

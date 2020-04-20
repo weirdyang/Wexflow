@@ -207,7 +207,7 @@ namespace Wexflow.Core
         public DateTime StartedOn { get; private set; }
 
         private bool _stopCalled;
-        private Queue<Job> _jobsQueue;
+        private readonly Queue<Job> _jobsQueue;
         private Thread _thread;
         private HistoryEntry _historyEntry;
 
@@ -1148,8 +1148,7 @@ namespace Wexflow.Core
 
             foreach (var node in nodes)
             {
-                var @if = node as If;
-                if (@if != null)
+                if (node is If @if)
                 {
                     var doTasks = NodesToTasks(@if.DoNodes);
                     var otherwiseTasks = NodesToTasks(@if.ElseNodes);
@@ -1169,9 +1168,8 @@ namespace Wexflow.Core
                 {
                     tasks.AddRange(NodesToTasks(((While)node).Nodes));
                 }
-                else if (node is Switch)
+                else if (node is Switch @switch)
                 {
-                    var @switch = (Switch)node;
                     tasks.AddRange(NodesToTasks(@switch.Default).Where(task => tasks.All(t => t.Id != task.Id)));
                     tasks.AddRange(NodesToTasks(@switch.Cases.SelectMany(@case => @case.Nodes).ToArray()).Where(task => tasks.All(t => t.Id != task.Id)));
                 }
@@ -1206,15 +1204,13 @@ namespace Wexflow.Core
             {
                 var startNode = GetStartupNode(nodes);
 
-                var @if = startNode as If;
-                if (@if != null)
+                if (startNode is If @if)
                 {
                     var doIf = @if;
                     RunIf(tasks, nodes, doIf, force, ref success, ref warning, ref atLeastOneSucceed);
                 }
-                else if (startNode is While)
+                else if (startNode is While doWhile)
                 {
-                    var doWhile = (While)startNode;
                     RunWhile(tasks, nodes, doWhile, force, ref success, ref warning, ref atLeastOneSucceed);
                 }
                 else
@@ -1271,15 +1267,13 @@ namespace Wexflow.Core
             {
                 if (node is If || node is While || node is Switch)
                 {
-                    var if1 = node as If;
-                    if (if1 != null)
+                    if (node is If if1)
                     {
                         var @if = if1;
                         RunIf(tasks, nodes, @if, force, ref success, ref warning, ref atLeastOneSucceed);
                     }
-                    else if (node is While)
+                    else if (node is While @while)
                     {
-                        var @while = (While)node;
                         RunWhile(tasks, nodes, @while, force, ref success, ref warning, ref atLeastOneSucceed);
                     }
                     else
@@ -1306,21 +1300,18 @@ namespace Wexflow.Core
 
                             if (childNode != null)
                             {
-                                var if1 = childNode as If;
-                                if (if1 != null)
+                                if (childNode is If if1)
                                 {
                                     var @if = if1;
                                     RunIf(tasks, nodes, @if, force, ref success, ref warning, ref atLeastOneSucceed);
                                 }
-                                else if (childNode is While)
+                                else if (childNode is While while2)
                                 {
-                                    var @while = (While)childNode;
-                                    RunWhile(tasks, nodes, @while, force, ref success, ref warning, ref atLeastOneSucceed);
+                                    RunWhile(tasks, nodes, while2, force, ref success, ref warning, ref atLeastOneSucceed);
                                 }
-                                else if (childNode is Switch)
+                                else if (childNode is Switch switch2)
                                 {
-                                    var @switch = (Switch)childNode;
-                                    RunSwitch(tasks, nodes, @switch, force, ref success, ref warning, ref atLeastOneSucceed);
+                                    RunSwitch(tasks, nodes, switch2, force, ref success, ref warning, ref atLeastOneSucceed);
                                 }
                                 else
                                 {
@@ -1339,20 +1330,17 @@ namespace Wexflow.Core
                                             // Recusive call
                                             var ccNode = nodes.FirstOrDefault(n => n.ParentId == childNode.Id);
 
-                                            var node1 = ccNode as If;
-                                            if (node1 != null)
+                                            if (ccNode is If node1)
                                             {
                                                 var @if = node1;
                                                 RunIf(tasks, nodes, @if, force, ref success, ref warning, ref atLeastOneSucceed);
                                             }
-                                            else if (ccNode is While)
+                                            else if (ccNode is While @while)
                                             {
-                                                var @while = (While)ccNode;
                                                 RunWhile(tasks, nodes, @while, force, ref success, ref warning, ref atLeastOneSucceed);
                                             }
-                                            else if (ccNode is Switch)
+                                            else if (ccNode is Switch @switch)
                                             {
-                                                var @switch = (Switch)ccNode;
                                                 RunSwitch(tasks, nodes, @switch, force, ref success, ref warning, ref atLeastOneSucceed);
                                             }
                                             else

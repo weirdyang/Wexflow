@@ -10,8 +10,8 @@ namespace Wexflow.Core.Db.Oracle
     {
         private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
-        private string _connectionString;
-        private Helper _helper;
+        private readonly string _connectionString;
+        private readonly Helper _helper;
 
         public Db(string connectionString) : base(connectionString)
         {

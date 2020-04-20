@@ -6,7 +6,7 @@ namespace Wexflow.Scripts.Oracle
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
