@@ -475,7 +475,7 @@ namespace Wexflow.Core.MongoDB
         public override long GetEntriesCount(string keyword, DateTime from, DateTime to)
         {
             var keywordToLower = keyword.ToLower();
-            var col = _db.GetCollection<HistoryEntry>(Core.Db.Entry.DocumentName);
+            var col = _db.GetCollection<Entry>(Core.Db.Entry.DocumentName);
 
             return col.Find(e => (e.Name.ToLower().Contains(keywordToLower) || e.Description.ToLower().Contains(keywordToLower)) && e.StatusDate > from && e.StatusDate < to).CountDocuments();
         }
