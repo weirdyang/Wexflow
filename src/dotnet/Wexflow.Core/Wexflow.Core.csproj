@@ -148,53 +148,53 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Wexflow.Core.CosmosDB\Wexflow.Core.CosmosDB.csproj">
+    <ProjectReference Include="..\Wexflow.Core.CosmosDB\Wexflow.Core.Db.CosmosDB.csproj">
       <Project>{2311d99b-0524-40c5-a647-6b2200f15a47}</Project>
-      <Name>Wexflow.Core.CosmosDB</Name>
+      <Name>Wexflow.Core.Db.CosmosDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.Db\Wexflow.Core.Db.csproj">
       <Project>{ffe105a5-1c72-4e7d-bc48-5f5902376893}</Project>
       <Name>Wexflow.Core.Db</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.Firebird\Wexflow.Core.Firebird.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.Firebird\Wexflow.Core.Db.Firebird.csproj">
       <Project>{dde24357-edd6-4718-93b3-21af7fcb78e2}</Project>
-      <Name>Wexflow.Core.Firebird</Name>
+      <Name>Wexflow.Core.Db.Firebird</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.LiteDB\Wexflow.Core.LiteDB.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.LiteDB\Wexflow.Core.Db.LiteDB.csproj">
       <Project>{2bbb9f04-49d7-49a7-a065-4b2c81e66307}</Project>
-      <Name>Wexflow.Core.LiteDB</Name>
+      <Name>Wexflow.Core.Db.LiteDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.MariaDB\Wexflow.Core.MariaDB.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.MariaDB\Wexflow.Core.Db.MariaDB.csproj">
       <Project>{5bd0e054-0f10-4721-99b6-652da2472422}</Project>
-      <Name>Wexflow.Core.MariaDB</Name>
+      <Name>Wexflow.Core.Db.MariaDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.MongoDB\Wexflow.Core.MongoDB.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.MongoDB\Wexflow.Core.Db.MongoDB.csproj">
       <Project>{18fddb89-d389-4f8f-b878-d874fef8b99e}</Project>
-      <Name>Wexflow.Core.MongoDB</Name>
+      <Name>Wexflow.Core.Db.MongoDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.MySQL\Wexflow.Core.MySQL.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.MySQL\Wexflow.Core.Db.MySQL.csproj">
       <Project>{e7d38365-9ce1-45be-bdcd-c63a94921e27}</Project>
-      <Name>Wexflow.Core.MySQL</Name>
+      <Name>Wexflow.Core.Db.MySQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.Oracle\Wexflow.Core.Oracle.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.Oracle\Wexflow.Core.Db.Oracle.csproj">
       <Project>{51c99bd8-8190-4198-9216-c5acb2b56057}</Project>
-      <Name>Wexflow.Core.Oracle</Name>
+      <Name>Wexflow.Core.Db.Oracle</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.PostgreSQL\Wexflow.Core.PostgreSQL.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.PostgreSQL\Wexflow.Core.Db.PostgreSQL.csproj">
       <Project>{f6070c45-b535-489d-99fb-86f6c9175257}</Project>
-      <Name>Wexflow.Core.PostgreSQL</Name>
+      <Name>Wexflow.Core.Db.PostgreSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.RavenDB\Wexflow.Core.RavenDB.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.RavenDB\Wexflow.Core.Db.RavenDB.csproj">
       <Project>{15a456e4-6992-4586-97aa-4f0279434de5}</Project>
-      <Name>Wexflow.Core.RavenDB</Name>
+      <Name>Wexflow.Core.Db.RavenDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.SQLite\Wexflow.Core.SQLite.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.SQLite\Wexflow.Core.Db.SQLite.csproj">
       <Project>{19673281-bd4a-4587-9d7c-3472e605f426}</Project>
-      <Name>Wexflow.Core.SQLite</Name>
+      <Name>Wexflow.Core.Db.SQLite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Core.SQLServer\Wexflow.Core.SQLServer.csproj">
+    <ProjectReference Include="..\Wexflow.Core.Db.SQLServer\Wexflow.Core.Db.SQLServer.csproj">
       <Project>{23a7c9d1-d796-4152-af5a-24ec6bfe90fa}</Project>
-      <Name>Wexflow.Core.SQLServer</Name>
+      <Name>Wexflow.Core.Db.SQLServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
