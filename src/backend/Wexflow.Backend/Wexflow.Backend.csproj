@@ -118,6 +118,8 @@
     <Content Include="designer.html" />
     <Content Include="forgot-password.html" />
     <Content Include="images\delete.png" />
+    <Content Include="images\en.png" />
+    <Content Include="images\fr.png" />
     <Content Include="images\logo.png" />
     <Content Include="js\ace.js" />
     <Content Include="js\approval.min.js" />
@@ -140,6 +142,7 @@
     <Content Include="js\forgot-password.min.js" />
     <Content Include="js\history.min.js" />
     <Content Include="js\jquery.toast.min.js" />
+    <Content Include="js\language.js" />
     <Content Include="js\lodash.min.js" />
     <Content Include="js\manager.min.js" />
     <Content Include="js\mode-json.js" />

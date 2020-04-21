@@ -35,6 +35,9 @@ body {
     float: right;
 }
 
+#lang{
+    margin-top: 10px !important;
+}
 
 #login {
     width: 280px;
