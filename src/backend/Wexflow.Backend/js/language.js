@@ -17,6 +17,10 @@
     languages["en"]["valid-username"] = "Enter a valid username and password.";
     languages["en"]["wrong-credentials"] = "Wrong credentials.";
     languages["en"]["wrong-password"] = "The password is incorrect.";
+    languages["en"]["submit"] = "Submit";
+    languages["en"]["enter-username"] = "Enter a username.";
+    languages["en"]["fp-error"] = "An error occured while sending the email.";
+    languages["en"]["fp-success"] = "An email with a new password was sent to: ";
 
     // fr
     languages["fr"]["help"] = "Aide";
@@ -28,6 +32,10 @@
     languages["fr"]["valid-username"] = "Entrez un nom d'utilisateur et un mot de passe valides.";
     languages["fr"]["wrong-credentials"] = "Paramètres de connexion incorrects.";
     languages["fr"]["wrong-password"] = "Mot de passe incorrect.";
+    languages["fr"]["submit"] = "Soumettre";
+    languages["fr"]["enter-username"] = "Enterez un nom d'utilisateur.";
+    languages["fr"]["fp-error"] = "Une erreur est survenue lors de l'envoi de l'Email.";
+    languages["fr"]["fp-success"] = "Un Email avec un nouveau password a été envoyé à : ";
 
     this.get = function (keyword) {
         return languages[self.getLanguage()][keyword] || languages["en"][keyword];
