@@ -1,6 +1,45 @@
 ﻿function Profiles() {
     "use strict";
 
+    // lang
+    let language = new Language();
+
+    function updateLanguage() {
+        let code = language.getLanguage();
+        if (code === "en") {
+            document.getElementById("lang").title = "French";
+            document.getElementById("lang-img").src = "images/fr.png";
+        } else if (code === "fr") {
+            document.getElementById("lang").title = "English";
+            document.getElementById("lang-img").src = "images/en.png";
+        }
+
+        document.getElementById("help").innerHTML = language.get("help");
+        document.getElementById("about").innerHTML = language.get("about");
+        document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
+        document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
+        document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
+        document.getElementById("lnk-history").innerHTML = language.get("lnk-history");
+        document.getElementById("lnk-users").innerHTML = language.get("lnk-users");
+        document.getElementById("lnk-profiles").innerHTML = language.get("lnk-profiles");
+        document.getElementById("spn-logout").innerHTML = language.get("spn-logout");
+
+        document.getElementById("users-search-action").value = language.get("btn-search");
+        document.getElementById("users-save-action").value = language.get("save-action");
+        // 
+    }
+    updateLanguage();
+
+    document.getElementById("lang").onclick = function () {
+        let code = language.getLanguage();
+        if (code === "en") {
+            language.setLanguage("fr");
+        } else if (code === "fr") {
+            language.setLanguage("en");
+        }
+        updateLanguage();
+    };
+
     var uri = Common.trimEnd(Settings.Uri, "/");
     var lnkManager = document.getElementById("lnk-manager");
     var lnkDesigner = document.getElementById("lnk-designer");
@@ -47,7 +86,7 @@
                     lnkUsers.style.display = "inline";
                     lnkProfiles.style.display = "inline";
 
-                    btnLogout.innerHTML = "Logout (" + u.Username + ")";
+                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
                     btnLogout.onclick = function () {
                         deleteUser();

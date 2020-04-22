@@ -38,6 +38,11 @@
         display: none;
     }
 
+#lang {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+}
+
 #profiles {
     display: none;
     position: absolute;
@@ -130,7 +135,6 @@
 
 #users-save-action {
     float: right;
-    width: 75px;
     margin-top: 10px;
     margin-right: 10px;
     display: none;
