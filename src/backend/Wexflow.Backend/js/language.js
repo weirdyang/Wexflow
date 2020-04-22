@@ -21,7 +21,28 @@
     languages["en"]["enter-username"] = "Enter a username.";
     languages["en"]["fp-error"] = "An error occured while sending the email.";
     languages["en"]["fp-success"] = "An email with a new password was sent to: ";
+    languages["en"]["lnk-dashboard"] = "Dashboard";
+    languages["en"]["lnk-manager"] = "Manager";
+    languages["en"]["lnk-designer"] = "Designer";
+    languages["en"]["lnk-history"] = "History";
+    languages["en"]["lnk-users"] = "Users";
+    languages["en"]["lnk-profiles"] = "Profiles";
+    languages["en"]["spn-logout"] = "Logout";
+    languages["en"]["status-pending-label"] = "Pending";
+    languages["en"]["status-running-label"] = "Running";
+    languages["en"]["status-done-label"] = "Done";
+    languages["en"]["status-failed-label"] = "Failed";
+    languages["en"]["status-warning-label"] = "Warning";
+    languages["en"]["status-disapproved-label"] = "Rejected";
+    languages["en"]["status-stopped-label"] = "Stopped";
+    languages["en"]["lbl-show"] = "Show";
+    languages["en"]["lbl-entries"] = "entries";
+    languages["en"]["spn-entries-count-label"] = "Total entries: ";
+    languages["en"]["lbl-from"] = "from";
+    languages["en"]["lbl-to"] = "to";
+    languages["en"]["btn-search"] = "Search";
 
+    // 
     // fr
     languages["fr"]["help"] = "Aide";
     languages["fr"]["about"] = "À propos";
@@ -36,6 +57,26 @@
     languages["fr"]["enter-username"] = "Enterez un nom d'utilisateur.";
     languages["fr"]["fp-error"] = "Une erreur est survenue lors de l'envoi de l'Email.";
     languages["fr"]["fp-success"] = "Un Email avec un nouveau password a été envoyé à : ";
+    languages["fr"]["lnk-dashboard"] = "Tableau de bord";
+    languages["fr"]["lnk-manager"] = "Manager";
+    languages["fr"]["lnk-designer"] = "Concepteur";
+    languages["fr"]["lnk-history"] = "Historique";
+    languages["fr"]["lnk-users"] = "Utilisateurs";
+    languages["fr"]["lnk-profiles"] = "Profiles";
+    languages["fr"]["spn-logout"] = "Se déconnecter";
+    languages["fr"]["status-pending-label"] = "En attente";
+    languages["fr"]["status-running-label"] = "En cours";
+    languages["fr"]["status-done-label"] = "Terminé";
+    languages["fr"]["status-failed-label"] = "Échoué";
+    languages["fr"]["status-warning-label"] = "Avertissement";
+    languages["fr"]["status-disapproved-label"] = "Rejeté";
+    languages["fr"]["status-stopped-label"] = "Arrêté";
+    languages["fr"]["lbl-show"] = "Monter";
+    languages["fr"]["lbl-entries"] = "entrées";
+    languages["fr"]["spn-entries-count-label"] = "Nombre d'entrées : ";
+    languages["fr"]["lbl-from"] = "de";
+    languages["fr"]["lbl-to"] = "à";
+    languages["fr"]["btn-search"] = "Rechercher";
 
     this.get = function (keyword) {
         return languages[self.getLanguage()][keyword] || languages["en"][keyword];

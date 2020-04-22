@@ -1,6 +1,56 @@
 ﻿function Dashboard() {
     "use strict";
 
+    // lang
+    let language = new Language();
+
+    function updateLanguage() {
+        let code = language.getLanguage();
+        if (code === "en") {
+            document.getElementById("lang").title = "French";
+            document.getElementById("lang-img").src = "images/fr.png";
+        } else if (code === "fr") {
+            document.getElementById("lang").title = "English";
+            document.getElementById("lang-img").src = "images/en.png";
+        }
+
+        document.getElementById("help").innerHTML = language.get("help");
+        document.getElementById("about").innerHTML = language.get("about");
+        document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
+        document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
+        document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
+        document.getElementById("lnk-history").innerHTML = language.get("lnk-history");
+        document.getElementById("lnk-users").innerHTML = language.get("lnk-users");
+        document.getElementById("lnk-profiles").innerHTML = language.get("lnk-profiles");
+        document.getElementById("spn-logout").innerHTML = language.get("spn-logout");
+
+        document.getElementById("status-pending-label").innerHTML = language.get("status-pending-label");
+        document.getElementById("status-running-label").innerHTML = language.get("status-running-label");
+        document.getElementById("status-done-label").innerHTML = language.get("status-done-label");
+        document.getElementById("status-failed-label").innerHTML = language.get("status-failed-label");
+        document.getElementById("status-warning-label").innerHTML = language.get("status-warning-label");
+        document.getElementById("status-disapproved-label").innerHTML = language.get("status-disapproved-label");
+        document.getElementById("status-stopped-label").innerHTML = language.get("status-stopped-label");
+
+        document.getElementById("lbl-show").innerHTML = language.get("lbl-show");
+        document.getElementById("lbl-entries").innerHTML = language.get("lbl-entries");
+        document.getElementById("spn-entries-count-label").innerHTML = language.get("spn-entries-count-label");
+        document.getElementById("lbl-from").innerHTML = language.get("lbl-from");
+        document.getElementById("lbl-to").innerHTML = language.get("lbl-to");
+        document.getElementById("btn-search").value = language.get("btn-search");
+    }
+    updateLanguage();
+
+    document.getElementById("lang").onclick = function () {
+        let code = language.getLanguage();
+        if (code === "en") {
+            language.setLanguage("fr");
+        } else if (code === "fr") {
+            language.setLanguage("en");
+        }
+        updateLanguage();
+    };
+
     var uri = Common.trimEnd(Settings.Uri, "/");
     var refreshTimeout = 1000;
     var statusPending = document.getElementById("status-pending-value");
@@ -19,7 +69,7 @@
     var btnNextPage = document.getElementById("btn-next-page");
     var btnPreviousPage = document.getElementById("btn-previous-page");
     var lblPages = document.getElementById("lbl-pages");
-    var lblEntriesCount = document.getElementById("lbl-entries-count");
+    var lblEntriesCount = document.getElementById("spn-entries-count");
     var txtFrom = document.getElementById("txt-from");
     var txtTo = document.getElementById("txt-to");
     var lnkManager = document.getElementById("lnk-manager");
@@ -62,7 +112,7 @@
                         Common.redirectToLoginPage();
                     };
 
-                    btnLogout.innerHTML = "Logout (" + u.Username + ")";
+                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
                     if (u.UserProfile === 0 || u.UserProfile === 1) {
                         lnkManager.style.display = "inline";
@@ -218,7 +268,7 @@
     }
 
     function updatePagerControls(count) {
-        lblEntriesCount.innerHTML = "Total entries: " + count;
+        lblEntriesCount.innerHTML = count;
 
         numberOfPages = count / getEntriesCount();
         var numberOfPagesInt = parseInt(numberOfPages);
@@ -266,7 +316,6 @@
                     items.push("<tr>"
                         + "<input type='hidden' class='entryId' value='" + val.Id + "'>"
                         + "<td class='status'>" + estatus + "</td>"
-                        //+ "<td class='date'>" + Common.formatDate(new Date(val.StatusDate)) + "</td>"
                         + "<td class='date'>" + val.StatusDate + "</td>"
                         + "<td class='id' title='" + val.WorkflowId + "'>" + val.WorkflowId + "</td>"
                         + "<td class='name'>" + val.Name + "</td>"
@@ -310,7 +359,7 @@
 
                 var descriptions = entriesTable.querySelectorAll(".desc");
                 for (i = 0; i < descriptions.length; i++) {
-                    descriptions[i].style.width = entriesTable.offsetWidth - 620 + "px";
+                    descriptions[i].style.width = entriesTable.offsetWidth - 600 + "px";
                 }
 
                 for (var j = 0; j < rows.length; j++) {

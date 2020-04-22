@@ -38,6 +38,10 @@ body {
         display: none;
     }
 
+#lang {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+}
 
 #status {
     position: absolute;
