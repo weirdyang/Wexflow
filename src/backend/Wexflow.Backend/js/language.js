@@ -41,6 +41,17 @@
     languages["en"]["lbl-from"] = "from";
     languages["en"]["lbl-to"] = "to";
     languages["en"]["btn-search"] = "Search";
+    languages["en"]["new-user-action"] = "New user";
+    languages["en"]["save-action"] = "Save";
+    languages["en"]["delete-action"] = "Delete";
+    languages["en"]["tr-createdOn-label"] = "Created on";
+    languages["en"]["tr-modifiedOn-label"] = "Modified on";
+    languages["en"]["userprofile-slct-label"] = "User profile";
+    languages["en"]["email-text-label"] = "Email";
+    languages["en"]["change-password"] = "Change password";
+    languages["en"]["old-password-text-label"] = "Old password";
+    languages["en"]["lbl-new-password"] = "New password";
+    languages["en"]["confirm-password-text-label"] = "Confirm password";
 
     // 
     // fr
@@ -77,6 +88,17 @@
     languages["fr"]["lbl-from"] = "de";
     languages["fr"]["lbl-to"] = "à";
     languages["fr"]["btn-search"] = "Rechercher";
+    languages["fr"]["new-user-action"] = "Nouvel utilisateur";
+    languages["fr"]["save-action"] = "Sauvegarder";
+    languages["fr"]["delete-action"] = "Supprimer";
+    languages["fr"]["tr-createdOn-label"] = "Créé le";
+    languages["fr"]["tr-modifiedOn-label"] = "Modifié le";
+    languages["fr"]["userprofile-slct-label"] = "Profile";
+    languages["fr"]["email-text-label"] = "Email";
+    languages["fr"]["change-password"] = "Changer le mot de passe";
+    languages["fr"]["old-password-text-label"] = "Ancien mot de passe";
+    languages["fr"]["lbl-new-password"] = "Nouveau mot de passe";
+    languages["fr"]["confirm-password-text-label"] = "Confirmer le mot de passe";
 
     this.get = function (keyword) {
         return languages[self.getLanguage()][keyword] || languages["en"][keyword];

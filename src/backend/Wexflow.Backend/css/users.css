@@ -38,6 +38,11 @@
         display: none;
     }
 
+#lang {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+}
+
 #users {
     position: absolute;
     top: 45px;
@@ -131,7 +136,6 @@
 
     #right-panel #new-user-action, #save-action, #delete-action {
         margin-top: 10px;
-        width: 75px;
     }
 
     #right-panel .action-right {

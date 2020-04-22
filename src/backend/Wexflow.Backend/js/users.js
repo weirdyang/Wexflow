@@ -1,6 +1,57 @@
 ﻿function Users() {
     "use strict";
 
+    // lang
+    let language = new Language();
+
+    function updateLanguage() {
+        let code = language.getLanguage();
+        if (code === "en") {
+            document.getElementById("lang").title = "French";
+            document.getElementById("lang-img").src = "images/fr.png";
+        } else if (code === "fr") {
+            document.getElementById("lang").title = "English";
+            document.getElementById("lang-img").src = "images/en.png";
+        }
+
+        document.getElementById("help").innerHTML = language.get("help");
+        document.getElementById("about").innerHTML = language.get("about");
+        document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
+        document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
+        document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
+        document.getElementById("lnk-history").innerHTML = language.get("lnk-history");
+        document.getElementById("lnk-users").innerHTML = language.get("lnk-users");
+        document.getElementById("lnk-profiles").innerHTML = language.get("lnk-profiles");
+        document.getElementById("spn-logout").innerHTML = language.get("spn-logout");
+
+        document.getElementById("users-search-action").value = language.get("btn-search");
+        document.getElementById("new-user-action").value = language.get("new-user-action");
+        document.getElementById("save-action").value = language.get("save-action");
+        document.getElementById("delete-action").value = language.get("delete-action");
+        document.getElementById("tr-createdOn-label").innerHTML = language.get("tr-createdOn-label");
+        document.getElementById("tr-modifiedOn-label").innerHTML = language.get("tr-modifiedOn-label");
+        document.getElementById("username-text-label").innerHTML = language.get("username");
+        document.getElementById("userprofile-slct-label").innerHTML = language.get("userprofile-slct-label");
+        document.getElementById("email-text-label").innerHTML = language.get("email-text-label");
+        document.getElementById("change-password").innerHTML = language.get("change-password");
+        document.getElementById("old-password-text-label").innerHTML = language.get("old-password-text-label");
+        document.getElementById("lbl-new-password").innerHTML = language.get("lbl-new-password");
+        document.getElementById("confirm-password-text-label").innerHTML = language.get("confirm-password-text-label");
+        //
+
+    }
+    updateLanguage();
+
+    document.getElementById("lang").onclick = function () {
+        let code = language.getLanguage();
+        if (code === "en") {
+            language.setLanguage("fr");
+        } else if (code === "fr") {
+            language.setLanguage("en");
+        }
+        updateLanguage();
+    };
+
     var uri = Common.trimEnd(Settings.Uri, "/");
     var lnkManager = document.getElementById("lnk-manager");
     var lnkDesigner = document.getElementById("lnk-designer");
@@ -81,7 +132,7 @@
                         lnkProfiles.style.display = "inline";
                     }
 
-                    btnLogout.innerHTML = "Logout (" + u.Username + ")";
+                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
                     btnLogout.onclick = function () {
                         deleteUser();
@@ -236,7 +287,7 @@
                             //lblNewPassword.innerHTML = "Password";
                             changePass.style.display = "none";
                         } else {
-                            lblNewPassword.innerHTML = "New password";
+                            lblNewPassword.innerHTML = language.get("lbl-new-password");
                         }
 
                         newUser = false;
@@ -372,7 +423,7 @@
 
         txtUsername.disabled = false;
         oldPasswordTr.style.display = "none";
-        lblNewPassword.innerHTML = "Password";
+        lblNewPassword.innerHTML = language.get("password");
         txtUsername.value = "";
         slctProfile.disabled = false;
         slctProfile.value = -1;

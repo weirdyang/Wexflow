@@ -5,36 +5,38 @@
     <title>Users</title>
     <link rel="icon" href="images/logo.png" type="image/png">
 
-    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery.toast.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/users.css" />-->
+    <link rel="stylesheet" type="text/css" href="css/users.css" />
 
-    <link rel="stylesheet" type="text/css" href="css/users.min.css" />
+    <!--<link rel="stylesheet" type="text/css" href="css/users.min.css" />-->
 
     <script type="text/javascript" src="js/settings.js"></script>
 
-    <!--<script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.toast.min.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/md5.js"></script>
     <script type="text/javascript" src="js/authenticate.js"></script>
-    <script type="text/javascript" src="js/users.js"></script>-->
+    <script type="text/javascript" src="js/language.js"></script>
+    <script type="text/javascript" src="js/users.js"></script>
 
-    <script type="text/javascript" src="js/users.min.js"></script>
+    <!--<script type="text/javascript" src="js/users.min.js"></script>-->
 </head>
 <body>
     <div id="header">
-        <a href="dashboard.html">Dashboard</a>
+        <a id="lnk-dashboard" href="dashboard.html">Dashboard</a>
         <a id="lnk-manager" href="manager.html">Manager</a>
         <!--<a id="lnk-approval" href="approval.html">Approval</a>-->
         <a id="lnk-designer" href="designer.html">Designer</a>
         <!--<a id="lnk-editor" href="editor.html">Editor</a>-->
-        <a href="history.html">History</a>
+        <a id="lnk-history" href="history.html">History</a>
         <a id="lnk-users" href="users.html" style="text-decoration: underline">Users</a>
         <a id="lnk-profiles" href="profiles.html">Profiles</a>
-        <a href="#" id="btn-logout" class="header-right">Logout</a>
-        <a href="https://wexflow.github.io" class="header-right">About</a>
-        <a href="https://github.com/aelassas/Wexflow/wiki" class="header-right">Help</a>
+        <a id="lang" href="#" class="header-right" title=""><img id="lang-img" src="" alt=""></a>
+        <a href="#" id="btn-logout" class="header-right"><span id="spn-logout">Logout</span><span id="spn-username"></span></a>
+        <a id="about" href="https://wexflow.github.io" class="header-right">About</a>
+        <a id="help" href="https://github.com/aelassas/Wexflow/wiki" class="header-right">Help</a>
     </div>
     <div id="users">
         <div id="users-container">
@@ -62,7 +64,7 @@
                     </tr>
                     <tr id="tr-createdOn">
                         <td>
-                            <label>Created on</label>
+                            <label id="tr-createdOn-label">Created on</label>
                         </td>
                         <td>
                             <input id="txt-createdOn" type="text" disabled="disabled" />
@@ -70,7 +72,7 @@
                     </tr>
                     <tr id="tr-modifiedOn">
                         <td>
-                            <label>Modified on</label>
+                            <label id="tr-modifiedOn-label">Modified on</label>
                         </td>
                         <td>
                             <input id="txt-modifiedOn" type="text" disabled="disabled" />
@@ -78,7 +80,7 @@
                     </tr>
                     <tr>
                         <td class="username-td">
-                            <label>Username</label>
+                            <label id="username-text-label">Username</label>
                         </td>
                         <td>
                             <input id="username-text" type="text">
@@ -86,7 +88,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>User profile </label>
+                            <label id="userprofile-slct-label">User profile </label>
                         </td>
                         <td>
                             <select id="slct-profile">
@@ -99,7 +101,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>Email</label>
+                            <label id="email-text-label">Email</label>
                         </td>
                         <td>
                             <input id="email-text" type="text">
@@ -113,7 +115,7 @@
                     </tr>
                     <tr id="old-password-tr">
                         <td>
-                            <label>Old password </label>
+                            <label id="old-password-text-label" >Old password</label>
                         </td>
                         <td>
                             <input id="old-password-text" type="password">
@@ -121,7 +123,7 @@
                     </tr>
                     <tr id="new-password-tr">
                         <td>
-                            <label id="lbl-new-password">New password </label>
+                            <label id="lbl-new-password">New password</label>
                         </td>
                         <td>
                             <input id="new-password-text" type="password">
@@ -129,7 +131,7 @@
                     </tr>
                     <tr id="confirm-password-tr">
                         <td>
-                            <label>Confirm password </label>
+                            <label id="confirm-password-text-label">Confirm password</label>
                         </td>
                         <td>
                             <input id="confirm-password-text" type="password">
