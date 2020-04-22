@@ -1,6 +1,48 @@
 ﻿function History() {
     "use strict";
 
+    // lang
+    let language = new Language();
+
+    function updateLanguage() {
+        let code = language.getLanguage();
+        if (code === "en") {
+            document.getElementById("lang").title = "French";
+            document.getElementById("lang-img").src = "images/fr.png";
+        } else if (code === "fr") {
+            document.getElementById("lang").title = "English";
+            document.getElementById("lang-img").src = "images/en.png";
+        }
+
+        document.getElementById("help").innerHTML = language.get("help");
+        document.getElementById("about").innerHTML = language.get("about");
+        document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
+        document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
+        document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
+        document.getElementById("lnk-history").innerHTML = language.get("lnk-history");
+        document.getElementById("lnk-users").innerHTML = language.get("lnk-users");
+        document.getElementById("lnk-profiles").innerHTML = language.get("lnk-profiles");
+        document.getElementById("spn-logout").innerHTML = language.get("spn-logout");
+
+        document.getElementById("lbl-show").innerHTML = language.get("lbl-show");
+        document.getElementById("lbl-entries").innerHTML = language.get("lbl-entries");
+        document.getElementById("spn-entries-count-label").innerHTML = language.get("spn-entries-count-label");
+        document.getElementById("lbl-from").innerHTML = language.get("lbl-from");
+        document.getElementById("lbl-to").innerHTML = language.get("lbl-to");
+        document.getElementById("btn-search").value = language.get("btn-search");
+    }
+    updateLanguage();
+
+    document.getElementById("lang").onclick = function () {
+        let code = language.getLanguage();
+        if (code === "en") {
+            language.setLanguage("fr");
+        } else if (code === "fr") {
+            language.setLanguage("en");
+        }
+        updateLanguage();
+    };
+
     var uri = Common.trimEnd(Settings.Uri, "/");
     var divEntries = document.getElementById("entries");
     var divEntriesAction = document.getElementById("entries-action");
@@ -11,7 +53,7 @@
     var btnNextPage = document.getElementById("btn-next-page");
     var btnPreviousPage = document.getElementById("btn-previous-page");
     var lblPages = document.getElementById("lbl-pages");
-    var lblEntriesCount = document.getElementById("lbl-entries-count");
+    var lblEntriesCount = document.getElementById("spn-entries-count");
     var txtFrom = document.getElementById("txt-from");
     var txtTo = document.getElementById("txt-to");
     var lnkManager = document.getElementById("lnk-manager");
@@ -66,7 +108,8 @@
                         Common.redirectToLoginPage();
                     };
 
-                    btnLogout.innerHTML = "Logout (" + u.Username + ")";
+                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+
                     Common.get(uri + "/historyEntryStatusDateMin",
                         function (dateMin) {
                             Common.get(uri + "/historyEntryStatusDateMax",
@@ -189,7 +232,7 @@
     }
 
     function updatePagerControls(count) {
-        lblEntriesCount.innerHTML = "Total entries: " + count;
+        lblEntriesCount.innerHTML = count;
 
         numberOfPages = count / getEntriesCount();
         var numberOfPagesInt = parseInt(numberOfPages);
