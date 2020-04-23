@@ -52,6 +52,29 @@
     languages["en"]["old-password-text-label"] = "Old password";
     languages["en"]["lbl-new-password"] = "New password";
     languages["en"]["confirm-password-text-label"] = "Confirm password";
+    languages["en"]["wf-start"] = "Start";
+    languages["en"]["wf-pause"] = "Suspend";
+    languages["en"]["wf-resume"] = "Resume";
+    languages["en"]["wf-stop"] = "Stop";
+    languages["en"]["wf-approve"] = "Approve";
+    languages["en"]["wf-reject"] = "Reject";
+    languages["en"]["op-not-supported"] = "This operation is not supported.";
+    languages["en"]["job-part-1"] = "The job ";
+    languages["en"]["job-approved"] = " was approved.";
+    languages["en"]["job-rejected"] = " was rejected.";
+    languages["en"]["workflows-server-error"] = "An error occured while retrieving workflows. Check that Wexflow server is running correctly."
+    languages["en"]["job-approved-error-part-1"] = "An error occured while approving the job ";
+    languages["en"]["job-rejected-error-part-1"] = "An error occured while rejecting the job ";
+    languages["en"]["job-approved-error-part-2"] = " of the workflow ";
+    languages["en"]["th-wf-id"] = "Id";
+    languages["en"]["th-wf-n"] = "Name";
+    languages["en"]["th-wf-lt"] = "LaunchType";
+    languages["en"]["th-wf-e"] = "Enabled";
+    languages["en"]["th-wf-a"] = "Approval";
+    languages["en"]["th-wf-d"] = "Description";
+    languages["en"]["th-job-id"] = "Job Id";
+    languages["en"]["th-job-startedOn"] = "Started on";
+
 
     // 
     // fr
@@ -99,6 +122,28 @@
     languages["fr"]["old-password-text-label"] = "Ancien mot de passe";
     languages["fr"]["lbl-new-password"] = "Nouveau mot de passe";
     languages["fr"]["confirm-password-text-label"] = "Confirmer le mot de passe";
+    languages["fr"]["wf-start"] = "Démarrer";
+    languages["fr"]["wf-pause"] = "Pause";
+    languages["fr"]["wf-resume"] = "Reprendre";
+    languages["fr"]["wf-stop"] = "Arrêter";
+    languages["fr"]["wf-approve"] = "Approuver";
+    languages["fr"]["wf-reject"] = "Rejeter";
+    languages["fr"]["op-not-supported"] = "Cette opération n'est pas supportée.";
+    languages["fr"]["job-part-1"] = "Le job ";
+    languages["fr"]["job-approved"] = " a été approuvé.";
+    languages["fr"]["job-rejected"] = " a été rejeté.";
+    languages["fr"]["workflows-server-error"] = "Une erreur s'est produite lors de la récupération de workflows. Vérifiez que le serveur tourne."
+    languages["fr"]["job-approved-error-part-1"] = "Une erreur s'est produite lors de l'approbation du job ";
+    languages["fr"]["job-rejected-error-part-1"] = "Une erreur s'est produite lors du rejet du job ";
+    languages["fr"]["job-approved-error-part-2"] = " du workflow ";
+    languages["fr"]["th-wf-id"] = "Id";
+    languages["fr"]["th-wf-n"] = "Nom";
+    languages["fr"]["th-wf-lt"] = "LaunchType";
+    languages["fr"]["th-wf-e"] = "Activé";
+    languages["fr"]["th-wf-a"] = "Approbation";
+    languages["fr"]["th-wf-d"] = "Description";
+    languages["fr"]["th-job-id"] = "Job Id";
+    languages["fr"]["th-job-startedOn"] = "Démarré le";
 
     this.get = function (keyword) {
         return languages[self.getLanguage()][keyword] || languages["en"][keyword];

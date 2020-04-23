@@ -1,6 +1,95 @@
 ﻿function WexflowManager() {
     "use strict";
 
+    // lang
+    let language = new Language();
+
+    function updateLanguage() {
+        let code = language.getLanguage();
+        if (code === "en") {
+            document.getElementById("lang").title = "French";
+            document.getElementById("lang-img").src = "images/fr.png";
+        } else if (code === "fr") {
+            document.getElementById("lang").title = "English";
+            document.getElementById("lang-img").src = "images/en.png";
+        }
+
+        document.getElementById("help").innerHTML = language.get("help");
+        document.getElementById("about").innerHTML = language.get("about");
+        document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
+        document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
+        document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
+        document.getElementById("lnk-history").innerHTML = language.get("lnk-history");
+        document.getElementById("lnk-users").innerHTML = language.get("lnk-users");
+        document.getElementById("lnk-profiles").innerHTML = language.get("lnk-profiles");
+        document.getElementById("spn-logout").innerHTML = language.get("spn-logout");
+
+        if (document.getElementById("wf-start")) {
+            document.getElementById("wf-start").innerHTML = language.get("wf-start");
+        }
+        if (document.getElementById("wf-pause")) {
+            document.getElementById("wf-pause").innerHTML = language.get("wf-pause");
+        }
+        if (document.getElementById("wf-resume")) {
+            document.getElementById("wf-resume").innerHTML = language.get("wf-resume");
+        }
+        if (document.getElementById("wf-stop")) {
+            document.getElementById("wf-stop").innerHTML = language.get("wf-stop");
+        }
+        if (document.getElementById("wf-approve")) {
+            document.getElementById("wf-approve").innerHTML = language.get("wf-approve");
+        }
+        if (document.getElementById("wf-reject")) {
+            document.getElementById("wf-reject").innerHTML = language.get("wf-reject");
+        }
+        if (document.getElementById("wf-search-action")) {
+            document.getElementById("wf-search-action").innerHTML = language.get("btn-search");
+        }
+
+        if (document.getElementById("th-job-id")) {
+            document.getElementById("th-job-id").innerHTML = language.get("th-job-id");
+        }
+        if (document.getElementById("th-job-startedOn")) {
+            document.getElementById("th-job-startedOn").innerHTML = language.get("th-job-startedOn");
+        }
+        if (document.getElementById("th-job-n")) {
+            document.getElementById("th-job-n").innerHTML = language.get("th-wf-n");
+        }
+        if (document.getElementById("th-job-d")) {
+            document.getElementById("th-job-d").innerHTML = language.get("th-wf-d");
+        }
+
+        if (document.getElementById("th-wf-id")) {
+            document.getElementById("th-wf-id").innerHTML = language.get("th-wf-id");
+        }
+        if (document.getElementById("th-wf-n")) {
+            document.getElementById("th-wf-n").innerHTML = language.get("th-wf-n");
+        }
+        if (document.getElementById("th-wf-lt")) {
+            document.getElementById("th-wf-lt").innerHTML = language.get("th-wf-lt");
+        }
+        if (document.getElementById("th-wf-e")) {
+            document.getElementById("th-wf-e").innerHTML = language.get("th-wf-e");
+        }
+        if (document.getElementById("th-wf-a")) {
+            document.getElementById("th-wf-a").innerHTML = language.get("th-wf-a");
+        }
+        if (document.getElementById("th-wf-d")) {
+            document.getElementById("th-wf-d").innerHTML = language.get("th-wf-d");
+        }
+    }
+    updateLanguage();
+
+    document.getElementById("lang").onclick = function () {
+        let code = language.getLanguage();
+        if (code === "en") {
+            language.setLanguage("fr");
+        } else if (code === "fr") {
+            language.setLanguage("en");
+        }
+        updateLanguage();
+    };
+
     var id = "wf-manager";
     var uri = Common.trimEnd(Settings.Uri, "/");
     var lnkManager = document.getElementById("lnk-manager");
@@ -22,12 +111,12 @@
 
     var html = "<div id='wf-container'>"
         + "<div id='wf-cmd'>"
-        + "<button id='wf-start' type='button' class='btn btn-primary btn-xs'>Start</button>"
-        + "<button id='wf-pause' type='button' class='btn btn-secondary btn-xs'>Suspend</button>"
-        + "<button id='wf-resume' type='button' class='btn btn-secondary btn-xs'>Resume</button>"
-        + "<button id='wf-stop' type='button' class='btn btn-danger btn-xs'>Stop</button>"
-        + "<button id='wf-approve' type='button' class='btn btn-primary btn-xs'>Approve</button>"
-        + "<button id='wf-reject' type='button' class='btn btn-warning btn-xs'>Reject</button>"
+        + "<button id='wf-start' type='button' class='btn btn-primary btn-xs'>" + language.get("wf-start") + "</button>"
+        + "<button id='wf-pause' type='button' class='btn btn-secondary btn-xs'>" + language.get("wf-pause") + "</button>"
+        + "<button id='wf-resume' type='button' class='btn btn-secondary btn-xs'>" + language.get("wf-resume") + "</button>"
+        + "<button id='wf-stop' type='button' class='btn btn-danger btn-xs'>" + language.get("wf-stop") + "</button>"
+        + "<button id='wf-approve' type='button' class='btn btn-primary btn-xs'>" + language.get("wf-approve") + "</button>"
+        + "<button id='wf-reject' type='button' class='btn btn-warning btn-xs'>" + language.get("wf-reject") + "</button>"
         + "</div>"
         + "<div id='wf-notifier'>"
         + "<input id='wf-notifier-text' type='text' name='fname' readonly>"
@@ -36,16 +125,16 @@
         + "<div id='wf-search-text-container'>"
         + "<input id='wf-search-text' type='text' name='fname'>"
         + "</div>"
-        + "<button id='wf-search-action' type='button' class='btn btn-primary btn-xs'>Search</button>"
+        + "<button id='wf-search-action' type='button' class='btn btn-primary btn-xs'>" + language.get("btn-search") + "</button>"
         + "</div>"
         + "<div id='wf-jobs'>"
         + "<table id='wf-jobs-table' class='table'>"
         + "<thead class='thead-dark'>"
         + "<tr>"
-        + "<th class='wf-jobId'>Job Id</th>"
-        + "<th class='wf-startedOn'>Started On</th>"
-        + "<th class='wf-n'>Name</th>"
-        + "<th class='wf-d'>Description</th>"
+        + "<th id='th-job-id' class='wf-jobId'>"+language.get("th-job-id")+"</th>"
+        + "<th id='th-job-startedOn' class='wf-startedOn'>"+language.get("th-job-startedOn")+"</th>"
+        + "<th id='th-job-n' class='wf-n'>"+language.get("th-wf-n")+"</th>"
+        + "<th id='th-job-d' class='wf-d'>"+language.get("th-wf-d")+"</th>"
         + "</tr>"
         + "</thead>"
         + "<tbody>"
@@ -103,7 +192,7 @@
                             deleteUser();
                             Common.redirectToLoginPage();
                         };
-                        btnLogout.innerHTML = "Logout (" + u.Username + ")";
+                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
                         Common.disableButton(startButton, true);
                         Common.disableButton(suspendButton, true);
@@ -196,12 +285,12 @@
                 var table = "<table id='wf-workflows-table' class='table'>"
                     + "<thead class='thead-dark'>"
                     + "<tr>"
-                    + "<th class='wf-id'>Id</th>"
-                    + "<th class='wf-n'>Name</th>"
-                    + "<th class='wf-lt'>LaunchType</th>"
-                    + "<th class='wf-e'>Enabled</th>"
-                    + "<th class='wf-a'>Approval</th>"
-                    + "<th class='wf-d'>Description</th>"
+                    + "<th id='th-wf-id' class='wf-id'>" + language.get("th-wf-id") + "</th>"
+                    + "<th id='th-wf-n' class='wf-n'>" + language.get("th-wf-n") + "</th>"
+                    + "<th id='th-wf-lt' class='wf-lt'>" + language.get("th-wf-lt") + "</th>"
+                    + "<th id='th-wf-e' class='wf-e'>" + language.get("th-wf-e") + "</th>"
+                    + "<th id='th-wf-a' class='wf-a'>" + language.get("th-wf-a") + "</th>"
+                    + "<th id='th-wf-d' class='wf-d'>" + language.get("th-wf-d") + "</th>"
                     + "</tr>"
                     + "</thead>"
                     + "<tbody>"
@@ -228,7 +317,7 @@
 
                 var descriptions = workflowsTable.querySelectorAll(".wf-d");
                 for (i = 0; i < descriptions.length; i++) {
-                    descriptions[i].style.width = workflowsTable.offsetWidth - 515 + "px";
+                    descriptions[i].style.width = workflowsTable.offsetWidth - 495 + "px";
                 }
 
                 function getWorkflow(wid, func) {
@@ -478,7 +567,7 @@
                         if (res === true) {
                             updateJobButtons(selectedId, jobId, true);
                         } else {
-                            Common.toastInfo("This operation is not supported.");
+                            Common.toastInfo(language.get("op-not-supported"));
                         }
                     }, function () { }, "", auth);
                 };
@@ -503,7 +592,7 @@
                             if (res === true) {
                                 updateJobButtons(selectedId, jobId, true);
                             } else {
-                                Common.toastInfo("This operation is not supported.");
+                                Common.toastInfo(language.get("op-not-supported"));
                             }
                         },
                         function () { }, "", auth);
@@ -519,11 +608,11 @@
                         function (res) {
                             if (res === true) {
                                 updateJobButtons(selectedId, jobId, true);
-                                Common.toastSuccess("The job " + jobId + " was approved.");
+                                Common.toastSuccess(language.get("job-part-1") + jobId + language.get("job-approved"));
                             } else {
                                 Common.disableButton(approveButton, false);
                                 Common.disableButton(stopButton, false);
-                                Common.toastError("An error occured while approving the job " + jobId + " of the workflow " + selectedId + ".");
+                                Common.toastError(language.get("job-approved-error-part-1") + jobId + language.get("job-approved-error-part-2") + selectedId + ".");
                             }
                         },
                         function () { }, "", auth);
@@ -540,12 +629,12 @@
                         function (res) {
                             if (res === true) {
                                 updateJobButtons(selectedId, jobId, true);
-                                Common.toastSuccess("The job " + jobId + " was rejected.");
+                                Common.toastSuccess(language.get("job-part-1") + jobId + language.get("job-rejected"));
                             } else {
                                 Common.disableButton(disapproveButton, true);
                                 Common.disableButton(approveButton, false);
                                 Common.disableButton(stopButton, false);
-                                Common.toastError("An error occured while rejecting the job " + jobId + " of the workflow " + selectedId + ".");
+                                Common.toastError(language.get("job-rejected-error-part-1") + jobId + language.get("job-approved-error-part-2") + selectedId + ".");
                             }
                         },
                         function () { }, "", auth);
@@ -554,7 +643,7 @@
                 // End of get workflows
             },
             function () {
-                Common.toastError("An error occured while retrieving workflows. Check that Wexflow server is running correctly.");
+                Common.toastError(language.get("workflows-server-error"));
             }, auth);
     }
 

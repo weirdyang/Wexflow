@@ -39,6 +39,10 @@
         display: none;
     }
 
+#lang {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+}
 
 #wf-manager{
 	position: absolute; 
@@ -91,7 +95,7 @@
 
     #wf-search #wf-search-text-container {
         position: absolute;
-        right: 75px;
+        right: 79px;
         left: 0;
     }
         #wf-search #wf-search-text-container #wf-search-text {
@@ -101,7 +105,7 @@
     #wf-search #wf-search-action {
         position: absolute;
         right: 0px;
-        width: 70px;
+        width: 74px;
     }
 
 /* workflows */
