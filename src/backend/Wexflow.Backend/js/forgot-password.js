@@ -30,9 +30,9 @@
         updateLanguage();
     };
 
-    var uri = Common.trimEnd(Settings.Uri, "/");
-    var txtUsername = document.getElementById("txt-username");
-    var btnSubmit = document.getElementById("btn-submit");
+    let uri = Common.trimEnd(Settings.Uri, "/");
+    let txtUsername = document.getElementById("txt-username");
+    let btnSubmit = document.getElementById("btn-submit");
 
     btnSubmit.onclick = function () {
         sendEmail();
@@ -48,7 +48,7 @@
     function sendEmail() {
         btnSubmit.disabled = true;
 
-        var username = txtUsername.value;
+        let username = txtUsername.value;
 
         if (username === "") {
             Common.toastInfo(language.get("enter-username"));
