@@ -45,6 +45,11 @@
         display: none;
     }
 
+#lang {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+}
+
 #navigation, #leftcard, #propwrap, #wfclose, #wfpropwrap, #canvas {
     display: none;
 }
