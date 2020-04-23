@@ -43,40 +43,40 @@
         updateLanguage();
     };
 
-    var uri = Common.trimEnd(Settings.Uri, "/");
-    var divEntries = document.getElementById("entries");
-    var divEntriesAction = document.getElementById("entries-action");
-    var btnLogout = document.getElementById("btn-logout");
-    var btnSearch = document.getElementById("btn-search");
-    var txtSearch = document.getElementById("txt-search");
-    var slctEntriesCount = document.getElementById("slct-entries-count");
-    var btnNextPage = document.getElementById("btn-next-page");
-    var btnPreviousPage = document.getElementById("btn-previous-page");
-    var lblPages = document.getElementById("lbl-pages");
-    var lblEntriesCount = document.getElementById("spn-entries-count");
-    var txtFrom = document.getElementById("txt-from");
-    var txtTo = document.getElementById("txt-to");
-    var lnkManager = document.getElementById("lnk-manager");
-    var lnkDesigner = document.getElementById("lnk-designer");
-    //var lnkEditor = document.getElementById("lnk-editor");
-    //var lnkApproval = document.getElementById("lnk-approval");
-    var lnkUsers = document.getElementById("lnk-users");
-    var lnkProfiles = document.getElementById("lnk-profiles");
+    let uri = Common.trimEnd(Settings.Uri, "/");
+    let divEntries = document.getElementById("entries");
+    let divEntriesAction = document.getElementById("entries-action");
+    let btnLogout = document.getElementById("btn-logout");
+    let btnSearch = document.getElementById("btn-search");
+    let txtSearch = document.getElementById("txt-search");
+    let slctEntriesCount = document.getElementById("slct-entries-count");
+    let btnNextPage = document.getElementById("btn-next-page");
+    let btnPreviousPage = document.getElementById("btn-previous-page");
+    let lblPages = document.getElementById("lbl-pages");
+    let lblEntriesCount = document.getElementById("spn-entries-count");
+    let txtFrom = document.getElementById("txt-from");
+    let txtTo = document.getElementById("txt-to");
+    let lnkManager = document.getElementById("lnk-manager");
+    let lnkDesigner = document.getElementById("lnk-designer");
+    //let lnkEditor = document.getElementById("lnk-editor");
+    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkUsers = document.getElementById("lnk-users");
+    let lnkProfiles = document.getElementById("lnk-profiles");
 
-    var page = 1;
-    var numberOfPages = 0;
-    var heo = 1;
-    var suser = getUser();
-    var from = null;
-    var to = null;
-    var username = "";
-    var password = "";
-    var auth = "";
+    let page = 1;
+    let numberOfPages = 0;
+    let heo = 1;
+    let suser = getUser();
+    let from = null;
+    let to = null;
+    let username = "";
+    let password = "";
+    let auth = "";
 
     if (suser === null || suser === "") {
         Common.redirectToLoginPage();
     } else {
-        var user = JSON.parse(suser);
+        let user = JSON.parse(suser);
 
         username = user.Username;
         password = user.Password;
@@ -235,7 +235,7 @@
         lblEntriesCount.innerHTML = count;
 
         numberOfPages = count / getEntriesCount();
-        var numberOfPagesInt = parseInt(numberOfPages);
+        let numberOfPagesInt = parseInt(numberOfPages);
         if (numberOfPages > numberOfPagesInt) {
             numberOfPages = numberOfPagesInt + 1;
         } else if (numberOfPagesInt === 0) {
@@ -266,16 +266,16 @@
     }
 
     function loadEntries() {
-        var entriesCount = getEntriesCount();
+        let entriesCount = getEntriesCount();
 
         Common.get(uri + "/searchHistoryEntriesByPageOrderBy?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime() + "&page=" + page + "&entriesCount=" + entriesCount + "&heo=" + heo,
             function (data) {
-                var items = [];
-                var i;
-                for (i = 0; i < data.length; i++) {
-                    var val = data[i];
-                    var lt = Common.launchType(val.LaunchType);
-                    var entryStatus = Common.status(val.Status);
+                let items = [];
+                
+                for (let i = 0; i < data.length; i++) {
+                    let val = data[i];
+                    let lt = Common.launchType(val.LaunchType);
+                    let entryStatus = Common.status(val.Status);
                     items.push("<tr>"
                         + "<input type='hidden' class='entryId' value='" + val.Id + "'>"
                         + "<td class='status'>" + entryStatus + "</td>"
@@ -287,7 +287,7 @@
                         + "</tr>");
                 }
 
-                var table = "<table id='entries-table' class='table'>"
+                let table = "<table id='entries-table' class='table'>"
                     + "<thead class='thead-dark'>"
                     + "<tr>"
                     + "<th id='th-status' class='status'>Status</th>"
@@ -305,13 +305,13 @@
 
                 document.getElementById("entries").innerHTML = table;
 
-                var entriesTable = document.getElementById("entries-table");
+                let entriesTable = document.getElementById("entries-table");
 
                 entriesTable.getElementsByTagName("tbody")[0].style.height = (document.getElementById("entries").offsetHeight - 35) + "px";
 
-                var rows = entriesTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                let rows = entriesTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
                 if (rows.length > 0) {
-                    var hrow = entriesTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    let hrow = entriesTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
                     hrow.querySelector(".status").style.width = rows[0].querySelector(".status").offsetWidth + "px";
                     hrow.querySelector(".date").style.width = rows[0].querySelector(".date").offsetWidth + "px";
                     hrow.querySelector(".id").style.width = rows[0].querySelector(".id").offsetWidth + "px";
@@ -320,23 +320,23 @@
                     hrow.querySelector(".desc").style.width = rows[0].querySelector(".desc").offsetWidth + "px";
                 }
 
-                var descriptions = entriesTable.querySelectorAll(".desc");
-                for (i = 0; i < descriptions.length; i++) {
+                let descriptions = entriesTable.querySelectorAll(".desc");
+                for (let i = 0; i < descriptions.length; i++) {
                     descriptions[i].style.width = entriesTable.offsetWidth - 600 + "px";
                 }
 
-                for (i = 0; i < rows.length; i++) {
+                for (let i = 0; i < rows.length; i++) {
                     rows[i].onclick = function () {
-                        var selected = document.getElementsByClassName("selected");
+                        let selected = document.getElementsByClassName("selected");
                         if (selected.length > 0) {
                             selected[0].className = selected[0].className.replace("selected", "");
                         }
                         this.className += "selected";
 
-                        var entryId = this.getElementsByClassName("entryId")[0].value;
+                        let entryId = this.getElementsByClassName("entryId")[0].value;
 
                         Common.get(uri + "/historyEntryLogs?id=" + entryId, function (logs) {
-                            var grabMe = document.getElementById("grabMe");
+                            let grabMe = document.getElementById("grabMe");
                             grabMe.innerHTML = Common.escape(logs).replace(/\r\n/g, "<br>");
 
                             new jBox('Modal', {
@@ -352,12 +352,12 @@
                     };
                 }
 
-                var thDate = document.getElementById("th-date");
-                var thId = document.getElementById("th-id");
-                var thName = document.getElementById("th-name");
-                var thLt = document.getElementById("th-lt");
-                var thDesc = document.getElementById("th-desc");
-                var thStatus = document.getElementById("th-status");
+                let thDate = document.getElementById("th-date");
+                let thId = document.getElementById("th-id");
+                let thName = document.getElementById("th-name");
+                let thLt = document.getElementById("th-lt");
+                let thDesc = document.getElementById("th-desc");
+                let thStatus = document.getElementById("th-status");
 
                 if (heo === 0) { // By Date ascending
                     thDate.innerHTML = "Date&nbsp;&nbsp;🔺";
