@@ -90,26 +90,26 @@
         updateLanguage();
     };
 
-    var id = "wf-manager";
-    var uri = Common.trimEnd(Settings.Uri, "/");
-    var lnkManager = document.getElementById("lnk-manager");
-    var lnkDesigner = document.getElementById("lnk-designer");
-    //var lnkEditor = document.getElementById("lnk-editor");
-    //var lnkApproval = document.getElementById("lnk-approval");
-    var lnkUsers = document.getElementById("lnk-users");
-    var lnkProfiles = document.getElementById("lnk-profiles");
-    var selectedId = -1;
-    var workflows = {};
+    let id = "wf-manager";
+    let uri = Common.trimEnd(Settings.Uri, "/");
+    let lnkManager = document.getElementById("lnk-manager");
+    let lnkDesigner = document.getElementById("lnk-designer");
+    //let lnkEditor = document.getElementById("lnk-editor");
+    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkUsers = document.getElementById("lnk-users");
+    let lnkProfiles = document.getElementById("lnk-profiles");
+    let selectedId = -1;
+    let workflows = {};
     let jobs = [];
     let workflowJobs = {};
-    var workflowTimer = null;
+    let workflowTimer = null;
     let jobTimer = null;
-    var timerInterval = 1000; // ms
-    var username = "";
-    var password = "";
-    var auth = "";
+    let timerInterval = 1000; // ms
+    let username = "";
+    let password = "";
+    let auth = "";
 
-    var html = "<div id='wf-container'>"
+    let html = "<div id='wf-container'>"
         + "<div id='wf-cmd'>"
         + "<button id='wf-start' type='button' class='btn btn-primary btn-xs'>" + language.get("wf-start") + "</button>"
         + "<button id='wf-pause' type='button' class='btn btn-secondary btn-xs'>" + language.get("wf-pause") + "</button>"
@@ -147,21 +147,21 @@
 
     document.getElementById(id).innerHTML = html;
 
-    var startButton = document.getElementById("wf-start");
-    var suspendButton = document.getElementById("wf-pause");
-    var resumeButton = document.getElementById("wf-resume");
-    var stopButton = document.getElementById("wf-stop");
-    var approveButton = document.getElementById("wf-approve");
-    var rejectButton = document.getElementById("wf-reject");
-    var searchButton = document.getElementById("wf-search-action");
-    var searchText = document.getElementById("wf-search-text");
-    var suser = getUser();
+    let startButton = document.getElementById("wf-start");
+    let suspendButton = document.getElementById("wf-pause");
+    let resumeButton = document.getElementById("wf-resume");
+    let stopButton = document.getElementById("wf-stop");
+    let approveButton = document.getElementById("wf-approve");
+    let rejectButton = document.getElementById("wf-reject");
+    let searchButton = document.getElementById("wf-search-action");
+    let searchText = document.getElementById("wf-search-text");
+    let suser = getUser();
 
 
     if (suser === null || suser === "") {
         Common.redirectToLoginPage();
     } else {
-        var user = JSON.parse(suser);
+        let user = JSON.parse(suser);
 
         username = user.Username;
         password = user.Password;
@@ -184,8 +184,8 @@
                             lnkProfiles.style.display = "inline";
                         }
 
-                        var btnLogout = document.getElementById("btn-logout");
-                        var divWorkflows = document.getElementById("wf-manager");
+                        let btnLogout = document.getElementById("btn-logout");
+                        let divWorkflows = document.getElementById("wf-manager");
                         divWorkflows.style.display = "block";
 
                         btnLogout.onclick = function () {
@@ -265,12 +265,12 @@
         Common.get(uri + "/search?s=" + encodeURIComponent(searchText.value),
             function (data) {
                 data.sort(compareById);
-                var items = [];
-                var i;
-                for (i = 0; i < data.length; i++) {
-                    var val = data[i];
+                let items = [];
+                
+                for (let i = 0; i < data.length; i++) {
+                    let val = data[i];
                     workflows[val.Id] = val;
-                    var lt = launchType(val.LaunchType);
+                    let lt = launchType(val.LaunchType);
                     items.push("<tr>"
                         + "<td class='wf-id' title='" + val.Id + "'>" + val.Id + "</td>"
                         + "<td class='wf-n' title='" + val.Name + "'>" + val.Name + "</td>"
@@ -282,7 +282,7 @@
 
                 }
 
-                var table = "<table id='wf-workflows-table' class='table'>"
+                let table = "<table id='wf-workflows-table' class='table'>"
                     + "<thead class='thead-dark'>"
                     + "<tr>"
                     + "<th id='th-wf-id' class='wf-id'>" + language.get("th-wf-id") + "</th>"
@@ -301,13 +301,13 @@
                 let divWorkflows = document.getElementById("wf-workflows");
                 divWorkflows.innerHTML = table;
 
-                var workflowsTable = document.getElementById("wf-workflows-table");
+                let workflowsTable = document.getElementById("wf-workflows-table");
 
                 workflowsTable.getElementsByTagName("tbody")[0].style.height = (divWorkflows.offsetHeight - 45) + "px";
 
-                var rows = workflowsTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                let rows = workflowsTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
                 if (rows.length > 0) {
-                    var hrow = workflowsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    let hrow = workflowsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
                     hrow.querySelector(".wf-id").style.width = rows[0].querySelector(".wf-id").offsetWidth + "px";
                     hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
                     hrow.querySelector(".wf-e").style.width = rows[0].querySelector(".wf-e").offsetWidth + "px";
@@ -315,8 +315,8 @@
                     hrow.querySelector(".wf-d").style.width = rows[0].querySelector(".wf-d").offsetWidth + "px";
                 }
 
-                var descriptions = workflowsTable.querySelectorAll(".wf-d");
-                for (i = 0; i < descriptions.length; i++) {
+                let descriptions = workflowsTable.querySelectorAll(".wf-d");
+                for (let i = 0; i < descriptions.length; i++) {
                     descriptions[i].style.width = workflowsTable.offsetWidth - 495 + "px";
                 }
 
@@ -350,7 +350,7 @@
                 }
 
                 function workflowStatusChanged(workflow) {
-                    var changed = workflows[workflow.Id].IsEnabled !== workflow.IsEnabled;
+                    let changed = workflows[workflow.Id].IsEnabled !== workflow.IsEnabled;
                     workflows[workflow.Id].IsEnabled = workflow.IsEnabled;
                     return changed;
                 }
@@ -392,19 +392,18 @@
                     if (!job || !workflowJobs[job.InstanceId]) {
                         return true;
                     }
-                    var changed = workflowJobs[job.InstanceId].IsRunning !== job.IsRunning || workflowJobs[job.InstanceId].IsPaused !== job.IsPaused || workflowJobs[job.InstanceId].IsWaitingForApproval !== job.IsWaitingForApproval;
+                    let changed = workflowJobs[job.InstanceId].IsRunning !== job.IsRunning || workflowJobs[job.InstanceId].IsPaused !== job.IsPaused || workflowJobs[job.InstanceId].IsWaitingForApproval !== job.IsWaitingForApproval;
                     workflowJobs[job.InstanceId].IsRunning = job.IsRunning;
                     workflowJobs[job.InstanceId].IsPaused = job.IsPaused;
                     workflowJobs[job.InstanceId].IsWaitingForApproval = job.IsWaitingForApproval;
                     return changed;
                 }
 
-                var rows = (workflowsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
-                for (i = 0; i < rows.length; i++) {
+                for (let i = 0; i < rows.length; i++) {
                     rows[i].onclick = function () {
                         selectedId = parseInt(this.getElementsByClassName("wf-id")[0].innerHTML);
 
-                        var selected = workflowsTable.querySelectorAll(".selected");
+                        let selected = workflowsTable.querySelectorAll(".selected");
                         if (selected.length > 0) {
                             selected[0].classList.remove("selected");
                         }
@@ -436,15 +435,15 @@
 
                                             if (jobs.includes(jobId) === false) {
                                                 // Add
-                                                var row = jobsTable.getElementsByTagName('tbody')[0].insertRow();
+                                                let row = jobsTable.getElementsByTagName('tbody')[0].insertRow();
 
                                                 for (let i = 0; i < data.length; i++) {
-                                                    var job = data[i];
+                                                    let job = data[i];
                                                     if (job.InstanceId === jobId) {
-                                                        var cell1 = row.insertCell(0);
-                                                        var cell2 = row.insertCell(1);
-                                                        var cell3 = row.insertCell(2);
-                                                        var cell4 = row.insertCell(3);
+                                                        let cell1 = row.insertCell(0);
+                                                        let cell2 = row.insertCell(1);
+                                                        let cell3 = row.insertCell(2);
+                                                        let cell4 = row.insertCell(3);
                                                         cell1.className = "wf-jobId";
                                                         cell1.innerHTML = job.InstanceId;
                                                         cell2.className = "wf-startedOn";
@@ -459,7 +458,7 @@
 
                                                 //let rows = (jobsTable.getElementsByTagName("tbody")[0]).getElementsByTagName("tr");
                                                 //if (rows.length > 0) {
-                                                //    var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                                                //    let hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
                                                 //    hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
                                                 //    hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
                                                 //    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
@@ -488,7 +487,7 @@
                                                         }
 
                                                         //if (rows.length > 0) {
-                                                        //    var hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                                                        //    let hrow = jobsTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
                                                         //    hrow.querySelector(".wf-jobId").style.width = rows[0].querySelector(".wf-jobId").offsetWidth + "px";
                                                         //    hrow.querySelector(".wf-startedOn").style.width = rows[0].querySelector(".wf-startedOn").offsetWidth + "px";
                                                         //    hrow.querySelector(".wf-n").style.width = rows[0].querySelector(".wf-n").offsetWidth + "px";
@@ -553,7 +552,7 @@
                 }
 
                 startButton.onclick = function () {
-                    var startUri = uri + "/start?w=" + selectedId;
+                    let startUri = uri + "/start?w=" + selectedId;
                     Common.post(startUri, function (res) {
                     }, function () { }, "", auth);
                 };
@@ -562,7 +561,7 @@
                     let selectedJob = document.getElementById("wf-jobs-table").querySelector(".selected");
                     let jobId = selectedJob.querySelector(".wf-jobId").innerHTML;
 
-                    var suspendUri = uri + "/suspend?w=" + selectedId + "&i=" + jobId;
+                    let suspendUri = uri + "/suspend?w=" + selectedId + "&i=" + jobId;
                     Common.post(suspendUri, function (res) {
                         if (res === true) {
                             updateJobButtons(selectedId, jobId, true);
@@ -576,7 +575,7 @@
                     let selectedJob = document.getElementById("wf-jobs-table").querySelector(".selected");
                     let jobId = selectedJob.querySelector(".wf-jobId").innerHTML;
 
-                    var resumeUri = uri + "/resume?w=" + selectedId + "&i=" + jobId;
+                    let resumeUri = uri + "/resume?w=" + selectedId + "&i=" + jobId;
                     Common.post(resumeUri, function () {
                         updateJobButtons(selectedId, jobId, true);
                     }, function () { }, "", auth);
@@ -586,7 +585,7 @@
                     let selectedJob = document.getElementById("wf-jobs-table").querySelector(".selected");
                     let jobId = selectedJob.querySelector(".wf-jobId").innerHTML;
 
-                    var stopUri = uri + "/stop?w=" + selectedId + "&i=" + jobId;
+                    let stopUri = uri + "/stop?w=" + selectedId + "&i=" + jobId;
                     Common.post(stopUri,
                         function (res) {
                             if (res === true) {
