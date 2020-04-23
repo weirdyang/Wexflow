@@ -75,7 +75,6 @@
     languages["en"]["th-job-id"] = "Job Id";
     languages["en"]["th-job-startedOn"] = "Started on";
 
-
     // 
     // fr
     languages["fr"]["help"] = "Aide";
