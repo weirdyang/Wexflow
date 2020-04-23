@@ -33,5 +33,11 @@ jobs:
       run: dotnet build src/dotnet-core/Wexflow.Scripts.MySQL/Wexflow.Scripts.MySQL.csproj --configuration Release
     - name: Build Wexflow.Scripts.SQLite.csproj
       run: dotnet build src/dotnet-core/Wexflow.Scripts.SQLite/Wexflow.Scripts.SQLite.csproj --configuration Release            
+    - name: Build Wexflow.Scripts.Firebird.csproj
+      run: dotnet build src/dotnet-core/Wexflow.Scripts.Firebird/Wexflow.Scripts.Firebird.csproj --configuration Release
+    - name: Build Wexflow.Scripts.Oracle.csproj
+      run: dotnet build src/dotnet-core/Wexflow.Scripts.Oracle/Wexflow.Scripts.Oracle.csproj --configuration Release
+    - name: Build Wexflow.Scripts.MariaDB.csproj
+      run: dotnet build src/dotnet-core/Wexflow.Scripts.MariaDB/Wexflow.Scripts.MariaDB.csproj --configuration Release            
     - name: Build Wexflow.DotnetCore.Tests.csproj
       run: dotnet build tests/dotnet-core/Wexflow.DotnetCore.Tests/Wexflow.DotnetCore.Tests.csproj --configuration Release    
