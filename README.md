@@ -1,7 +1,7 @@
 ![Logo](https://aelassas.github.io/wexflow/images/wd-logo-4.jpg)
 
 [![Downloads](https://img.shields.io/github/downloads/aelassas/Wexflow/total.svg)](https://wexflow.github.io/stats)
-[![Nuget](https://img.shields.io/nuget/v/Wexflow)](https://www.nuget.org/packages/Wexflow)
+[![NuGet](https://buildstats.info/nuget/Wexflow)](https://www.nuget.org/packages/Wexflow)
 
 ## Download
 
