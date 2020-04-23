@@ -52,62 +52,62 @@
         updateLanguage();
     };
 
-    var uri = Common.trimEnd(Settings.Uri, "/");
-    var lnkManager = document.getElementById("lnk-manager");
-    var lnkDesigner = document.getElementById("lnk-designer");
-    //var lnkEditor = document.getElementById("lnk-editor");
-    //var lnkApproval = document.getElementById("lnk-approval");
-    var lnkUsers = document.getElementById("lnk-users");
-    var lnkProfiles = document.getElementById("lnk-profiles");
-    var divUsers = document.getElementById("users");
-    var divUsersTable = document.getElementById("users-table");
-    var divUserActions = document.getElementById("user-actions");
-    var divUserProfile = document.getElementById("user-profile");
-    var slctProfile = document.getElementById("slct-profile");
-    var oldPasswordText = document.getElementById("old-password-text");
-    var newPasswordText = document.getElementById("new-password-text");
-    var confirmPasswordText = document.getElementById("confirm-password-text");
-    var deleteAction = document.getElementById("delete-action");
-    var saveAction = document.getElementById("save-action");
-    var newUserAction = document.getElementById("new-user-action");
-    var btnLogout = document.getElementById("btn-logout");
-    var oldPasswordTr = document.getElementById("old-password-tr");
-    var newPasswordTr = document.getElementById("new-password-tr");
-    var confirmPasswordTr = document.getElementById("confirm-password-tr");
-    var lblNewPassword = document.getElementById("lbl-new-password");
-    var txtUsername = document.getElementById("username-text");
-    var changePass = document.getElementById("change-password");
-    var emailText = document.getElementById("email-text");
-    var txtId = document.getElementById("txt-id");
-    var txtCreatedOn = document.getElementById("txt-createdOn");
-    var txtModifiedOn = document.getElementById("txt-modifiedOn");
-    var trId = document.getElementById("tr-id");
-    var trCreatedOn = document.getElementById("tr-createdOn");
-    var trModifiedOn = document.getElementById("tr-modifiedOn");
-    var txtSearch = document.getElementById("users-search-text");
-    var btnSearch = document.getElementById("users-search-action");
-    var selectedUsername;
-    var selectedUsernameTd;
-    var selectedUserId;
-    var selectedUserProfile;
-    var selectedUserProfileTd;
-    var logedinUser;
-    var logedinUserProfile;
-    var newUser = false;
-    var changePassword = false;
-    var selectedTr;
-    var uo = 0;
-    var thUsername;
-    var qusername = "";
-    var qpassword = "";
-    var auth = "";
+    let uri = Common.trimEnd(Settings.Uri, "/");
+    let lnkManager = document.getElementById("lnk-manager");
+    let lnkDesigner = document.getElementById("lnk-designer");
+    //let lnkEditor = document.getElementById("lnk-editor");
+    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkUsers = document.getElementById("lnk-users");
+    let lnkProfiles = document.getElementById("lnk-profiles");
+    let divUsers = document.getElementById("users");
+    let divUsersTable = document.getElementById("users-table");
+    let divUserActions = document.getElementById("user-actions");
+    let divUserProfile = document.getElementById("user-profile");
+    let slctProfile = document.getElementById("slct-profile");
+    let oldPasswordText = document.getElementById("old-password-text");
+    let newPasswordText = document.getElementById("new-password-text");
+    let confirmPasswordText = document.getElementById("confirm-password-text");
+    let deleteAction = document.getElementById("delete-action");
+    let saveAction = document.getElementById("save-action");
+    let newUserAction = document.getElementById("new-user-action");
+    let btnLogout = document.getElementById("btn-logout");
+    let oldPasswordTr = document.getElementById("old-password-tr");
+    let newPasswordTr = document.getElementById("new-password-tr");
+    let confirmPasswordTr = document.getElementById("confirm-password-tr");
+    let lblNewPassword = document.getElementById("lbl-new-password");
+    let txtUsername = document.getElementById("username-text");
+    let changePass = document.getElementById("change-password");
+    let emailText = document.getElementById("email-text");
+    let txtId = document.getElementById("txt-id");
+    let txtCreatedOn = document.getElementById("txt-createdOn");
+    let txtModifiedOn = document.getElementById("txt-modifiedOn");
+    let trId = document.getElementById("tr-id");
+    let trCreatedOn = document.getElementById("tr-createdOn");
+    let trModifiedOn = document.getElementById("tr-modifiedOn");
+    let txtSearch = document.getElementById("users-search-text");
+    let btnSearch = document.getElementById("users-search-action");
+    let selectedUsername;
+    let selectedUsernameTd;
+    let selectedUserId;
+    let selectedUserProfile;
+    let selectedUserProfileTd;
+    let logedinUser;
+    let logedinUserProfile;
+    let newUser = false;
+    let changePassword = false;
+    let selectedTr;
+    let uo = 0;
+    let thUsername;
+    let qusername = "";
+    let qpassword = "";
+    let auth = "";
 
-    var suser = getUser();
+    let suser = getUser();
 
     if (suser === null || suser === "") {
         Common.redirectToLoginPage();
     } else {
-        var user = JSON.parse(suser);
+        let user = JSON.parse(suser);
 
         qusername = user.Username;
         qpassword = user.Password;
@@ -168,10 +168,10 @@
         Common.get(uri + "/searchUsers?keyword=" + encodeURIComponent(txtSearch.value) + "&uo=" + uo,
             function (data) {
 
-                var items = [];
-                for (var i = 0; i < data.length; i++) {
-                    var val = data[i];
-                    var tr;
+                let items = [];
+                for (let i = 0; i < data.length; i++) {
+                    let val = data[i];
+                    let tr;
 
                     if (usernameToSelect === val.Username) {
                         tr = "<tr class='selected'>";
@@ -188,7 +188,7 @@
                     );
                 }
 
-                var table = "<table id='wf-users-table' class='table'>"
+                let table = "<table id='wf-users-table' class='table'>"
                     + "<thead class='thead-dark'>"
                     + "<tr>"
                     + "<th id='th-id' class='userid'>Id</th>"
@@ -203,19 +203,19 @@
 
                 divUsersTable.innerHTML = table;
 
-                var usersTable = document.getElementById("wf-users-table");
+                let usersTable = document.getElementById("wf-users-table");
 
                 usersTable.getElementsByTagName("tbody")[0].style.height = (divUsersTable.offsetHeight - 35) + "px";
 
-                var rows = usersTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                let rows = usersTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
                 if (rows.length > 0) {
-                    var hrow = usersTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
+                    let hrow = usersTable.getElementsByTagName("thead")[0].getElementsByTagName("tr")[0];
                     hrow.querySelector(".username").style.width = rows[0].querySelector(".username").offsetWidth + "px";
                     hrow.querySelector(".userprofile").style.width = rows[0].querySelector(".userprofile").offsetWidth + "px";
                 }
 
-                var profiles = usersTable.querySelectorAll(".userprofile");
-                for (i = 0; i < profiles.length; i++) {
+                let profiles = usersTable.querySelectorAll(".userprofile");
+                for (let i = 0; i < profiles.length; i++) {
                     profiles[i].style.width = usersTable.offsetWidth - 60 + "px";
                 }
 
@@ -236,21 +236,21 @@
                 }
 
                 // set selectedUsernameTd
-                var selected = document.getElementsByClassName("selected");
+                let selected = document.getElementsByClassName("selected");
                 if (selected.length > 0) {
                     selectedTr = selected[0];
                     selectedUsernameTd = selectedTr.getElementsByClassName("username")[0];
                     selectedUserProfileTd = selectedTr.getElementsByClassName("userprofile")[0];
                 }
 
-                for (var j = 0; j < rows.length; j++) {
+                for (let j = 0; j < rows.length; j++) {
 
-                    var row = rows[j];
+                    let row = rows[j];
                     if (scroll === true) {
-                        var userIdTd = row.getElementsByClassName("userid")[0];
+                        let userIdTd = row.getElementsByClassName("userid")[0];
 
                         if (typeof userIdTd !== "undefined" && userIdTd !== null) {
-                            var userId = userIdTd.innerHTML;
+                            let userId = userIdTd.innerHTML;
                             if (userId === selectedUserId) {
                                 row.scrollIntoView(true);
                             }
@@ -259,7 +259,7 @@
                     }
 
                     row.onclick = function () {
-                        var selected = document.getElementsByClassName("selected");
+                        let selected = document.getElementsByClassName("selected");
                         if (selected.length > 0) {
                             selectedTr = selected[0];
                             selectedTr.className = selectedTr.className.replace("selected", "");
@@ -458,7 +458,7 @@
     };
 
     deleteAction.onclick = function () {
-        var r = confirm("Are you sure you want to delete this user?");
+        let r = confirm("Are you sure you want to delete this user?");
 
         if (r === true) {
             if (selectedUsername !== logedinUser) {
@@ -501,10 +501,10 @@
     function save() {
         if (newUser === true) {
 
-            var username = txtUsername.value;
-            var up = parseInt(getSelectedProfile());
-            var password = newPasswordText.value;
-            var confirmedPassword = confirmPasswordText.value;
+            let username = txtUsername.value;
+            let up = parseInt(getSelectedProfile());
+            let password = newPasswordText.value;
+            let confirmedPassword = confirmPasswordText.value;
 
             if (username === "") {
                 Common.toastInfo("Type a username.");
@@ -523,7 +523,7 @@
                                     } else if (emailText.value === "" || validateEmail(emailText.value) === false) {
                                         Common.toastInfo("Enter a valid email address.");
                                     } else {
-                                        var hashedPass = MD5(password);
+                                        let hashedPass = MD5(password);
                                         Common.post(
                                             uri + "/insertUser?username=" + encodeURIComponent(username) + "&password=" + hashedPass + "&up=" + up + "&email=" + encodeURIComponent(emailText.value),
                                             function (val) {
@@ -581,7 +581,7 @@
             }
 
         } else {
-            var up2 = parseInt(getSelectedProfile());
+            let up2 = parseInt(getSelectedProfile());
             if (changePassword === false) {
                 if (txtUsername.value === "") {
                     Common.toastInfo("Enter a username.");
@@ -601,7 +601,7 @@
                                     if (newPasswordText.value === "") {
                                         Common.toastInfo("Type the password of this user.");
                                     } else {
-                                        var pass = MD5(newPasswordText.value);
+                                        let pass = MD5(newPasswordText.value);
 
                                         if (pass !== u.Password) {
                                             Common.toastInfo("The password is incorrect.");
@@ -624,7 +624,7 @@
             } else {
                 Common.get(uri + "/user?username=" + encodeURIComponent(selectedUsername),
                     function (u) {
-                        var oldPassword = MD5(oldPasswordText.value);
+                        let oldPassword = MD5(oldPasswordText.value);
                         if (u.UserProfile === 0 && u.Password !== oldPassword) {
                             Common.toastInfo("The old password is not valid.");
                         } else {
@@ -634,8 +634,8 @@
                             } else if (newPasswordText.value === "" || confirmPasswordText.value === "") {
                                 Common.toastInfo("Enter a new password.");
                             } else {
-                                var newPassword = MD5(newPasswordText.value);
-                                var up = getSelectedProfile();
+                                let newPassword = MD5(newPasswordText.value);
+                                let up = getSelectedProfile();
 
                                 if (txtUsername.value === "") {
                                     Common.toastInfo("Enter a username.");
@@ -717,7 +717,7 @@
     }
 
     function updateUsernameAndPassword() {
-        var up = parseInt(getSelectedProfile());
+        let up = parseInt(getSelectedProfile());
 
         Common.post(uri + "/updateUsernameAndEmailAndUserProfile?userId=" + selectedUserId + "&username=" + encodeURIComponent(txtUsername.value) + "&email=" + encodeURIComponent(emailText.value) + "&up=" + up,
             function (val) {
@@ -776,7 +776,7 @@
     }
 
     function validateEmail(email) {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
 
