@@ -112,9 +112,7 @@
     languages["en"]["confirm-delete-task"] = "Are you sure you want to delete this task?";
     languages["en"]["confirm-cron"] = "The cron expression format is not valid.\nRead the documentation?";
     languages["en"]["confirm-delete-var"] = "Are you sure you want to delete this variable?";
-
     languages["en"]["confirm-delete-workflows"] = "Are you sure you want to delete selected workflows?";
-
     languages["en"]["toast-task-names-error"] = "An error occured while retrieving task names.";
     languages["en"]["toast-workflow-id-error"] = "An error occured while getting a new workflow id.";
     languages["en"]["toast-workflow-deleted"] = "Workflow deleted with success.";
@@ -253,9 +251,7 @@
     languages["fr"]["confirm-delete-task"] = "Êtes-vous sûr de vouloir supprimer cette tâche ?";
     languages["fr"]["confirm-cron"] = "L'expression cron n'est pas valide.\nConsulter la documentation?";
     languages["fr"]["confirm-delete-var"] = "Êtes-vous sûr de vouloir supprimer cette variable ?";
-
     languages["fr"]["confirm-delete-workflows"] = "Êtes-vous sûr de vouloir supprimer les workflows sélectionnés?";
-
     languages["fr"]["toast-task-names-error"] = "Une erreur s'est produite lors de la récupération des tâches.";
     languages["fr"]["toast-workflow-id-error"] = "Une erreur s'est produite lors de la récupération d'un nouveau workflow id.";
     languages["fr"]["toast-workflow-deleted"] = "Workflow supprimé avec succès.";
