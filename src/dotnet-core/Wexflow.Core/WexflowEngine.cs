@@ -73,6 +73,10 @@ namespace Wexflow.Core
         /// </summary>
         public string SettingsFile { get; private set; }
         /// <summary>
+        /// Indicates whether workflows hot folder is enabled or not.
+        /// </summary>
+        public bool EnableWorkflowsHotFolder { get; private set; }
+        /// <summary>
         /// Workflows hot folder path.
         /// </summary>
         public string WorkflowsFolder { get; private set; }
@@ -145,9 +149,11 @@ namespace Wexflow.Core
         /// Creates a new instance of Wexflow engine.
         /// </summary>
         /// <param name="settingsFile">Settings file path.</param>
-        public WexflowEngine(string settingsFile)
+        /// <param name="enableWorkflowsHotFolder">Indicates whether workflows hot folder is enabled or not.</param>
+        public WexflowEngine(string settingsFile, bool enableWorkflowsHotFolder)
         {
             SettingsFile = settingsFile;
+            EnableWorkflowsHotFolder = enableWorkflowsHotFolder;
             Workflows = new List<Workflow>();
 
             Logger.Info("");
@@ -483,10 +489,13 @@ namespace Wexflow.Core
                     StopCronJobs(removedWorkflow.Id);
                     Workflows.Remove(removedWorkflow);
 
-                    if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                    if (EnableWorkflowsHotFolder)
                     {
-                        File.Delete(removedWorkflow.FilePath);
-                        Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                        if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                        {
+                            File.Delete(removedWorkflow.FilePath);
+                            Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                        }
                     }
                 }
 
@@ -519,10 +528,13 @@ namespace Wexflow.Core
                         Workflows.Remove(removedWorkflow);
                         Database.DeleteUserWorkflowRelationsByWorkflowId(removedWorkflow.DbId);
 
-                        if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                        if (EnableWorkflowsHotFolder)
                         {
-                            File.Delete(removedWorkflow.FilePath);
-                            Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                            if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                            {
+                                File.Delete(removedWorkflow.FilePath);
+                                Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                            }
                         }
                     }
                 }
@@ -645,14 +657,17 @@ namespace Wexflow.Core
             }
             Logger.InfoFormat("Scheduling {0} workflows finished.", Workflows.Count);
 
-            Logger.InfoFormat("Loading workflows from hot folder {0} ...", WorkflowsFolder);
-            var workflowFiles = Directory.GetFiles(WorkflowsFolder, "*.xml");
-            var admin = GetUser("admin");
-            foreach (var worlflowFile in workflowFiles)
+            if (EnableWorkflowsHotFolder)
             {
-                SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile);
+                Logger.InfoFormat("Loading workflows from hot folder {0} ...", WorkflowsFolder);
+                var workflowFiles = Directory.GetFiles(WorkflowsFolder, "*.xml");
+                var admin = GetUser("admin");
+                foreach (var worlflowFile in workflowFiles)
+                {
+                    SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile);
+                }
+                Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
             }
-            Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
         }
 
         private void ScheduleWorkflow(Workflow wf)
