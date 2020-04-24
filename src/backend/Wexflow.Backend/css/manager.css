@@ -39,9 +39,25 @@
         display: none;
     }
 
+/*lang*/
 #lang {
-    margin-top: 10px !important;
-    margin-left: 0px !important;
+    margin-top: 10px;
+    margin-right: 20px;
+    color: #000;
+}
+
+#lang .lang{
+    cursor: pointer;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+#lang .lang:hover{
+    opacity:.8;
+}
+
+.dropdown-menu{
+    min-width: 90px;
 }
 
 #wf-manager{

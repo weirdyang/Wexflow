@@ -12,13 +12,15 @@
     <!--<link rel="stylesheet" type="text/css" href="css/users.min.css" />-->
 
     <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/language.js"></script>
 
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.toast.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/md5.js"></script>
     <script type="text/javascript" src="js/authenticate.js"></script>
-    <script type="text/javascript" src="js/language.js"></script>
+    <script type="text/javascript" src="js/language.core.js"></script>
     <script type="text/javascript" src="js/users.js"></script>
 
     <!--<script type="text/javascript" src="js/users.min.js"></script>-->
@@ -33,7 +35,7 @@
         <a id="lnk-history" href="history.html">History</a>
         <a id="lnk-users" href="users.html" style="text-decoration: underline">Users</a>
         <a id="lnk-profiles" href="profiles.html">Profiles</a>
-        <a id="lang" href="#" class="header-right" title=""><img id="lang-img" src="" alt=""></a>
+        <div id="lang" href="#" class="header-right"></div>
         <a href="#" id="btn-logout" class="header-right"><span id="spn-logout">Logout</span><span id="spn-username"></span></a>
         <a id="about" href="https://wexflow.github.io" class="header-right">About</a>
         <a id="help" href="https://github.com/aelassas/Wexflow/wiki" class="header-right">Help</a>
@@ -115,7 +117,7 @@
                     </tr>
                     <tr id="old-password-tr">
                         <td>
-                            <label id="old-password-text-label" >Old password</label>
+                            <label id="old-password-text-label">Old password</label>
                         </td>
                         <td>
                             <input id="old-password-text" type="password">

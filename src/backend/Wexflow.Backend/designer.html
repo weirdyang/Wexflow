@@ -22,7 +22,7 @@
         <a id="lnk-history" href="history.html">History</a>
         <a id="lnk-users" href="users.html">Users</a>
         <a id="lnk-profiles" href="profiles.html">Profiles</a>
-        <a id="lang" href="#" class="header-right" title=""><img id="lang-img" src="" alt=""></a>
+        <div id="lang" class="header-right"></div>
         <a href="#" id="btn-logout" class="header-right"><span id="spn-logout">Logout</span><span id="spn-username"></span></a>
         <a id="lnk-about" href="https://wexflow.github.io" class="header-right">About</a>
         <a id="lnk-help" href="https://github.com/aelassas/Wexflow/wiki" class="header-right">Help</a>
@@ -65,7 +65,7 @@
                 <p id="task-id-label" class="inputlabel">Id</p>
                 <input id="taskid" class="form-control inputtext" type="text" />
                 <p id="task-desc-label" class="inputlabel">Description</p>
-				<input id="taskdescription" class="form-control inputtext" type="text" />
+                <input id="taskdescription" class="form-control inputtext" type="text" />
                 <p id="task-enabled-label" class="inputlabel">Enabled</p>
                 <input id="taskenabled" class="inputtext" type="checkbox" checked />
                 <button id="btn-new-setting" type="button" class="wf-new-setting btn btn-secondary">New Setting</button>
@@ -98,7 +98,7 @@
                 <input id='wfenabled' class="inputtext" type='checkbox' checked />
                 <p id='wfapproval-label' class="inputlabel">Approval</p>
                 <input id='wfapproval' class="inputtext" type='checkbox' />
-                <p id='wfenablepj-label'  class="inputlabel">EnableParallelJobs</p>
+                <p id='wfenablepj-label' class="inputlabel">EnableParallelJobs</p>
                 <input id='wfenablepj' class="inputtext" type='checkbox' checked />
                 <p class="inputlabel">
                     <span id="wf-local-vars-label">Local Variables</span>
@@ -148,9 +148,11 @@
     <!-- js scripts -->
 
     <script type="text/javascript" src="js/settings.js"></script>
+    <script src="js/language.js"></script>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.toast.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/common.js"></script>
     <script src="js/authenticate.js"></script>
     <script src="js/flowy.js"></script>
@@ -160,7 +162,7 @@
     <script src="js/blocks_compressed.js"></script>
     <script src="js/en.js"></script>
     <script src="js/lodash.min.js"></script>
-    <script type="text/javascript" src="js/language.js"></script>
+    <script src="js/language.core.js"></script>
     <script src="js/designer.js"></script>
 
     <!--<script src="js/blockly_compressed.js"></script>

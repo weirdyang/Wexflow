@@ -1,34 +1,15 @@
 ﻿function ForgotPassword() {
     "use strict";
 
-    // lang
-    let language = new Language();
-
-    function updateLanguage() {
-        let code = language.getLanguage();
-        if (code === "en") {
-            document.getElementById("lang").title = "French";
-            document.getElementById("lang-img").src = "images/fr.png";
-        } else if (code === "fr") {
-            document.getElementById("lang").title = "English";
-            document.getElementById("lang-img").src = "images/en.png";
-        }
+    let updateLanguage = function (language) {
         document.getElementById("help").innerHTML = language.get("help");
         document.getElementById("about").innerHTML = language.get("about");
         document.getElementById("lbl-username").innerHTML = language.get("username");
         document.getElementById("btn-submit").value = language.get("submit");
-    }
-    updateLanguage();
-
-    document.getElementById("lang").onclick = function () {
-        let code = language.getLanguage();
-        if (code === "en") {
-            language.setLanguage("fr");
-        } else if (code === "fr") {
-            language.setLanguage("en");
-        }
-        updateLanguage();
     };
+
+    let language = new Language("lang", updateLanguage);
+    language.init();
 
     let uri = Common.trimEnd(Settings.Uri, "/");
     let txtUsername = document.getElementById("txt-username");
