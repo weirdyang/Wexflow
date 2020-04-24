@@ -13,7 +13,7 @@ namespace Wexflow.DotnetCore.Tests
             ? "/opt/wexflow/Wexflow/Wexflow.xml"
             : (Environment.OSVersion.Platform == PlatformID.MacOSX
                ? "/Applications/wexflow/Wexflow/Wexflow.xml"
-               : @"C:\Wexflow-dotnet-core\Wexflow.xml"));
+               : @"C:\Wexflow-dotnet-core\Wexflow.xml"), false);
 
         public static readonly string TempFolder =
             Environment.OSVersion.Platform == PlatformID.Unix
