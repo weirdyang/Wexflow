@@ -14,6 +14,8 @@ namespace Wexflow.Server
 {
     public class WexflowServer
     {
+        private static string superAdminUsername;
+
         public static FileSystemWatcher Watcher;
         public static IConfiguration Config;
         public static WexflowEngine WexflowEngine;
@@ -24,17 +26,18 @@ namespace Wexflow.Server
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
-            XmlDocument log4NetConfig = new XmlDocument();
+            var log4NetConfig = new XmlDocument();
             log4NetConfig.Load(File.OpenRead("log4net.config"));
             var repo = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             XmlConfigurator.Configure(repo, log4NetConfig["log4net"]);
 
-            string wexflowSettingsFile = Config["WexflowSettingsFile"];
+            var wexflowSettingsFile = Config["WexflowSettingsFile"];
+            superAdminUsername = Config["SuperAdminUsername"];
             WexflowEngine = new WexflowEngine(wexflowSettingsFile);
             WexflowEngine.Run();
             InitializeFileSystemWatcher();
 
-            int port = int.Parse(Config["WexflowServicePort"]);
+            var port = int.Parse(Config["WexflowServicePort"]);
 
             var host = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
@@ -80,7 +83,7 @@ namespace Wexflow.Server
             Logger.Info("FileSystemWatcher.OnCreated");
             try
             {
-                var admin = WexflowEngine.GetUser("admin");
+                var admin = WexflowEngine.GetUser(superAdminUsername);
                 WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
             }
             catch (Exception ex)
@@ -94,7 +97,7 @@ namespace Wexflow.Server
             Logger.Info("FileSystemWatcher.OnChanged");
             try
             {
-                var admin = WexflowEngine.GetUser("admin");
+                var admin = WexflowEngine.GetUser(superAdminUsername);
                 WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
             }
             catch (Exception ex)
