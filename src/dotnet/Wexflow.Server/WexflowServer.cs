@@ -15,6 +15,7 @@ namespace Wexflow.Server
         public static FileSystemWatcher Watcher;
         public static NameValueCollection Config = ConfigurationManager.AppSettings;
         private static string settingsFile = Config["WexflowSettingsFile"];
+        private static string superAdminUsername = Config["SuperAdminUsername"];
         public static WexflowEngine WexflowEngine = new WexflowEngine(settingsFile);
 
         private IDisposable _webApp;
@@ -84,7 +85,7 @@ namespace Wexflow.Server
             Logger.Info("FileSystemWatcher.OnCreated");
             try
             {
-                var admin = WexflowEngine.GetUser("admin");
+                var admin = WexflowEngine.GetUser(superAdminUsername);
                 WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
             }
             catch (Exception ex)
@@ -98,7 +99,7 @@ namespace Wexflow.Server
             Logger.Info("FileSystemWatcher.OnChanged");
             try
             {
-                var admin = WexflowEngine.GetUser("admin");
+                var admin = WexflowEngine.GetUser(superAdminUsername);
                 WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
             }
             catch (Exception ex)
