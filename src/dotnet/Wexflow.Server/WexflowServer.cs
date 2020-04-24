@@ -40,7 +40,7 @@ namespace Wexflow.Server
                 _webApp.Dispose();
             }
 
-            var port = int.Parse(ConfigurationManager.AppSettings["WexflowServicePort"]);
+            var port = int.Parse(Config["WexflowServicePort"]);
             var url = "http://+:" + port;
             _webApp = WebApp.Start<Startup>(url);
         }
