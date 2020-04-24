@@ -151,7 +151,7 @@ namespace Wexflow.Server
                                     wf.Name.ToUpper().Contains(keywordToUpper)
                                     || wf.Description.ToUpper().Contains(keywordToUpper)
                                     || wf.Id.ToString().Contains(keywordToUpper))
-                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
+                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                 wf.IsExecutionGraphEmpty
@@ -167,7 +167,7 @@ namespace Wexflow.Server
                                                     wf.Name.ToUpper().Contains(keywordToUpper)
                                                     || wf.Description.ToUpper().Contains(keywordToUpper)
                                                     || wf.Id.ToString().Contains(keywordToUpper))
-                                                .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
+                                                .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                                     wf.IsExecutionGraphEmpty
@@ -216,7 +216,7 @@ namespace Wexflow.Server
                                 (wf.Name.ToUpper().Contains(keywordToUpper)
                                 || wf.Description.ToUpper().Contains(keywordToUpper))
                                 || wf.Id.ToString().Contains(keywordToUpper))
-                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
+                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                 wf.IsExecutionGraphEmpty
@@ -233,7 +233,7 @@ namespace Wexflow.Server
                                                     (wf.Name.ToUpper().Contains(keywordToUpper)
                                                     || wf.Description.ToUpper().Contains(keywordToUpper))
                                                     || wf.Id.ToString().Contains(keywordToUpper))
-                                                .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
+                                                .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                                                     (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                                     wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                                                     wf.IsExecutionGraphEmpty
@@ -270,7 +270,7 @@ namespace Wexflow.Server
                 Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(id);
                 if (wf != null)
                 {
-                    var workflow = new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description,
+                    var workflow = new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath, (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description,
                         wf.IsRunning, wf.IsPaused, wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                         wf.IsExecutionGraphEmpty
                         , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
@@ -342,7 +342,7 @@ namespace Wexflow.Server
 
                     if (wf != null)
                     {
-                        var workflow = new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description,
+                        var workflow = new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath, (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description,
                             wf.IsRunning, wf.IsPaused, wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                             wf.IsExecutionGraphEmpty
                             , wf.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
@@ -408,7 +408,7 @@ namespace Wexflow.Server
                 if (wf != null)
                 {
                     var jobs = wf.Jobs.Select(j => j.Value).Select(
-                        w => new WorkflowInfo(w.DbId, w.Id, w.InstanceId, w.Name, (LaunchType)w.LaunchType, w.IsEnabled, w.IsApproval, w.EnableParallelJobs, w.IsWaitingForApproval, w.Description,
+                        w => new WorkflowInfo(w.DbId, w.Id, w.InstanceId, w.Name, w.FilePath, (LaunchType)w.LaunchType, w.IsEnabled, w.IsApproval, w.EnableParallelJobs, w.IsWaitingForApproval, w.Description,
                             w.IsRunning, w.IsPaused, w.Period.ToString(@"dd\.hh\:mm\:ss"), w.CronExpression,
                             w.IsExecutionGraphEmpty
                             , w.LocalVariables.Select(v => new Contracts.Variable { Key = v.Key, Value = v.Value }).ToArray()
@@ -975,6 +975,7 @@ namespace Wexflow.Server
                         {
                             Id = wf.Id,
                             Name = wf.Name,
+                            FilePath = wf.FilePath,
                             LaunchType = (int)wf.LaunchType,
                             Period = wf.Period.ToString(),
                             CronExpression = wf.CronExpression,
@@ -1449,12 +1450,10 @@ namespace Wexflow.Server
                     var json = RequestStream.FromStream(Request.Body).AsString();
                     var res = false;
 
-                    JObject o = JObject.Parse(json);
-                    int workflowId = int.Parse((string)o.SelectToken("workflowId"));
-                    //string username = o.Value<string>("username");
-                    //string password = o.Value<string>("password");
-                    string xml = (string)o.SelectToken("xml");
-                    //xml = CleanupXml(xml);
+                    var o = JObject.Parse(json);
+                    var workflowId = int.Parse((string)o.SelectToken("workflowId"));
+                    var path = (string)o.SelectToken("filePath");
+                    var xml = (string)o.SelectToken("xml");
 
                     var user = WexflowServer.WexflowEngine.GetUser(username);
                     if (user.Password.Equals(password))
@@ -1507,7 +1506,19 @@ namespace Wexflow.Server
                         }
                     }
 
-                    var resStr = JsonConvert.SerializeObject(res);
+                    if (res)
+                    {
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                            WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                        }
+                        var xdoc = XDocument.Parse(xml);
+                        xdoc.Save(path);
+                    }
+
+                    var ressr = new SaveResult { FilePath = path, Result = res };
+                    var resStr = JsonConvert.SerializeObject(ressr);
                     var resBytes = Encoding.UTF8.GetBytes(resStr);
 
                     return new Response()
@@ -1520,7 +1531,7 @@ namespace Wexflow.Server
                 {
                     Console.WriteLine(e);
 
-                    var resStr = JsonConvert.SerializeObject(false);
+                    var resStr = JsonConvert.SerializeObject(new SaveResult { FilePath = string.Empty, Result = false });
                     var resBytes = Encoding.UTF8.GetBytes(resStr);
 
                     return new Response()
@@ -1783,12 +1794,13 @@ namespace Wexflow.Server
             return null;
         }
 
-        private bool SaveJsonWorkflow(Core.Db.User user, string json)
+        private SaveResult SaveJsonWorkflow(Core.Db.User user, string json)
         {
             var o = JObject.Parse(json);
             var wi = o.SelectToken("WorkflowInfo");
             int currentWorkflowId = (int)wi.SelectToken("Id");
             var isNew = !WexflowServer.WexflowEngine.Workflows.Any(w => w.Id == currentWorkflowId);
+            var path = string.Empty;
 
             if (isNew)
             {
@@ -1948,8 +1960,16 @@ namespace Wexflow.Server
 
                 if (id == "-1")
                 {
-                    return false;
+                    return new SaveResult { FilePath = path, Result = false };
                 }
+
+                path = (string)wi.SelectToken("FilePath");
+                if (string.IsNullOrEmpty(path))
+                {
+                    path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                    WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                }
+                xdoc.Save(path);
             }
             else
             {
@@ -2176,12 +2196,20 @@ namespace Wexflow.Server
                     var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
                     if (qid == "-1")
                     {
-                        return false;
+                        return new SaveResult { FilePath = path, Result = false };
                     }
+
+                    path = (string)wi.SelectToken("FilePath");
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                        WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                    }
+                    xdoc.Save(path);
                 }
             }
 
-            return true;
+            return new SaveResult { FilePath = path, Result = true };
         }
 
         /// <summary>
@@ -2417,6 +2445,7 @@ namespace Wexflow.Server
                 try
                 {
                     var res = true;
+                    var ressr = new SaveResult { FilePath = string.Empty, Result = false };
                     var auth = GetAuth(Request);
                     var username = auth.Username;
                     var password = auth.Password;
@@ -2469,11 +2498,19 @@ namespace Wexflow.Server
                         {
                             var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, fileValue);
                             res = id != "-1";
+
+                            if (res)
+                            {
+                                var path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, fileName);
+                                var xdoc = XDocument.Parse(fileValue);
+                                xdoc.Save(path);
+                                ressr = new SaveResult { FilePath = path, Result = true };
+                            }
                         }
                         else
                         {
-                            res = SaveJsonWorkflow(user, fileValue);
-
+                            ressr = SaveJsonWorkflow(user, fileValue);
+                            res = ressr.Result;
                         }
                     }
 
@@ -2482,7 +2519,7 @@ namespace Wexflow.Server
                         workflowId = -1;
                     }
 
-                    var resStr = JsonConvert.SerializeObject(workflowId);
+                    var resStr = JsonConvert.SerializeObject(new { WorkflowId = workflowId, SaveResult = ressr });
                     var resBytes = Encoding.UTF8.GetBytes(resStr);
 
                     return new Response
@@ -2523,8 +2560,6 @@ namespace Wexflow.Server
                     var password = auth.Password;
 
                     int workflowId = int.Parse(Request.Query["w"].ToString());
-                    //string username = Request.Query["u"].ToString();
-                    //string password = Request.Query["p"].ToString();
                     Core.Workflow wf = WexflowServer.WexflowEngine.GetWorkflow(workflowId);
 
                     if (wf != null)
@@ -3169,7 +3204,7 @@ namespace Wexflow.Server
                         Core.Workflow[] workflows = WexflowServer.WexflowEngine.GetUserWorkflows(userId);
                         res = workflows
                             .ToList()
-                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name,
+                            .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                             (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                             wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
                             wf.IsExecutionGraphEmpty
@@ -3878,8 +3913,6 @@ namespace Wexflow.Server
                     var res = false;
 
                     var o = JObject.Parse(json);
-                    //var username = o.Value<string>("Username");
-                    //var password = o.Value<string>("Password");
                     var workflowDbIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("WorkflowsToDelete")).ToString());
 
                     var auth = GetAuth(Request);

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string FilePath { get; set; }
         public int LaunchType { get; set; }
         public bool IsEnabled { get; set; }
         public bool IsApproval { get; set; }

@@ -46,6 +46,10 @@ namespace Wexflow.Core
         /// </summary>
         public string DbId { get; private set; }
         /// <summary>
+        /// Workflow file path.
+        /// </summary>
+        public string FilePath { get; set; }
+        /// <summary>
         /// XML of the workflow.
         /// </summary>
         public string Xml { get; private set; }

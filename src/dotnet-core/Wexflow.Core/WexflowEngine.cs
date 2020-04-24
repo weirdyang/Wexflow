@@ -73,6 +73,10 @@ namespace Wexflow.Core
         /// </summary>
         public string SettingsFile { get; private set; }
         /// <summary>
+        /// Workflows hot folder path.
+        /// </summary>
+        public string WorkflowsFolder { get; private set; }
+        /// <summary>
         /// Temp folder path.
         /// </summary>
         public string TempFolder { get; private set; }
@@ -212,6 +216,7 @@ namespace Wexflow.Core
         private void LoadSettings()
         {
             var xdoc = XDocument.Load(SettingsFile);
+            WorkflowsFolder = GetWexflowSetting(xdoc, "workflowsFolder");
             TempFolder = GetWexflowSetting(xdoc, "tempFolder");
             TasksFolder = GetWexflowSetting(xdoc, "tasksFolder");
             if (!Directory.Exists(TempFolder)) Directory.CreateDirectory(TempFolder);
@@ -263,6 +268,7 @@ namespace Wexflow.Core
         {
             var workflows = Database.GetWorkflows();
 
+            // Load workflows from db
             foreach (var workflow in workflows)
             {
                 var wf = LoadWorkflowFromDatabase(workflow);
@@ -429,6 +435,35 @@ namespace Wexflow.Core
         }
 
         /// <summary>
+        /// Saves a workflow from its file
+        /// </summary>
+        /// <param name="userId">User Id</param>
+        /// <param name="userProfile">User Profile</param>
+        /// <param name="filePath">Workflow File Path</param>
+        /// <returns>Workflow DB Id</returns>
+        public string SaveWorkflowFromFile(string userId, UserProfile userProfile, string filePath)
+        {
+            try
+            {
+                var xml = File.ReadAllText(filePath);
+                var id = SaveWorkflow(userId, userProfile, xml);
+                var workflow = Workflows.First(w => w.DbId == id);
+                workflow.FilePath = filePath;
+                return id;
+            }
+            catch (IOException e) when ((e.HResult & 0x0000FFFF) == 32)
+            {
+                Logger.InfoFormat("There is a sharing violation for the file {0}.", filePath);
+            }
+            catch (Exception e)
+            {
+                Logger.ErrorFormat("Error while saving the workflow {0}", e, filePath);
+            }
+
+            return "-1";
+        }
+
+        /// <summary>
         /// Deletes a workflow from the database.
         /// </summary>
         /// <param name="dbId">DB ID.</param>
@@ -447,6 +482,12 @@ namespace Wexflow.Core
 
                     StopCronJobs(removedWorkflow.Id);
                     Workflows.Remove(removedWorkflow);
+
+                    if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                    {
+                        File.Delete(removedWorkflow.FilePath);
+                        Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                    }
                 }
 
             }
@@ -477,6 +518,12 @@ namespace Wexflow.Core
                         StopCronJobs(removedWorkflow.Id);
                         Workflows.Remove(removedWorkflow);
                         Database.DeleteUserWorkflowRelationsByWorkflowId(removedWorkflow.DbId);
+
+                        if (!string.IsNullOrEmpty(removedWorkflow.FilePath) && File.Exists(removedWorkflow.FilePath))
+                        {
+                            File.Delete(removedWorkflow.FilePath);
+                            Logger.InfoFormat("Workflow file {0} removed.", removedWorkflow.FilePath);
+                        }
                     }
                 }
 
@@ -586,6 +633,7 @@ namespace Wexflow.Core
         /// </summary>
         public void Run()
         {
+            Logger.InfoFormat("Scheduling {0} workflows...", Workflows.Count);
             foreach (Workflow workflow in Workflows)
             {
                 ScheduleWorkflow(workflow);
@@ -595,6 +643,16 @@ namespace Wexflow.Core
             {
                 QuartzScheduler.Start().Wait();
             }
+            Logger.InfoFormat("Scheduling {0} workflows finished.", Workflows.Count);
+
+            Logger.InfoFormat("Loading workflows from hot folder {0} ...", WorkflowsFolder);
+            var workflowFiles = Directory.GetFiles(WorkflowsFolder, "*.xml");
+            var admin = GetUser("admin");
+            foreach (var worlflowFile in workflowFiles)
+            {
+                SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile);
+            }
+            Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
         }
 
         private void ScheduleWorkflow(Workflow wf)

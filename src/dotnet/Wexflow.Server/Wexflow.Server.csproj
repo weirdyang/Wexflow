@@ -193,6 +193,7 @@
     <Compile Include="Contracts\Entry.cs" />
     <Compile Include="Contracts\HistoryEntry.cs" />
     <Compile Include="Contracts\Node.cs" />
+    <Compile Include="Contracts\SaveResult.cs" />
     <Compile Include="Contracts\SettingInfo.cs" />
     <Compile Include="Contracts\StatusCount.cs" />
     <Compile Include="Contracts\TaskInfo.cs" />

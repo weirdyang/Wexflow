@@ -1323,6 +1323,8 @@ definitions:
          format: "int64"
        Name:
          type: "string"
+       FilePath:
+         type: "string"
        Description:
          type: "string"
        Period:

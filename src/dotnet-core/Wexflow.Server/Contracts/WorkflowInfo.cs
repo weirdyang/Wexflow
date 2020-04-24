@@ -20,6 +20,8 @@ namespace Wexflow.Server.Contracts
 
         public string Name { get; set; }
 
+        public string FilePath { get; set; }
+
         public LaunchType LaunchType { get; set; }
 
         public bool IsEnabled { get; set; }
@@ -46,12 +48,13 @@ namespace Wexflow.Server.Contracts
 
         public string StartedOn { get; set; }
 
-        public WorkflowInfo(string dbId, int id, Guid instanceId, string name, LaunchType launchType, bool isEnabled, bool isApproval, bool enableParallelJobs, bool isWaitingForApproval, string desc, bool isRunning, bool isPaused, string period, string cronExpression, bool isExecutionGraphEmpty, Variable[] localVariables, string startedOn)
+        public WorkflowInfo(string dbId, int id, Guid instanceId, string name, string filePath, LaunchType launchType, bool isEnabled, bool isApproval, bool enableParallelJobs, bool isWaitingForApproval, string desc, bool isRunning, bool isPaused, string period, string cronExpression, bool isExecutionGraphEmpty, Variable[] localVariables, string startedOn)
         {
             DbId = dbId;
             Id = id;
             InstanceId = instanceId;
             Name = name;
+            FilePath = filePath;
             LaunchType = launchType;
             IsEnabled = isEnabled;
             IsApproval = isApproval;

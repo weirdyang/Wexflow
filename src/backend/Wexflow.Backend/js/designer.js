@@ -1253,7 +1253,8 @@
 
                     let saveFunc = function () {
                         Common.post(uri + "/save", function (res) {
-                            if (res === true) {
+                            if (res.Result === true) {
+                                workflow.WorkflowInfo.FilePath = res.FilePath;
                                 initialWorkflow = JSON.parse(JSON.stringify(workflow));
                                 checkId = false;
                                 openSavePopup = false;
@@ -1399,13 +1400,15 @@
                 } else if (json === true) {
                     let json = JSON.parse(editor.getValue());
                     Common.post(uri + "/save", function (res) {
-                        if (res === true) {
+                        if (res.Result === true) {
                             checkId = false;
                             openSavePopup = false;
-                            loadDiagram(workflow.WorkflowInfo.Id);
+                            workflow.WorkflowInfo.FilePath = res.FilePath;
+                            loadDiagram(workflow.WorkflowInfo.Id, res.FilePath);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
                             jsonEditorChanged = false;
+                            openJsonView(JSON.stringify(workflow, null, '\t'));
                             Common.toastSuccess(language.get("toast-save-workflow-json"));
                         } else {
                             Common.toastError(language.get("toast-save-workflow-json-error"));
@@ -1416,13 +1419,16 @@
                 } else if (xml === true) {
                     let json = {
                         workflowId: workflow.WorkflowInfo.Id,
+                        filePath: workflow.WorkflowInfo.FilePath,
                         xml: editor.getValue()
                     };
                     Common.post(uri + "/saveXml", function (res) {
-                        if (res === true) {
+                        if (res.Result === true) {
                             checkId = false;
                             openSavePopup = false;
-                            loadDiagram(workflow.WorkflowInfo.Id);
+                            //let filePath = res.FilePath.replace(/\\/g, "\\\\");
+                            workflow.WorkflowInfo.FilePath = res.FilePath;
+                            loadDiagram(workflow.WorkflowInfo.Id, res.FilePath);
                             initialWorkflow = JSON.parse(JSON.stringify(workflow));
                             removeworkflow.style.display = "block";
                             xmlEditorChanged = false;
@@ -2246,161 +2252,165 @@
         let modal = null;
         let exportModal = null;
 
-        function loadDiagram(workflowId) {
+        function loadDiagram(workflowId, filePath) {
             Common.get(uri + "/json/" + workflowId,
                 function (val) {
-                    workflow = val;
-                    initialWorkflow = JSON.parse(JSON.stringify(val));;
-
-                    // fill workflow settings
-                    document.getElementById("wfid").value = workflow.WorkflowInfo.Id;
-                    document.getElementById("wfname").value = workflow.WorkflowInfo.Name;
-                    document.getElementById("wfdesc").value = workflow.WorkflowInfo.Description;
-                    document.getElementById("wflaunchtype").value = launchType(workflow.WorkflowInfo.LaunchType);
-                    document.getElementById("wfperiod").value = workflow.WorkflowInfo.Period;
-                    document.getElementById("wfcronexp").value = workflow.WorkflowInfo.CronExpression;
-                    document.getElementById("wfenabled").checked = workflow.WorkflowInfo.IsEnabled;
-                    document.getElementById("wfapproval").checked = workflow.WorkflowInfo.IsApproval;
-                    document.getElementById("wfenablepj").checked = workflow.WorkflowInfo.EnableParallelJobs;
-
-                    // Local variables
-                    document.getElementsByClassName("wf-local-vars")[0].innerHTML = "";
-                    if (workflow.WorkflowInfo.LocalVariables.length > 0) {
-                        let varsHtml = "";
-                        for (let i = 0; i < workflow.WorkflowInfo.LocalVariables.length; i++) {
-                            let variable = workflow.WorkflowInfo.LocalVariables[i];
-                            let varKey = variable.Key;
-                            let varValue = variable.Value;
-                            varsHtml += "<tr>";
-                            varsHtml += "<td><input class='form-control wf-var-key' type='text' value='" + varKey + "'></td>";
-                            varsHtml += "<td><button type='button' class='wf-remove-var btn btn-danger'>" + language.get("wf-remove-var") + "</button></td>";
-                            varsHtml += "</tr>";
-                            varsHtml += "<tr>";
-                            varsHtml += "<td class='wf-value' colspan='2'><input class='form-control wf-var-value' type='text' value='" + varValue + "'></td>";
-                            varsHtml += "</tr>";
+                    if (val) {
+                        workflow = val;
+                        if (filePath) {
+                            workflow.WorkflowInfo.FilePath = filePath;
                         }
-                        varsHtml += "</table>";
-                        document.getElementsByClassName("wf-local-vars")[0].innerHTML = varsHtml;
+                        initialWorkflow = JSON.parse(JSON.stringify(val));
 
-                        // Bind keys modifications
-                        let bindVarKey = function (index) {
-                            let wfVarKey = document.getElementsByClassName("wf-var-key")[index];
-                            wfVarKey.onkeyup = function () {
-                                workflow.WorkflowInfo.LocalVariables[index].Key = wfVarKey.value;
+                        // fill workflow settings
+                        document.getElementById("wfid").value = workflow.WorkflowInfo.Id;
+                        document.getElementById("wfname").value = workflow.WorkflowInfo.Name;
+                        document.getElementById("wfdesc").value = workflow.WorkflowInfo.Description;
+                        document.getElementById("wflaunchtype").value = launchType(workflow.WorkflowInfo.LaunchType);
+                        document.getElementById("wfperiod").value = workflow.WorkflowInfo.Period;
+                        document.getElementById("wfcronexp").value = workflow.WorkflowInfo.CronExpression;
+                        document.getElementById("wfenabled").checked = workflow.WorkflowInfo.IsEnabled;
+                        document.getElementById("wfapproval").checked = workflow.WorkflowInfo.IsApproval;
+                        document.getElementById("wfenablepj").checked = workflow.WorkflowInfo.EnableParallelJobs;
+
+                        // Local variables
+                        document.getElementsByClassName("wf-local-vars")[0].innerHTML = "";
+                        if (workflow.WorkflowInfo.LocalVariables.length > 0) {
+                            let varsHtml = "";
+                            for (let i = 0; i < workflow.WorkflowInfo.LocalVariables.length; i++) {
+                                let variable = workflow.WorkflowInfo.LocalVariables[i];
+                                let varKey = variable.Key;
+                                let varValue = variable.Value;
+                                varsHtml += "<tr>";
+                                varsHtml += "<td><input class='form-control wf-var-key' type='text' value='" + varKey + "'></td>";
+                                varsHtml += "<td><button type='button' class='wf-remove-var btn btn-danger'>" + language.get("wf-remove-var") + "</button></td>";
+                                varsHtml += "</tr>";
+                                varsHtml += "<tr>";
+                                varsHtml += "<td class='wf-value' colspan='2'><input class='form-control wf-var-value' type='text' value='" + varValue + "'></td>";
+                                varsHtml += "</tr>";
+                            }
+                            varsHtml += "</table>";
+                            document.getElementsByClassName("wf-local-vars")[0].innerHTML = varsHtml;
+
+                            // Bind keys modifications
+                            let bindVarKey = function (index) {
+                                let wfVarKey = document.getElementsByClassName("wf-var-key")[index];
+                                wfVarKey.onkeyup = function () {
+                                    workflow.WorkflowInfo.LocalVariables[index].Key = wfVarKey.value;
+                                };
                             };
+
+                            let wfVarKeys = document.getElementsByClassName("wf-var-key");
+                            for (let i = 0; i < wfVarKeys.length; i++) {
+                                bindVarKey(i);
+                            }
+
+                            // Bind values modifications
+                            let bindVarValue = function (index) {
+                                let wfVarValue = document.getElementsByClassName("wf-var-value")[index];
+                                wfVarValue.onkeyup = function () {
+                                    workflow.WorkflowInfo.LocalVariables[index].Value = wfVarValue.value;
+                                };
+                            };
+
+                            let wfVarValues = document.getElementsByClassName("wf-var-value");
+                            for (let i = 0; i < wfVarValues.length; i++) {
+                                bindVarValue(i);
+                            }
+
+                            // Bind delete variables
+                            let bindDeleteVar = function (index) {
+                                let wfVarDelete = document.getElementsByClassName("wf-remove-var")[index];
+                                wfVarDelete.onclick = function () {
+                                    let res = confirm(language.get("confirm-delete-var"));
+                                    if (res === true) {
+                                        index = parseInt(getElementIndex(wfVarDelete.parentElement.parentElement) / 2);
+                                        workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
+                                        wfVarDelete.parentNode.parentNode.nextSibling.remove();
+                                        wfVarDelete.parentElement.parentElement.remove();
+                                    }
+                                    return false;
+                                };
+                            };
+
+                            let wfVarDeleteBtns = document.getElementsByClassName("wf-remove-var");
+                            for (let i = 0; i < wfVarDeleteBtns.length; i++) {
+                                bindDeleteVar(i);
+                            }
+                        }
+
+                        tasks = {};
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            tasks[i] = task;
+                        }
+
+                        // load flowy
+                        let flowyinput = {};
+                        canvas.style.width = "100%";
+                        canvas.style.left = "0";
+
+                        document.getElementById("leftcard").style.left = -leftcardwidth + "px";
+                        closecardimg.src = "assets/openleft.png";
+                        leftcardHidden = true;
+
+                        document.getElementById("wfpropwrap").style.right = -wfpropwidth + "px";
+                        wfclose.style.right = "0";
+                        wfpropHidden = true;
+                        closewfcardimg.src = "assets/closeleft.png";
+
+                        closeTaskSettings();
+
+                        // build canvashtml
+                        let canvashtml = "";
+                        let blockspace = 180;
+                        let arrowspace = 180;
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            let task = workflow.Tasks[i];
+                            canvashtml += "<div class='blockelem noselect block' style='left: 500px; top: " + (25 + blockspace * i) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + task.Name + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + task.Description + "'><input type='hidden' name='blockid' class='blockid' value='" + i + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + task.Id + ". " + task.Name + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + task.Description + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
+                            if (i < workflow.Tasks.length - 1) {
+                                //canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path><path d='M15 75H25L20 80L15 75Z' fill='#6CA5EC'></path></svg></div>";
+                                canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path></svg></div>";
+                            }
+                        }
+
+                        // build blockarr
+                        let blockarr = [];
+                        for (let i = 0; i < workflow.Tasks.length; i++) {
+                            blockarr.push(
+                                {
+                                    "parent": i - 1,
+                                    "childwidth": (i < workflow.Tasks.length - 1 ? 318 : 0),
+                                    "id": i,
+                                    "x": 644,
+                                    "y": 190 + blockspace * i,
+                                    "width": 318,
+                                    "height": 100
+                                });
+                        }
+
+                        flowyinput = {
+                            "html": canvashtml,
+                            "blockarr": blockarr
                         };
 
-                        let wfVarKeys = document.getElementsByClassName("wf-var-key");
-                        for (let i = 0; i < wfVarKeys.length; i++) {
-                            bindVarKey(i);
+                        flowy.import(flowyinput);
+
+                        // disable checkId
+                        checkId = false;
+
+                        // show delete button
+                        removeworkflow.style.display = "block";
+
+                        // close jBox
+                        if (modal) {
+                            modal.close();
+                            modal.destroy();
                         }
 
-                        // Bind values modifications
-                        let bindVarValue = function (index) {
-                            let wfVarValue = document.getElementsByClassName("wf-var-value")[index];
-                            wfVarValue.onkeyup = function () {
-                                workflow.WorkflowInfo.LocalVariables[index].Value = wfVarValue.value;
-                            };
-                        };
-
-                        let wfVarValues = document.getElementsByClassName("wf-var-value");
-                        for (let i = 0; i < wfVarValues.length; i++) {
-                            bindVarValue(i);
-                        }
-
-                        // Bind delete variables
-                        let bindDeleteVar = function (index) {
-                            let wfVarDelete = document.getElementsByClassName("wf-remove-var")[index];
-                            wfVarDelete.onclick = function () {
-                                let res = confirm(language.get("confirm-delete-var"));
-                                if (res === true) {
-                                    index = parseInt(getElementIndex(wfVarDelete.parentElement.parentElement) / 2);
-                                    workflow.WorkflowInfo.LocalVariables = deleteRow(workflow.WorkflowInfo.LocalVariables, index);
-                                    wfVarDelete.parentNode.parentNode.nextSibling.remove();
-                                    wfVarDelete.parentElement.parentElement.remove();
-                                }
-                                return false;
-                            };
-                        };
-
-                        let wfVarDeleteBtns = document.getElementsByClassName("wf-remove-var");
-                        for (let i = 0; i < wfVarDeleteBtns.length; i++) {
-                            bindDeleteVar(i);
-                        }
                     }
+                }, function () { }, auth);
 
-                    tasks = {};
-                    for (let i = 0; i < workflow.Tasks.length; i++) {
-                        let task = workflow.Tasks[i];
-                        tasks[i] = task;
-                    }
-
-                    // load flowy
-                    let flowyinput = {};
-                    canvas.style.width = "100%";
-                    canvas.style.left = "0";
-
-                    document.getElementById("leftcard").style.left = -leftcardwidth + "px";
-                    closecardimg.src = "assets/openleft.png";
-                    leftcardHidden = true;
-
-                    document.getElementById("wfpropwrap").style.right = -wfpropwidth + "px";
-                    wfclose.style.right = "0";
-                    wfpropHidden = true;
-                    closewfcardimg.src = "assets/closeleft.png";
-
-                    closeTaskSettings();
-
-                    // build canvashtml
-                    let canvashtml = "";
-                    let blockspace = 180;
-                    let arrowspace = 180;
-                    for (let i = 0; i < workflow.Tasks.length; i++) {
-                        let task = workflow.Tasks[i];
-                        canvashtml += "<div class='blockelem noselect block' style='left: 500px; top: " + (25 + blockspace * i) + "px;'><input type='hidden' name='blockelemtype' class='blockelemtype' value='" + task.Name + "'><input type='hidden' name='blockelemdesc' class='blockelemdesc' value='" + task.Description + "'><input type='hidden' name='blockid' class='blockid' value='" + i + "'><div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + task.Id + ". " + task.Name + "</p></div><div class='blockyright'><img class='removediagblock' src='assets/close.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>" + task.Description + "</div><div class='indicator invisible' style='left: 154px; top: 100px;'></div></div>";
-                        if (i < workflow.Tasks.length - 1) {
-                            //canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path><path d='M15 75H25L20 80L15 75Z' fill='#6CA5EC'></path></svg></div>";
-                            canvashtml += "<div class='arrowblock' style='left: 639px; top: " + (125 + arrowspace * i) + "px;'><input type='hidden' class='arrowid' value='" + (i + 1) + "'><svg preserveAspectRatio='none' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20 0L20 40L20 40L20 80' stroke='#6CA5EC' stroke-width='2px'></path></svg></div>";
-                        }
-                    }
-
-                    // build blockarr
-                    let blockarr = [];
-                    for (let i = 0; i < workflow.Tasks.length; i++) {
-                        blockarr.push(
-                            {
-                                "parent": i - 1,
-                                "childwidth": (i < workflow.Tasks.length - 1 ? 318 : 0),
-                                "id": i,
-                                "x": 644,
-                                "y": 190 + blockspace * i,
-                                "width": 318,
-                                "height": 100
-                            });
-                    }
-
-                    flowyinput = {
-                        "html": canvashtml,
-                        "blockarr": blockarr
-                    };
-
-                    flowy.import(flowyinput);
-
-                    // disable checkId
-                    checkId = false;
-
-                    // show delete button
-                    removeworkflow.style.display = "block";
-
-                    // close jBox
-                    if (modal) {
-                        modal.close();
-                        modal.destroy();
-                    }
-
-
-                },
-                function () { }, auth);
         }
 
         function browse() {
@@ -2841,12 +2851,13 @@
 
                         let saveFunc = function () {
                             Common.post(uri + "/save", function (res) {
-                                if (res === true) {
+                                if (res.Result === true) {
                                     checkId = false;
                                     removeworkflow.style.display = "block";
+                                    workflow.WorkflowInfo.FilePath = res.FilePath;
                                     // load diagram
                                     if (id > -1) {
-                                        loadDiagram(id);
+                                        loadDiagram(id, res.FilePath);
                                         if (graph === true) {
                                             openGraph(id);
                                         }
@@ -2994,13 +3005,14 @@
                     } else if (json === true) {
                         let json = JSON.parse(editor.getValue());
                         Common.post(uri + "/save", function (res) {
-                            if (res === true) {
+                            if (res.Result === true) {
                                 if (id > -1) {
                                     Common.get(uri + "/json/" + id,
                                         function (val) {
+                                            workflow.WorkflowInfo.FilePath = res.FilePath;
                                             openJsonView(JSON.stringify(val, null, '\t'));
                                             jsonEditorChanged = false;
-                                            loadDiagram(id);
+                                            loadDiagram(id, res.FilePath);
                                             removeworkflow.style.display = "block";
                                             Common.toastSuccess(language.get("toast-save-workflow-json"));
                                         }, function () { }, auth);
@@ -3017,16 +3029,19 @@
                     } else if (xml === true) {
                         let json = {
                             workflowId: workflow.WorkflowInfo.Id,
+                            filePath: workflow.WorkflowInfo.FilePath,
                             xml: editor.getValue()
                         };
                         Common.post(uri + "/saveXml", function (res) {
-                            if (res === true) {
+                            if (res.Result === true) {
                                 if (id > -1) {
                                     Common.get(uri + "/xml/" + id,
                                         function (val) {
+                                            //workflow.WorkflowInfo.FilePath = res.FilePath.replace(/\\/g, "\\\\");
+                                            workflow.WorkflowInfo.FilePath = res.FilePath;
                                             openXmlView(val);
                                             xmlEditorChanged = false;
-                                            loadDiagram(id);
+                                            loadDiagram(id, res.FilePath);
                                             removeworkflow.style.display = "block";
                                             Common.toastSuccess(language.get("toast-save-workflow-xml"));
                                         }, function () { }, auth);
@@ -3494,24 +3509,25 @@
                 let fd = new FormData();
                 fd.append("file", file);
 
-                Common.post(uri + "/upload", function (workflowId) {
-                    if (workflowId > -1) {
+                Common.post(uri + "/upload", function (res) {
+                    if (res.WorkflowId > -1) {
+                        workflow.WorkflowInfo.FilePath = res.SaveResult.FilePath;
                         if (json === true) {
-                            Common.get(uri + "/json/" + workflowId,
+                            Common.get(uri + "/json/" + res.WorkflowId,
                                 function (val) {
                                     openJsonView(JSON.stringify(val, null, '\t'));
                                 }, function () { }, auth);
                         } else if (xml === true) {
-                            Common.get(uri + "/xml/" + workflowId,
+                            Common.get(uri + "/xml/" + res.WorkflowId,
                                 function (val) {
                                     openXmlView(val);
                                 }, function () { }, auth);
                         } else if (graph === true) {
-                            openGraph(workflowId);
+                            openGraph(res.WorkflowId);
                         }
 
                         // load diagram
-                        loadDiagram(workflowId);
+                        loadDiagram(res.WorkflowId, res.SaveResult.FilePath);
 
                         filedialog.value = "";
                         Common.toastSuccess(file.name + language.get("toast-upload-success"));
