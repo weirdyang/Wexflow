@@ -57,6 +57,7 @@ copy "..\src\backend\Wexflow.Backend\css\users.min.css" %dstDir%\%backend%\css
 copy "..\src\backend\Wexflow.Backend\css\profiles.min.css" %dstDir%\%backend%\css
 
 copy "..\src\backend\Wexflow.Backend\js\settings.js" %dstDir%\%backend%\js
+copy "..\src\backend\Wexflow.Backend\js\language.js" %dstDir%\%backend%\js
 copy "..\src\backend\Wexflow.Backend\js\login.min.js" %dstDir%\%backend%\js
 copy "..\src\backend\Wexflow.Backend\js\forgot-password.min.js" %dstDir%\%backend%\js
 copy "..\src\backend\Wexflow.Backend\js\dashboard.min.js" %dstDir%\%backend%\js

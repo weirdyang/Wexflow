@@ -27,6 +27,8 @@ namespace Wexflow.Server
         private void StartThread()
         {
             WexflowEngine.Run();
+
+            // TODO Hot folder
         }
 
         protected override void OnStart(string[] args)
