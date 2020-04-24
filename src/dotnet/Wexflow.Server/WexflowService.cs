@@ -1506,15 +1506,22 @@ namespace Wexflow.Server
                         }
                     }
 
-                    if (res)
+                    if (WexflowServer.WexflowEngine.EnableWorkflowsHotFolder)
                     {
-                        if (string.IsNullOrEmpty(path))
+                        if (res)
                         {
-                            path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
-                            WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                            if (string.IsNullOrEmpty(path))
+                            {
+                                path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                                WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                            }
+                            var xdoc = XDocument.Parse(xml);
+                            xdoc.Save(path);
                         }
-                        var xdoc = XDocument.Parse(xml);
-                        xdoc.Save(path);
+                    }
+                    else
+                    {
+                        path = string.Empty;
                     }
 
                     var ressr = new SaveResult { FilePath = path, Result = res };
@@ -1963,13 +1970,20 @@ namespace Wexflow.Server
                     return new SaveResult { FilePath = path, Result = false };
                 }
 
-                path = (string)wi.SelectToken("FilePath");
-                if (string.IsNullOrEmpty(path))
+                if (WexflowServer.WexflowEngine.EnableWorkflowsHotFolder)
                 {
-                    path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
-                    WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                    path = (string)wi.SelectToken("FilePath");
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                        WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                    }
+                    xdoc.Save(path);
                 }
-                xdoc.Save(path);
+                else
+                {
+                    path = string.Empty;
+                }
             }
             else
             {
@@ -2199,13 +2213,20 @@ namespace Wexflow.Server
                         return new SaveResult { FilePath = path, Result = false };
                     }
 
-                    path = (string)wi.SelectToken("FilePath");
-                    if (string.IsNullOrEmpty(path))
+                    if (WexflowServer.WexflowEngine.EnableWorkflowsHotFolder)
                     {
-                        path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
-                        WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                        path = (string)wi.SelectToken("FilePath");
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, "Workflow_" + workflowId.ToString() + ".xml");
+                            WexflowServer.WexflowEngine.GetWorkflow(workflowId).FilePath = path;
+                        }
+                        xdoc.Save(path);
                     }
-                    xdoc.Save(path);
+                    else
+                    {
+                        path = string.Empty;
+                    }
                 }
             }
 
@@ -2499,12 +2520,19 @@ namespace Wexflow.Server
                             var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, fileValue);
                             res = id != "-1";
 
-                            if (res)
+                            if (WexflowServer.WexflowEngine.EnableWorkflowsHotFolder)
                             {
-                                var path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, fileName);
-                                var xdoc = XDocument.Parse(fileValue);
-                                xdoc.Save(path);
-                                ressr = new SaveResult { FilePath = path, Result = true };
+                                if (res)
+                                {
+                                    var path = Path.Combine(WexflowServer.WexflowEngine.WorkflowsFolder, fileName);
+                                    var xdoc = XDocument.Parse(fileValue);
+                                    xdoc.Save(path);
+                                    ressr = new SaveResult { FilePath = path, Result = true };
+                                }
+                            }
+                            else
+                            {
+                                ressr = new SaveResult { FilePath = string.Empty, Result = true };
                             }
                         }
                         else

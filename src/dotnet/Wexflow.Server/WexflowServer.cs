@@ -12,11 +12,14 @@ namespace Wexflow.Server
 {
     public partial class WexflowServer : ServiceBase
     {
-        public static FileSystemWatcher Watcher;
         public static NameValueCollection Config = ConfigurationManager.AppSettings;
+
         private static string settingsFile = Config["WexflowSettingsFile"];
         private static string superAdminUsername = Config["SuperAdminUsername"];
-        public static WexflowEngine WexflowEngine = new WexflowEngine(settingsFile);
+        private static bool enableWorkflowsHotFolder = bool.Parse(Config["EnableWorkflowsHotFolder"]);
+
+        public static FileSystemWatcher Watcher;
+        public static WexflowEngine WexflowEngine = new WexflowEngine(settingsFile, enableWorkflowsHotFolder);
 
         private IDisposable _webApp;
 
@@ -31,7 +34,16 @@ namespace Wexflow.Server
         private void StartThread()
         {
             WexflowEngine.Run();
-            InitializeFileSystemWatcher();
+
+            if (enableWorkflowsHotFolder)
+            {
+                InitializeFileSystemWatcher();
+            }
+            else
+            {
+                Logger.Info("Workflows hot folder is disabled.");
+            }
+
         }
 
         protected override void OnStart(string[] args)
