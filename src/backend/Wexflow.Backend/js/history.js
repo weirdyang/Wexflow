@@ -30,6 +30,36 @@
         document.getElementById("lbl-from").innerHTML = language.get("lbl-from");
         document.getElementById("lbl-to").innerHTML = language.get("lbl-to");
         document.getElementById("btn-search").value = language.get("btn-search");
+
+
+        let statusPendingLabels = document.getElementsByClassName("st-pending");
+        for (let i = 0; i < statusPendingLabels.length; i++) {
+            statusPendingLabels[i].innerHTML = language.get("status-pending-label");
+        }
+        let statusRunningLabels = document.getElementsByClassName("st-running");
+        for (let i = 0; i < statusRunningLabels.length; i++) {
+            statusRunningLabels[i].innerHTML = language.get("status-running-label");
+        }
+        let statusDoneLabels = document.getElementsByClassName("st-done");
+        for (let i = 0; i < statusDoneLabels.length; i++) {
+            statusDoneLabels[i].innerHTML = language.get("status-done-label");
+        }
+        let statusFailedLabels = document.getElementsByClassName("st-failed");
+        for (let i = 0; i < statusFailedLabels.length; i++) {
+            statusFailedLabels[i].innerHTML = language.get("status-failed-label");
+        }
+        let statusWarningLabels = document.getElementsByClassName("st-warning");
+        for (let i = 0; i < statusWarningLabels.length; i++) {
+            statusWarningLabels[i].innerHTML = language.get("status-warning-label");
+        }
+        let statusStoppedLabels = document.getElementsByClassName("st-stopped");
+        for (let i = 0; i < statusStoppedLabels.length; i++) {
+            statusStoppedLabels[i].innerHTML = language.get("status-stopped-label");
+        }
+        let statusRejectedLabels = document.getElementsByClassName("st-disapproved");
+        for (let i = 0; i < statusRejectedLabels.length; i++) {
+            statusRejectedLabels[i].innerHTML = language.get("status-disapproved-label");
+        }
     }
     updateLanguage();
 
@@ -271,11 +301,11 @@
         Common.get(uri + "/searchHistoryEntriesByPageOrderBy?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime() + "&page=" + page + "&entriesCount=" + entriesCount + "&heo=" + heo,
             function (data) {
                 let items = [];
-                
+
                 for (let i = 0; i < data.length; i++) {
                     let val = data[i];
                     let lt = Common.launchType(val.LaunchType);
-                    let entryStatus = Common.status(val.Status);
+                    let entryStatus = Common.status(language, val.Status);
                     items.push("<tr>"
                         + "<input type='hidden' class='entryId' value='" + val.Id + "'>"
                         + "<td class='status'>" + entryStatus + "</td>"
