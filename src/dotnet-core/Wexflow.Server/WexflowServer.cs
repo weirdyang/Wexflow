@@ -16,7 +16,7 @@ namespace Wexflow.Server
     {
         private static string superAdminUsername;
 
-        public static FileSystemWatcher Watcher;
+        public static PollingFileSystemWatcher Watcher;
         public static IConfiguration Config;
         public static WexflowEngine WexflowEngine;
 
@@ -39,7 +39,7 @@ namespace Wexflow.Server
 
             if (enableWorkflowsHotFolder)
             {
-                InitializeFileSystemWatcher();
+                InitializePollingFileSystemWatcher();
             }
             else
             {
@@ -64,71 +64,68 @@ namespace Wexflow.Server
             WexflowEngine.Stop(true, true);
         }
 
-        public static void InitializeFileSystemWatcher()
+        public static void InitializePollingFileSystemWatcher()
         {
-            Logger.Info("Initializing FileSystemWatcher...");
-            Watcher = new FileSystemWatcher
-            {
-                Path = WexflowEngine.WorkflowsFolder,
-                Filter = "*.xml",
-                IncludeSubdirectories = false
-            };
+            Logger.Info("Initializing PollingFileSystemWatcher...");
+            Watcher = new PollingFileSystemWatcher(WexflowEngine.WorkflowsFolder, "*.xml");
 
             // Add event handlers.
-            Watcher.Created += OnCreated;
-            Watcher.Changed += OnChanged;
-            Watcher.Deleted += OnDeleted;
+            Watcher.ChangedDetailed += OnChanged;
 
             // Begin watching.
-            Watcher.EnableRaisingEvents = true;
-            Logger.InfoFormat("FileSystemWatcher.Path={0}", Watcher.Path);
-            Logger.InfoFormat("FileSystemWatcher.Filter={0}", Watcher.Filter);
-            Logger.InfoFormat("FileSystemWatcher.EnableRaisingEvents={0}", Watcher.EnableRaisingEvents);
-            Logger.Info("FileSystemWatcher Initialized.");
+            Watcher.Start();
+            Logger.InfoFormat("PollingFileSystemWatcher.Path={0}", Watcher.Path);
+            Logger.InfoFormat("PollingFileSystemWatcher.Filter={0}", Watcher.Filter);
+            Logger.Info("PollingFileSystemWatcher Initialized.");
         }
 
-        private static void OnCreated(object source, FileSystemEventArgs e)
+        private static void OnChanged(object source, PollingFileSystemEventArgs e)
         {
-            Logger.Info("FileSystemWatcher.OnCreated");
-            try
+            foreach (var change in e.Changes)
             {
-                var admin = WexflowEngine.GetUser(superAdminUsername);
-                WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
-            }
-            catch (Exception ex)
-            {
-                Logger.ErrorFormat("Error while creating the workflow {0}", ex, e.FullPath);
-            }
-        }
-
-        private static void OnChanged(object source, FileSystemEventArgs e)
-        {
-            Logger.Info("FileSystemWatcher.OnChanged");
-            try
-            {
-                var admin = WexflowEngine.GetUser(superAdminUsername);
-                WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath);
-            }
-            catch (Exception ex)
-            {
-                Logger.ErrorFormat("Error while updating the workflow {0}", ex, e.FullPath);
-            }
-        }
-
-        private static void OnDeleted(object source, FileSystemEventArgs e)
-        {
-            Logger.Info("FileSystemWatcher.OnDeleted");
-            try
-            {
-                var removedWorkflow = WexflowEngine.Workflows.SingleOrDefault(wf => wf.FilePath == e.FullPath);
-                if (removedWorkflow != null)
+                var path = Path.Combine(change.Directory, change.Name);
+                switch (change.ChangeType)
                 {
-                    WexflowEngine.DeleteWorkflow(removedWorkflow.DbId);
+                    case WatcherChangeTypes.Created:
+                        Logger.Info("PollingFileSystemWatcher.OnCreated");
+                        try
+                        {
+                            var admin = WexflowEngine.GetUser(superAdminUsername);
+                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.ErrorFormat("Error while creating the workflow {0}", ex, path);
+                        }
+                        break;
+                    case WatcherChangeTypes.Changed:
+                        Logger.Info("PollingFileSystemWatcher.OnChanged");
+                        try
+                        {
+                            var admin = WexflowEngine.GetUser(superAdminUsername);
+                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.ErrorFormat("Error while updating the workflow {0}", ex, path);
+                        }
+                        break;
+                    case WatcherChangeTypes.Deleted:
+                        Logger.Info("PollingFileSystemWatcher.OnDeleted");
+                        try
+                        {
+                            var removedWorkflow = WexflowEngine.Workflows.SingleOrDefault(wf => wf.FilePath == path);
+                            if (removedWorkflow != null)
+                            {
+                                WexflowEngine.DeleteWorkflow(removedWorkflow.DbId);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.ErrorFormat("Error while deleting the workflow {0}", ex, path);
+                        }
+                        break;
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.ErrorFormat("Error while deleting the workflow {0}", ex, e.FullPath);
             }
         }
 
