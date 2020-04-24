@@ -63,7 +63,7 @@
         for (let i = 0; i < statusStoppedLabels.length; i++) {
             statusStoppedLabels[i].innerHTML = language.get("status-stopped-label");
         }
-        let statusRejectedLabels = document.getElementsByClassName("st-disapproved");
+        let statusRejectedLabels = document.getElementsByClassName("st-rejected");
         for (let i = 0; i < statusRejectedLabels.length; i++) {
             statusRejectedLabels[i].innerHTML = language.get("status-disapproved-label");
         }
