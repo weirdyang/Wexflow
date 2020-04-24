@@ -1,4 +1,4 @@
-﻿function Language(domId, updateLanguage) {
+function Language(domId, updateLanguage) {
     "use strict";
 
     let self = this;
