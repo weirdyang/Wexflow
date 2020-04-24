@@ -144,6 +144,23 @@
     languages["en"]["wfs-delete"] = "Delete";
     languages["en"]["open-wfs-msg"] = "Ctrl+O to open this window.";
     languages["en"]["search-workflows"] = "Search workflows";
+    languages["en"]["toast-user-deleted"] = "The user was deleted with success.";
+    languages["en"]["toast-user-delete-error"] = "An error occured while deleting the user.";
+    languages["en"]["toast-username"] = "Type a username.";
+    languages["en"]["toast-userprofile"] = "Choose a user profile for this user.";
+    languages["en"]["toast-password"] = "Type a password.";
+    languages["en"]["toast-password-error"] = "Passwords don't match.";
+    languages["en"]["toast-email-error"] = "Enter a valid email address.";
+    languages["en"]["toast-user-created"] = "The user was created with success.";
+    languages["en"]["toast-user-create-error"] = "An error occured while creating the user.";
+    languages["en"]["toast-username-exists"] = "A user with this name already exists. Type another username.";
+    languages["en"]["toast-password-incorrect"] = "The password is incorrect.";
+    languages["en"]["toast-old-password-incorrect"] = "The old password is not valid.";
+    languages["en"]["toast-new-password-error"] = "New passwords don't match.";
+    languages["en"]["toast-new-password"] = "Enter a new password.";
+    languages["en"]["toast-user-updated"] = "The user was updated with success.";
+    languages["en"]["toast-user-update-error"] = "An error occured while updating the user.";
+    languages["en"]["confirm-user-delete"] = "Are you sure you want to delete this user?";
 
     // 
     // fr
@@ -283,6 +300,23 @@
     languages["fr"]["wfs-delete"] = "Supprimer";
     languages["fr"]["open-wfs-msg"] = "Ctrl+O pour ouvrir cette fenêtre.";
     languages["fr"]["search-workflows"] = "Rechercher de workflows";
+    languages["fr"]["toast-user-deleted"] = "L'utilisateur a été supprimé avec succès.";
+    languages["fr"]["toast-user-delete-error"] = "Une erreur s'est produite lors de la suppression de l'utilisateur.";
+    languages["fr"]["toast-username"] = "Entrez un nom d'utilisateur.";
+    languages["fr"]["toast-userprofile"] = "Entrez un profil pour cet utilisateur.";
+    languages["fr"]["toast-password"] = "Entrez un mot de passe.";
+    languages["fr"]["toast-password-error"] = "Les mots de passes ne correspondent pas.";
+    languages["fr"]["toast-email-error"] = "Entrez un adresse Email valide.";
+    languages["fr"]["toast-user-created"] = "L'utilisateur a été créé avec succès.";
+    languages["fr"]["toast-user-create-error"] = "Une erreur s'est produite lors de la création de l'utilisateur.";
+    languages["fr"]["toast-username-exists"] = "Un utilisateur avec le même nom existe déjà. Entrez un nouveau nom d'utilisateur.";
+    languages["fr"]["toast-password-incorrect"] = "Le mot de passe est incorrect.";
+    languages["fr"]["toast-old-password-incorrect"] = "L'ancien mot de passe n'est pas valide.";
+    languages["fr"]["toast-new-password-error"] = "Les nouveaux mots de passes ne correspondent pas.";
+    languages["fr"]["toast-new-password"] = "Entrez un nouveau mot de passe.";
+    languages["fr"]["toast-user-updated"] = "L'utilisateur a été mis à jour avec succès.";
+    languages["fr"]["toast-user-update-error"] = "Une erreur s'est produite lors de la mise à jour de l'utilisateur.";
+    languages["fr"]["confirm-user-delete"] = "Êtes-vous sûr de vouloir supprimer cet utlisateur ?";
 
     this.get = function (keyword) {
         return languages[self.getLanguage()][keyword] || languages["en"][keyword];

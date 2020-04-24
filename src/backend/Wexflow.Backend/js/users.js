@@ -458,7 +458,7 @@
     };
 
     deleteAction.onclick = function () {
-        let r = confirm("Are you sure you want to delete this user?");
+        let r = confirm(language.get("confirm-user-delete"));
 
         if (r === true) {
             if (selectedUsername !== logedinUser) {
@@ -468,12 +468,12 @@
                         Common.post(uri + "/deleteUser?username=" + encodeURIComponent(selectedUsername) + "&password=" + encodeURIComponent(u.Password),
                             function (val) {
                                 if (val === true) {
-                                    Common.toastSuccess("The user " + selectedUsername + " was deleted with success.");
+                                    Common.toastSuccess(language.get("toast-user-deleted"));
                                     loadUsers();
                                     divUserActions.style.display = "none";
                                     divUserProfile.style.display = "none";
                                 } else {
-                                    Common.toastError("An error occured while deleting the user " + selectedUsername + ".");
+                                    Common.toastError(language.get("toast-user-delete-error"));
                                 }
                             },
                             function () { }, "", auth);
@@ -507,28 +507,28 @@
             let confirmedPassword = confirmPasswordText.value;
 
             if (username === "") {
-                Common.toastInfo("Type a username.");
+                Common.toastInfo(language.get("toast-username"));
             } else {
                 Common.get(uri + "/user?username=" + encodeURIComponent(username),
                     function (u) {
                         if (typeof u === "undefined") {
                             if (up === -1) {
-                                Common.toastInfo("Choose a user profile for this user.");
+                                Common.toastInfo(language.get("toast-userprofile"));
                             } else {
                                 if (password === "" || confirmedPassword === "") {
-                                    Common.toastInfo("Type a password.");
+                                    Common.toastInfo(language.get("toast-password"));
                                 } else {
                                     if (password !== confirmedPassword) {
-                                        Common.toastInfo("Passwords don't match.");
+                                        Common.toastInfo(language.get("toast-password-error"));
                                     } else if (emailText.value === "" || validateEmail(emailText.value) === false) {
-                                        Common.toastInfo("Enter a valid email address.");
+                                        Common.toastInfo(language.get("toast-email-error"));
                                     } else {
                                         let hashedPass = MD5(password);
                                         Common.post(
                                             uri + "/insertUser?username=" + encodeURIComponent(username) + "&password=" + hashedPass + "&up=" + up + "&email=" + encodeURIComponent(emailText.value),
                                             function (val) {
                                                 if (val === true) {
-                                                    Common.toastSuccess("The user " + username + " was created with success.");
+                                                    Common.toastSuccess(language.get("toast-user-created"));
 
                                                     Common.get(uri + "/user?username=" + encodeURIComponent(username),
                                                         function (user) {
@@ -564,7 +564,7 @@
                                                         function () { }, auth);
 
                                                 } else {
-                                                    Common.toastError("An error occured while creating the user " + username + ".");
+                                                    Common.toastError(language.get("toast-user-create-error"));
                                                 }
                                             },
                                             function () { }, "", auth);
@@ -573,7 +573,7 @@
 
                             }
                         } else {
-                            Common.toastInfo("A user with this name already exists. Type another username.");
+                            Common.toastInfo(language.get("toast-username-exists"));
                         }
 
                     },
@@ -584,27 +584,27 @@
             let up2 = parseInt(getSelectedProfile());
             if (changePassword === false) {
                 if (txtUsername.value === "") {
-                    Common.toastInfo("Enter a username.");
+                    Common.toastInfo(language.get("toast-username"));
                 } else if (emailText.value === "" || validateEmail(emailText.value) === false) {
-                    Common.toastInfo("Enter a valid email address.");
+                    Common.toastInfo(language.get("toast-email-error"));
                 } else if (up2 === -1) {
-                    Common.toastInfo("Choose a user profile for this user.");
+                    Common.toastInfo(language.get("toast-userprofile"));
                 } else {
                     Common.get(uri + "/user?username=" + encodeURIComponent(txtUsername.value),
                         function (u) {
                             if (typeof u !== "undefined" && u !== null && u.Username !== selectedUsername) {
-                                Common.toastInfo("The user " + txtUsername.value + " already exists. Choose another username.");
+                                Common.toastInfo(language.get("toast-username-exists"));
                             } else {
 
                                 if (selectedUsername !== logedinUser && selectedUserProfile === 0) {
 
                                     if (newPasswordText.value === "") {
-                                        Common.toastInfo("Type the password of this user.");
+                                        Common.toastInfo(language.get("toast-password"));
                                     } else {
                                         let pass = MD5(newPasswordText.value);
 
                                         if (pass !== u.Password) {
-                                            Common.toastInfo("The password is incorrect.");
+                                            Common.toastInfo(language.get("toast-password-incorrect"));
                                         } else {
                                             updateUsernameAndPassword();
                                         }
@@ -626,30 +626,30 @@
                     function (u) {
                         let oldPassword = MD5(oldPasswordText.value);
                         if (u.UserProfile === 0 && u.Password !== oldPassword) {
-                            Common.toastInfo("The old password is not valid.");
+                            Common.toastInfo(language.get("toast-old-password-incorrect"));
                         } else {
 
                             if (newPasswordText.value !== confirmPasswordText.value) {
-                                Common.toastInfo("New passwords don't match.");
+                                Common.toastInfo(language.get("toast-new-password-error"));
                             } else if (newPasswordText.value === "" || confirmPasswordText.value === "") {
-                                Common.toastInfo("Enter a new password.");
+                                Common.toastInfo(language.get("toast-new-password"));
                             } else {
                                 let newPassword = MD5(newPasswordText.value);
                                 let up = getSelectedProfile();
 
                                 if (txtUsername.value === "") {
-                                    Common.toastInfo("Enter a username.");
+                                    Common.toastInfo(language.get("toast-username"));
                                 } else if (emailText.value === "" || validateEmail(emailText.value) === false) {
-                                    Common.toastInfo("Enter a valid email address.");
+                                    Common.toastInfo(language.get("toast-email-error"));
                                 } else if (up === -1) {
-                                    Common.toastInfo("Choose a user profile for this user.");
+                                    Common.toastInfo(language.get("toast-userprofile"));
                                 } else {
                                     Common.get(uri + "/user?username=" + encodeURIComponent(txtUsername.value),
                                         function (u) {
                                             if (typeof u !== "undefined" &&
                                                 u !== null &&
                                                 u.Username !== selectedUsername) {
-                                                Common.toastInfo("The user " + txtUsername.value + " already exists. Choose another username.");
+                                                Common.toastInfo(language.get("toast-username-exists"));
                                             } else {
 
                                                 Common.post(uri + "/updateUser?userId=" + selectedUserId + "&username=" + encodeURIComponent(txtUsername.value) + "&password=" + encodeURIComponent(newPassword) + "&up=" + up + "&email=" + encodeURIComponent(emailText.value),
@@ -692,11 +692,11 @@
                                                                         changePass.style.display = "none";
                                                                     }
 
-                                                                    Common.toastSuccess("The user " + txtUsername.value + " was updated with success.");
+                                                                    Common.toastSuccess(language.get("toast-user-updated"));
                                                                 },
                                                                 function () { }, auth);
                                                         } else {
-                                                            Common.toastError("An error occured while updating the user " + txtUsername.value + ".");
+                                                            Common.toastError(language.get("toast-user-update-error"));
                                                         }
                                                     },
                                                     function () { }, "", auth);
@@ -726,13 +726,14 @@
                         function (user) {
                             if (logedinUser === selectedUsername) {
                                 qpassword = user.Password;
-                                btnLogout.innerHTML = "Logout (" + txtUsername.value + ")";
+                                //btnLogout.innerHTML = "Logout (" + txtUsername.value + ")";
+                                document.getElementById("spn-username").innerHTML = " (" + txtUsername.Username + ")";
 
                                 deleteUser();
                                 authorize(txtUsername.value, user.Password, user.UserProfile);
 
                             }
-                            Common.toastSuccess("The user " + txtUsername.value + " was updated with success.");
+                            Common.toastSuccess(language.get("toast-user-updated"));
                             selectedUsernameTd.innerHTML = txtUsername.value;
                             selectedUserProfileTd.innerHTML = userProfileToText(user.UserProfile);
 
@@ -765,7 +766,7 @@
                         },
                         function () { }, auth);
                 } else {
-                    Common.toastError("An error occured while updating the user " + txtUsername.value + ".");
+                    Common.toastError(language.get("toast-user-update-error"));
                 }
             },
             function () { }, "", auth);
