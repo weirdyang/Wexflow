@@ -225,6 +225,7 @@ Source: "..\src\dotnet\Wexflow.Tasks.Slack\Slack.xml"; DestDir: "{app}\Documenta
 Source: "..\src\dotnet\Wexflow.Tasks.FilesLoaderEx\FilesLoaderEx.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Tasks.FilesJoiner\FilesJoiner.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Tasks.Twilio\Twilio.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
+Source: "..\src\dotnet\Wexflow.Tasks.SshCmd\SshCmd.xml"; DestDir: "{app}\Documentation"; Flags: ignoreversion
 
 Source: "..\LICENSE.txt"; DestDir: "{app}\"; Flags: ignoreversion
 

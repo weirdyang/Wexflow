@@ -8,13 +8,12 @@ using System.IO;
 
 namespace Wexflow.Tasks.Sync
 {
-    public class Sync:Task
+    public class Sync : Task
     {
         public string SrcFolder { get; private set; }
         public string DestFolder { get; private set; }
 
-        public Sync(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Sync(XElement xe, Workflow wf) : base(xe, wf)
         {
             SrcFolder = GetSetting("srcFolder");
             DestFolder = GetSetting("destFolder");
@@ -109,13 +108,13 @@ namespace Wexflow.Tasks.Sync
                 destinationProvider.SkippedChange += OnSkippedChange;
 
                 var agent = new SyncOrchestrator
-                    {
-                        LocalProvider = sourceProvider,
-                        RemoteProvider = destinationProvider,
-                        Direction = SyncDirectionOrder.Upload
-                    };
+                {
+                    LocalProvider = sourceProvider,
+                    RemoteProvider = destinationProvider,
+                    Direction = SyncDirectionOrder.Upload
+                };
 
-                InfoFormat("Synchronizing changes to replica: {0}" , destinationProvider.RootDirectoryPath);
+                InfoFormat("Synchronizing changes to replica: {0}", destinationProvider.RootDirectoryPath);
                 agent.Synchronize();
             }
             finally
