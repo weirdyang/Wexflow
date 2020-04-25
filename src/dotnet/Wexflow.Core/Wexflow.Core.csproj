@@ -122,6 +122,7 @@
     <Compile Include="LaunchType.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ExecutionGraph\Node.cs" />
+    <Compile Include="NetworkShareAccesser.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="Tag.cs" />

@@ -13,7 +13,7 @@
 	"FileExists": [ "file" ],
 	"FileMatch": [ "dir", "pattern", "recurssive" ],
 	"FilesConcat": [ "selectFiles" ],
-	"FilesCopier": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory" ],
+	"FilesCopier": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesDecryptor": [ "selectFiles" ],
 	"FilesDiff": [ "oldFile", "newFile" ],
 	"FilesEncryptor": [ "selectFiles" ],

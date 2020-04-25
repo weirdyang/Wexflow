@@ -1,8 +1,8 @@
 ﻿using System;
-using Wexflow.Core;
-using System.Xml.Linq;
 using System.IO;
 using System.Threading;
+using System.Xml.Linq;
+using Wexflow.Core;
 
 namespace Wexflow.Tasks.FilesCopier
 {
@@ -12,24 +12,62 @@ namespace Wexflow.Tasks.FilesCopier
         public bool Overwrite { get; private set; }
         public string PreserveFolderStructFrom { get; private set; }
         public bool AllowCreateDirectory { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public FilesCopier(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public FilesCopier(XElement xe, Workflow wf) : base(xe, wf)
         {
             DestFolder = GetSetting("destFolder");
             Overwrite = bool.Parse(GetSetting("overwrite", "false"));
             PreserveFolderStructFrom = GetSetting("preserveFolderStructFrom");
             AllowCreateDirectory = bool.Parse(GetSetting("allowCreateDirectory", "true"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Copying files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
-            var files = SelectFiles();
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            {
+                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                {
+                    success = CopyFiles(ref atLeastOneSucceed);
+                }
+            }
+            else
+            {
+                success = CopyFiles(ref atLeastOneSucceed);
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool CopyFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
+            var files = SelectFiles();
             foreach (FileInf file in files)
             {
                 string destPath;
@@ -76,20 +114,7 @@ namespace Wexflow.Tasks.FilesCopier
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
     }
 }

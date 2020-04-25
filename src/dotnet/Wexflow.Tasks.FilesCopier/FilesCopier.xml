@@ -16,6 +16,16 @@
     <Setting name="destFolder" value="$string" />
     <!--- Optional and defaults to false. true to overwrite the files located in the destination folder, false otherwise.-->
     <Setting name="overwrite" value="true|false" />
+
+     <!-- Samba computer name. -->
+    <Setting name="smbComputerName" value="$string" />
+    <!-- Samba domain name. -->
+    <Setting name="smbDomain" value="$string" />
+    <!-- Samba username. -->
+    <Setting name="smbUsername" value="$string" />
+    <!-- Samba password. -->
+    <Setting name="smbPassword" value="$string" />
+
     <!--
       Optional and defaults to empty. Preserve Directory Structure from a Source Path Point.
       For example:
