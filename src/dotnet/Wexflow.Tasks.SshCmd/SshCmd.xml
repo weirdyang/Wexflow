@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Tasks>
   <!--
-    SshCmd a sequential task that executes SSH commands.
+    SshCmd is a sequential task that executes an SSH command.
   -->
   <Task id="$int" name="SshCmd" description="$string" enabled="true|false">
     <!-- SSH host. -->
