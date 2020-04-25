@@ -17,13 +17,13 @@
     <!--- Optional and defaults to false. true to overwrite the files located in the destination folder, false otherwise.-->
     <Setting name="overwrite" value="true|false" />
 
-     <!-- Samba computer name. -->
+    <!-- Optional. Samba computer name. -->
     <Setting name="smbComputerName" value="$string" />
-    <!-- Samba domain name. -->
+    <!-- Optional. Samba domain name. -->
     <Setting name="smbDomain" value="$string" />
-    <!-- Samba username. -->
+    <!-- Optional. Samba username. -->
     <Setting name="smbUsername" value="$string" />
-    <!-- Samba password. -->
+    <!-- Optional. Samba password. -->
     <Setting name="smbPassword" value="$string" />
 
     <!--
