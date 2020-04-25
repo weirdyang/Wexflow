@@ -7,7 +7,7 @@ using ICSharpCode.SharpZipLib.Tar;
 
 namespace Wexflow.Tasks.Tar
 {
-    public class Tar:Task
+    public class Tar : Task
     {
         public string TarFileName { get; private set; }
 
@@ -36,13 +36,11 @@ namespace Wexflow.Tasks.Tar
                         {
                             using (Stream inputStream = File.OpenRead(file.Path))
                             {
-                                string tarName = file.FileName;
-
                                 long fileSize = inputStream.Length;
 
                                 // Create a tar entry named as appropriate. You can set the name to anything,
                                 // but avoid names starting with drive or UNC.
-                                var entry = TarEntry.CreateTarEntry(tarName);
+                                var entry = TarEntry.CreateTarEntry(file.RenameToOrName);
 
                                 // Must set size, otherwise TarOutputStream will fail when output exceeds.
                                 entry.Size = fileSize;
