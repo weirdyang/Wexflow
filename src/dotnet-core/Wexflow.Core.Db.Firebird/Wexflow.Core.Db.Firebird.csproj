@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Platforms>AnyCPU;x64;x86</Platforms> 
+    <Version>5.5.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

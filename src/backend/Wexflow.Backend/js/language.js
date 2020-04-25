@@ -164,7 +164,6 @@ languages["en"]["toast-user-updated"] = "The user was updated with success.";
 languages["en"]["toast-user-update-error"] = "An error occured while updating the user.";
 languages["en"]["confirm-user-delete"] = "Are you sure you want to delete this user?";
 
-// 
 // fr
 languages["fr"]["language"] = "Langue";
 languages["fr"]["help"] = "Aide";
