@@ -122,7 +122,14 @@
                                 ui.getConfigs().requestInterceptor = (req) => {
                                     if (!req.loadSpec) {
                                         // Add the header to "try it out" calls but not spec fetches
-                                        req.headers.Authorization = auth;
+                                        //req.headers.Authorization = auth;
+                                        req.headers = {
+                                            "Authorization": auth,
+                                            "Access-Control-Allow-Origin": "*",
+                                            "Access-Control-Request-Method": "POST,GET,PUT,DELETE,OPTIONS",
+                                            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+
+                                        };
                                     }
                                     req.contextUrl = window.location.origin + "/";
                                     req.url = req.url.replace(/http(s){0,1}:\/\/[^/]*\//i, req.contextUrl);
