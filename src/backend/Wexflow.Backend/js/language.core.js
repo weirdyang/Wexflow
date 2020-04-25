@@ -59,7 +59,6 @@ function Language(domId, updateLanguage) {
     }
 
     /* Internal functions */
-
     function setValue(key, value) {
         if (isIE()) {
             setCookie(key, value, 365);
