@@ -40,7 +40,7 @@ namespace Wexflow.Tasks.Zip
                         {
                             // Using GetFileName makes the result compatible with XP
                             // as the resulting path is not absolute.
-                            var entry = new ZipEntry(Path.GetFileName(file.Path)) { DateTime = DateTime.Now };
+                            var entry = new ZipEntry(file.RenameToOrName) { DateTime = DateTime.Now };
 
                             // Setup the entry data as required.
 

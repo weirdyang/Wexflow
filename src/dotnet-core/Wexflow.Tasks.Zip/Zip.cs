@@ -39,7 +39,7 @@ namespace Wexflow.Tasks.Zip
                         {
                             // Using GetFileName makes the result compatible with XP
                             // as the resulting path is not absolute.
-                            var entry = zip.CreateEntry(Path.GetFileName(file.Path));
+                            var entry = zip.CreateEntry(file.RenameToOrName);
 
                             using (FileStream fs = File.OpenRead(file.Path))
                             using (Stream entryStream = entry.Open())
