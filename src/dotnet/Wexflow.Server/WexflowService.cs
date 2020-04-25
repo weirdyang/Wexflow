@@ -1521,7 +1521,7 @@ namespace Wexflow.Server
                     }
                     else
                     {
-                        path = string.Empty;
+                        path = null;
                     }
 
                     var ressr = new SaveResult { FilePath = path, Result = res };
@@ -1982,7 +1982,7 @@ namespace Wexflow.Server
                 }
                 else
                 {
-                    path = string.Empty;
+                    path = null;
                 }
             }
             else
@@ -2225,7 +2225,7 @@ namespace Wexflow.Server
                     }
                     else
                     {
-                        path = string.Empty;
+                        path = null;
                     }
                 }
             }
@@ -2532,7 +2532,7 @@ namespace Wexflow.Server
                             }
                             else
                             {
-                                ressr = new SaveResult { FilePath = string.Empty, Result = true };
+                                ressr = new SaveResult { FilePath = null, Result = true };
                             }
                         }
                         else
