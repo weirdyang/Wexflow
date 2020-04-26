@@ -17,7 +17,7 @@
 	"FilesDecryptor": [ "selectFiles" ],
 	"FilesDiff": [ "oldFile", "newFile" ],
 	"FilesEncryptor": [ "selectFiles" ],
-	"FilesEqual": [ "file1", "file2" ],
+	"FilesEqual": [ "file1", "file2", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesExist": [ "file", "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesInfo": [ "selectFiles" ],
 	"FilesJoiner": [ "selectFiles", "destFolder", "overwrite" ],
