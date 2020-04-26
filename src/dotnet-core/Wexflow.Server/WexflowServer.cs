@@ -91,7 +91,7 @@ namespace Wexflow.Server
                         try
                         {
                             var admin = WexflowEngine.GetUser(superAdminUsername);
-                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path);
+                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path, true);
                         }
                         catch (Exception ex)
                         {
@@ -103,7 +103,7 @@ namespace Wexflow.Server
                         try
                         {
                             var admin = WexflowEngine.GetUser(superAdminUsername);
-                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path);
+                            WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, path, true);
                         }
                         catch (Exception ex)
                         {

@@ -1460,7 +1460,7 @@ namespace Wexflow.Server
                     {
                         if (user.UserProfile == Core.Db.UserProfile.SuperAdministrator)
                         {
-                            var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml);
+                            var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml, true);
                             if (id == "-1")
                             {
                                 res = false;
@@ -1480,7 +1480,7 @@ namespace Wexflow.Server
                                 var check = WexflowServer.WexflowEngine.CheckUserWorkflow(user.GetId(), workflowDbId);
                                 if (check)
                                 {
-                                    var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml);
+                                    var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml, true);
                                     if (id == "-1")
                                     {
                                         res = false;
@@ -1493,7 +1493,7 @@ namespace Wexflow.Server
                             }
                             else
                             {
-                                var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml);
+                                var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xml, true);
                                 if (id == "-1")
                                 {
                                     res = false;
@@ -1963,7 +1963,7 @@ namespace Wexflow.Server
                 }
 
                 xdoc.Add(xwf);
-                var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
+                var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString(), true);
 
                 if (id == "-1")
                 {
@@ -2207,7 +2207,7 @@ namespace Wexflow.Server
                         xdoc.Root.Add(xeg);
                     }
 
-                    var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
+                    var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString(), true);
                     if (qid == "-1")
                     {
                         return new SaveResult { FilePath = path, Result = false };
@@ -2346,7 +2346,7 @@ namespace Wexflow.Server
                         var xwfEnabled = xdoc.Root.XPathSelectElement("wf:Settings/wf:Setting[@name='enabled']",
                         wf.XmlNamespaceManager);
                         xwfEnabled.Attribute("value").Value = false.ToString().ToLower();
-                        var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
+                        var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString(), true);
 
                         if (qid != "-1")
                         {
@@ -2423,7 +2423,7 @@ namespace Wexflow.Server
                         var xwfEnabled = xdoc.Root.XPathSelectElement("wf:Settings/wf:Setting[@name='enabled']",
                         wf.XmlNamespaceManager);
                         xwfEnabled.Attribute("value").Value = true.ToString().ToLower();
-                        var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString());
+                        var qid = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, xdoc.ToString(), true);
 
                         if (qid != "-1")
                         {
@@ -2517,7 +2517,7 @@ namespace Wexflow.Server
                     {
                         if (isXml)
                         {
-                            var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, fileValue);
+                            var id = WexflowServer.WexflowEngine.SaveWorkflow(user.GetId(), user.UserProfile, fileValue, true);
                             res = id != "-1";
 
                             if (WexflowServer.WexflowEngine.EnableWorkflowsHotFolder)

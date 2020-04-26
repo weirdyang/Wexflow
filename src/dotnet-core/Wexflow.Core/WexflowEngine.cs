@@ -325,8 +325,9 @@ namespace Wexflow.Core
         /// <param name="xml">XML of the workflow.</param>
         /// <param name="userId">User id.</param>
         /// <param name="userProfile">User profile.</param>
+        /// <param name="schedule">Indicates whether to schedule the workflow or not.</param>
         /// <returns>Workflow db id.</returns>
-        public string SaveWorkflow(string userId, UserProfile userProfile, string xml)
+        public string SaveWorkflow(string userId, UserProfile userProfile, string xml, bool schedule)
         {
             try
             {
@@ -380,7 +381,10 @@ namespace Wexflow.Core
 
                         Logger.InfoFormat("New workflow {0} has been created. The workflow will be loaded.", newWorkflow.Name);
                         Workflows.Add(newWorkflow);
-                        ScheduleWorkflow(newWorkflow);
+                        if (schedule)
+                        {
+                            ScheduleWorkflow(newWorkflow);
+                        }
                         return dbId;
                     }
                     else // update
@@ -424,8 +428,10 @@ namespace Wexflow.Core
 
                             var updatedWorkflow = LoadWorkflowFromDatabase(workflowFromDb);
                             Workflows.Add(updatedWorkflow);
-                            ScheduleWorkflow(updatedWorkflow);
-
+                            if (schedule)
+                            {
+                                ScheduleWorkflow(updatedWorkflow);
+                            }
                             return changedWorkflow.DbId;
                         }
                     }
@@ -446,13 +452,14 @@ namespace Wexflow.Core
         /// <param name="userId">User Id</param>
         /// <param name="userProfile">User Profile</param>
         /// <param name="filePath">Workflow File Path</param>
+        /// <param name="schedule">Indicates whether to schedule the workflow or not.</param>
         /// <returns>Workflow DB Id</returns>
-        public string SaveWorkflowFromFile(string userId, UserProfile userProfile, string filePath)
+        public string SaveWorkflowFromFile(string userId, UserProfile userProfile, string filePath, bool schedule)
         {
             try
             {
                 var xml = File.ReadAllText(filePath);
-                var id = SaveWorkflow(userId, userProfile, xml);
+                var id = SaveWorkflow(userId, userProfile, xml, schedule);
                 var workflow = Workflows.First(w => w.DbId == id);
                 workflow.FilePath = filePath;
                 return id;
@@ -645,6 +652,18 @@ namespace Wexflow.Core
         /// </summary>
         public void Run()
         {
+            if (EnableWorkflowsHotFolder)
+            {
+                Logger.InfoFormat("Loading workflows from hot folder {0} ...", WorkflowsFolder);
+                var workflowFiles = Directory.GetFiles(WorkflowsFolder, "*.xml");
+                var admin = GetUser("admin");
+                foreach (var worlflowFile in workflowFiles)
+                {
+                    SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile, false);
+                }
+                Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
+            }
+
             Logger.InfoFormat("Scheduling {0} workflows...", Workflows.Count);
             foreach (Workflow workflow in Workflows)
             {
@@ -656,18 +675,6 @@ namespace Wexflow.Core
                 QuartzScheduler.Start().Wait();
             }
             Logger.InfoFormat("Scheduling {0} workflows finished.", Workflows.Count);
-
-            if (EnableWorkflowsHotFolder)
-            {
-                Logger.InfoFormat("Loading workflows from hot folder {0} ...", WorkflowsFolder);
-                var workflowFiles = Directory.GetFiles(WorkflowsFolder, "*.xml");
-                var admin = GetUser("admin");
-                foreach (var worlflowFile in workflowFiles)
-                {
-                    SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile);
-                }
-                Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
-            }
         }
 
         private void ScheduleWorkflow(Workflow wf)
