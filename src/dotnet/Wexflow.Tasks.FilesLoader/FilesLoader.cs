@@ -13,6 +13,10 @@ namespace Wexflow.Tasks.FilesLoader
         public string[] FlFiles { get; private set; }
         public string RegexPattern { get; private set; }
         public bool Recursive { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public FilesLoader(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -20,61 +24,30 @@ namespace Wexflow.Tasks.FilesLoader
             FlFiles = GetSettings("file");
             RegexPattern = GetSetting("regexPattern", "");
             Recursive = bool.Parse(GetSetting("recursive", "false"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Loading files...");
 
-            bool success = true;
+            var success = true;
 
             try
             {
-                if (Recursive)
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
                 {
-                    foreach (string folder in Folders)
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
                     {
-                        var files = GetFilesRecursive(folder);
-
-                        foreach (var file in files)
-                        {
-                            if (string.IsNullOrEmpty(RegexPattern) || Regex.IsMatch(file, RegexPattern))
-                            {
-                                var fi = new FileInf(file, Id);
-                                Files.Add(fi);
-                                InfoFormat("File loaded: {0}", file);
-                            }
-                        }
+                        success = LoadFiles();
                     }
                 }
                 else
                 {
-                    foreach (string folder in Folders)
-                    {
-                        foreach (string file in Directory.GetFiles(folder))
-                        {
-                            if (string.IsNullOrEmpty(RegexPattern) || Regex.IsMatch(file, RegexPattern))
-                            {
-                                var fi = new FileInf(file, Id);
-                                Files.Add(fi);
-                                InfoFormat("File loaded: {0}", file);
-                            }
-                        }
-                    }
-                }
-
-                foreach (string file in FlFiles)
-                {
-                    if (File.Exists(file))
-                    {
-                        Files.Add(new FileInf(file, Id));
-                        InfoFormat("File loaded: {0}", file);
-                    }
-                    else
-                    {
-                        ErrorFormat("File not found: {0}", file);
-                        success = false;
-                    }
+                    success = LoadFiles();
                 }
             }
             catch (ThreadAbortException)
@@ -98,9 +71,63 @@ namespace Wexflow.Tasks.FilesLoader
             return new TaskStatus(status, false);
         }
 
+        private bool LoadFiles()
+        {
+            var success = true;
+            if (Recursive)
+            {
+                foreach (string folder in Folders)
+                {
+                    var files = GetFilesRecursive(folder);
+
+                    foreach (var file in files)
+                    {
+                        if (string.IsNullOrEmpty(RegexPattern) || Regex.IsMatch(file, RegexPattern))
+                        {
+                            var fi = new FileInf(file, Id);
+                            Files.Add(fi);
+                            InfoFormat("File loaded: {0}", file);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (string folder in Folders)
+                {
+                    foreach (string file in Directory.GetFiles(folder))
+                    {
+                        if (string.IsNullOrEmpty(RegexPattern) || Regex.IsMatch(file, RegexPattern))
+                        {
+                            var fi = new FileInf(file, Id);
+                            Files.Add(fi);
+                            InfoFormat("File loaded: {0}", file);
+                        }
+                    }
+                }
+            }
+
+            foreach (string file in FlFiles)
+            {
+                if (File.Exists(file))
+                {
+                    Files.Add(new FileInf(file, Id));
+                    InfoFormat("File loaded: {0}", file);
+                }
+                else
+                {
+                    ErrorFormat("File not found: {0}", file);
+                    success = false;
+                }
+            }
+
+            return success;
+        }
+
         private string[] GetFilesRecursive(string dir)
         {
             return Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories);
         }
+
     }
 }

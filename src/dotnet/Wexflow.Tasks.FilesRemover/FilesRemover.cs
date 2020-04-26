@@ -6,20 +6,58 @@ using System.Threading;
 
 namespace Wexflow.Tasks.FilesRemover
 {
-    public class FilesRemover:Task
+    public class FilesRemover : Task
     {
-        public FilesRemover(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public FilesRemover(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Removing files...");
-            
-            bool success = true;
-            bool atLeastOneSucceed = false;
 
+            var success = true;
+            var atLeastOneSucceed = false;
+
+            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            {
+                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                {
+                    success = RemoveFiles(ref atLeastOneSucceed);
+                }
+            }
+            else
+            {
+                success = RemoveFiles(ref atLeastOneSucceed);
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool RemoveFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             var files = SelectFiles();
             for (int i = files.Length - 1; i > -1; i--)
             {
@@ -43,19 +81,8 @@ namespace Wexflow.Tasks.FilesRemover
                 }
             }
 
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
+
     }
 }
