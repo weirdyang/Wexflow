@@ -6,23 +6,61 @@ using System.IO;
 
 namespace Wexflow.Tasks.FilesRenamer
 {
-    public class FilesRenamer:Task
+    public class FilesRenamer : Task
     {
         public bool Overwrite { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public FilesRenamer(XElement xe, Workflow wf)
             : base(xe, wf)
         {
             Overwrite = bool.Parse(GetSetting("overwrite", "false"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Renaming files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            {
+                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                {
+                    success = RenameFiles(ref atLeastOneSucceed);
+                }
+            }
+            else
+            {
+                success = RenameFiles(ref atLeastOneSucceed);
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool RenameFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             foreach (var file in SelectFiles())
             {
                 try
@@ -30,7 +68,7 @@ namespace Wexflow.Tasks.FilesRenamer
                     if (!string.IsNullOrEmpty(file.RenameTo))
                     {
                         var dirName = Path.GetDirectoryName(file.Path);
-                        if(dirName == null) throw new Exception("File directory is null");
+                        if (dirName == null) throw new Exception("File directory is null");
                         var destPath = Path.Combine(dirName, file.RenameTo);
 
                         if (File.Exists(destPath))
@@ -73,20 +111,8 @@ namespace Wexflow.Tasks.FilesRenamer
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
+
     }
 }

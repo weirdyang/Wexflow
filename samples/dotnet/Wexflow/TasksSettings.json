@@ -25,7 +25,7 @@
 	"FilesLoaderEx": [ "file", "folder", "regexPattern", "recursive", "addMaxCreateDate", "addMinCreateDate", "addMaxModifyDate", "addMinModifyDate", "removeMaxCreateDate", "removeMinCreateDate", "removeMaxModifyDate", "removeMinModifyDate" ],
 	"FilesMover": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesRemover": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"FilesRenamer": [ "selectFiles", "overwrite" ],
+	"FilesRenamer": [ "selectFiles", "overwrite", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesSplitter": [ "selectFiles", "chunkSize" ],
 	"FolderExists": ["folder"],
 	"Ftp": [ "selectFiles", "command", "protocol", "encryption", "server", "port", "user", "password", "privateKeyPath", "passphrase", "path", "retryCount", "retryTimeout" ],
