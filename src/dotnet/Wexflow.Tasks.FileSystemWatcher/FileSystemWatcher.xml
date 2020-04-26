@@ -10,11 +10,11 @@
     <Setting name="filter" value="$string" />
     <!-- Optional. Indicates whether sub folders should be included in the wtach process or not. Defaults to false. -->
     <Setting name="includeSubFolders" value="true|false" />
-    <!-- onFileCreated event. List of tasks to trigger on file created. Example: 2, 3-->
+    <!-- onFileCreated event. List of tasks to trigger on file created. Example: 2, 3 -->
     <Setting name="onFileCreated" value="$string" />
-    <!-- onFileChanged event. List of tasks to trigger on file changed. Example: 2, 3-->
+    <!-- onFileChanged event. List of tasks to trigger on file changed. Example: 4, 5, 6 -->
     <Setting name="onFileChanged" value="$string" />
-    <!-- onFileDeleted event. List of tasks to trigger on file deleted. Example: 2, 3-->
+    <!-- onFileDeleted event. List of tasks to trigger on file deleted. Example: 7 -->
     <Setting name="onFileDeleted" value="$string" />
   </Task>
 </Tasks>
