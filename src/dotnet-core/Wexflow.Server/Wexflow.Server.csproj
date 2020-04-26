@@ -11,11 +11,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -139,6 +139,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.FilesRemover\Wexflow.Tasks.FilesRemover.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.FilesRenamer\Wexflow.Tasks.FilesRenamer.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.FilesSplitter\Wexflow.Tasks.FilesSplitter.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.FileSystemWatcher\Wexflow.Tasks.FileSystemWatcher.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.FolderExists\Wexflow.Tasks.FolderExists.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Ftp\Wexflow.Tasks.Ftp.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Guid\Wexflow.Tasks.Guid.csproj" />

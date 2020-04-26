@@ -20,6 +20,7 @@
 	"FilesRemover": [ "selectFiles" ],
 	"FilesRenamer": [ "selectFiles", "overwrite" ],
 	"FilesSplitter": [ "selectFiles", "chunkSize" ],
+	"FileSystemWatcher": [ "folderToWatch", "filter", "includeSubFolders", "onFileCreated", "onFileChanged", "onFileDeleted" ],
 	"FolderExists": [ "folder" ],
 	"Ftp": [ "selectFiles", "command", "protocol", "encryption", "server", "port", "user", "password", "privateKeyPath", "passphrase", "path", "retryCount", "retryTimeout" ],
 	"Guid": [ "guidCount" ],

@@ -97,6 +97,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             Info("FileSystemWatcher.OnCreated started.");
             try
             {
+                ClearFiles();
                 Files.Add(new FileInf(e.FullPath, Id));
                 var tasks = GetTasks(OnFileCreated);
                 foreach (var task in tasks)
@@ -135,6 +136,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             Info("FileSystemWatcher.OnChanged started.");
             try
             {
+                ClearFiles();
                 Files.Add(new FileInf(e.FullPath, Id));
                 var tasks = GetTasks(OnFileChanged);
                 foreach (var task in tasks)
@@ -173,6 +175,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             Info("FileSystemWatcher.OnDeleted started.");
             try
             {
+                ClearFiles();
                 Files.Add(new FileInf(e.FullPath, Id));
                 var tasks = GetTasks(OnFileDeleted);
                 foreach (var task in tasks)
@@ -222,6 +225,14 @@ namespace Wexflow.Tasks.FileSystemWatcher
             }
 
             return tasks.ToArray();
+        }
+
+        private void ClearFiles()
+        {
+            foreach (var task in Workflow.Tasks)
+            {
+                task.Files.Clear();
+            }
         }
 
     }
