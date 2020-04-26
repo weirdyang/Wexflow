@@ -1572,30 +1572,35 @@ namespace Wexflow.Core
             {
                 try
                 {
-                    _stopCalled = true;
-                    _thread.Abort();
-                    var logs = string.Join("\r\n", Logs);
-                    IsWaitingForApproval = false;
-                    Database.DecrementRunningCount();
-                    Database.IncrementStoppedCount();
-                    var entry = Database.GetEntry(Id, InstanceId);
-                    entry.Status = Db.Status.Stopped;
-                    entry.StatusDate = DateTime.Now;
-                    entry.Logs = logs;
-                    Database.UpdateEntry(entry.GetDbId(), entry);
-                    _historyEntry.Status = Db.Status.Stopped;
-                    _historyEntry.StatusDate = DateTime.Now;
-                    _historyEntry.Logs = logs;
-                    Database.InsertHistoryEntry(_historyEntry);
-                    IsRejected = false;
-                    Logs.Clear();
-                    Jobs.Remove(InstanceId);
-
-                    if (_jobsQueue.Count > 0)
+                    foreach (var task in Tasks)
                     {
-                        var job = _jobsQueue.Dequeue();
-                        job.Workflow.Start();
+                        task.Stop();
                     }
+
+                    //_stopCalled = true;
+                    //_thread.Abort();
+                    //var logs = string.Join("\r\n", Logs);
+                    //IsWaitingForApproval = false;
+                    //Database.DecrementRunningCount();
+                    //Database.IncrementStoppedCount();
+                    //var entry = Database.GetEntry(Id, InstanceId);
+                    //entry.Status = Db.Status.Stopped;
+                    //entry.StatusDate = DateTime.Now;
+                    //entry.Logs = logs;
+                    //Database.UpdateEntry(entry.GetDbId(), entry);
+                    //_historyEntry.Status = Db.Status.Stopped;
+                    //_historyEntry.StatusDate = DateTime.Now;
+                    //_historyEntry.Logs = logs;
+                    //Database.InsertHistoryEntry(_historyEntry);
+                    //IsRejected = false;
+                    //Logs.Clear();
+                    //Jobs.Remove(InstanceId);
+
+                    //if (_jobsQueue.Count > 0)
+                    //{
+                    //    var job = _jobsQueue.Dequeue();
+                    //    job.Workflow.Start();
+                    //}
 
                     return true;
                 }

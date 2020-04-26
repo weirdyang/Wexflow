@@ -17,6 +17,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
         public static string OnFileCreated { get; private set; }
         public static string OnFileChanged { get; private set; }
         public static string OnFileDeleted { get; private set; }
+        public static bool StopTask { get; private set; }
 
         public FileSystemWatcher(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -26,6 +27,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             OnFileCreated = GetSetting("onFileCreated");
             OnFileChanged = GetSetting("onFileChanged");
             OnFileDeleted = GetSetting("onFileDeleted");
+            StopTask = false;
         }
 
         public override TaskStatus Run()
@@ -54,7 +56,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
 
                 Info("Begin watching ...");
                 Workflow.Logs.AddRange(Logs);
-                while (true)
+                while (!StopTask)
                 {
                     Thread.Sleep(1);
                 }
@@ -77,8 +79,15 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 return new TaskStatus(Status.Error, false);
             }
 
-            //Info("Task finished");
-            //return new TaskStatus(Status.Success);
+            Info("Task finished");
+            return new TaskStatus(Status.Success);
+        }
+
+        public override bool Stop()
+        {
+            base.Stop();
+            StopTask = true;
+            return true;
         }
 
         private void OnChanged(object source, PollingFileSystemEventArgs e)
@@ -223,7 +232,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
 
         private void ClearFiles()
         {
-            foreach(var task in Workflow.Tasks)
+            foreach (var task in Workflow.Tasks)
             {
                 task.Files.Clear();
             }

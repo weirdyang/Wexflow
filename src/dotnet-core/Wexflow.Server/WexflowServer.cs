@@ -35,7 +35,6 @@ namespace Wexflow.Server
             superAdminUsername = Config["SuperAdminUsername"];
             var enableWorkflowsHotFolder = bool.Parse(Config["EnableWorkflowsHotFolder"]);
             WexflowEngine = new WexflowEngine(wexflowSettingsFile, enableWorkflowsHotFolder);
-            WexflowEngine.Run();
 
             if (enableWorkflowsHotFolder)
             {
@@ -45,6 +44,8 @@ namespace Wexflow.Server
             {
                 Logger.Info("Workflows hot folder is disabled.");
             }
+
+            WexflowEngine.Run();
 
             var port = int.Parse(Config["WexflowServicePort"]);
 

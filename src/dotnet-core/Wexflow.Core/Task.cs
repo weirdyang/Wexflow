@@ -355,6 +355,14 @@ namespace Wexflow.Core
             return null;
         }
 
+        /// <summary>
+        /// Stops the task.
+        /// </summary>
+        public virtual bool Stop()
+        {
+            return false;
+        }
+
         private string BuildLogMsg(string msg)
         {
             return string.Format("{0} [{1}] {2}", Workflow.LogTag, GetType().Name, msg);

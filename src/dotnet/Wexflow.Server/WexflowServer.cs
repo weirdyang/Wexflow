@@ -33,8 +33,6 @@ namespace Wexflow.Server
 
         private void StartThread()
         {
-            WexflowEngine.Run();
-
             if (enableWorkflowsHotFolder)
             {
                 InitializeFileSystemWatcher();
@@ -44,6 +42,7 @@ namespace Wexflow.Server
                 Logger.Info("Workflows hot folder is disabled.");
             }
 
+            WexflowEngine.Run();
         }
 
         protected override void OnStart(string[] args)
