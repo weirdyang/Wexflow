@@ -17,7 +17,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
         public static string OnFileCreated { get; private set; }
         public static string OnFileChanged { get; private set; }
         public static string OnFileDeleted { get; private set; }
-        public static bool StopTask { get; private set; }
+        public static List<string> CurrentLogs { get; private set; }
 
         public FileSystemWatcher(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -27,7 +27,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             OnFileCreated = GetSetting("onFileCreated");
             OnFileChanged = GetSetting("onFileChanged");
             OnFileDeleted = GetSetting("onFileDeleted");
-            StopTask = false;
+            CurrentLogs = new List<string>();
         }
 
         public override TaskStatus Run()
@@ -55,11 +55,12 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 Info("PollingFileSystemWatcher Initialized.");
 
                 Info("Begin watching ...");
-                Workflow.Logs.AddRange(Logs);
-                while (!StopTask)
+                CurrentLogs.AddRange(Logs);
+                while (!IsStopped)
                 {
                     Thread.Sleep(1);
                 }
+                Watcher.Dispose();
             }
             catch (ThreadAbortException)
             {
@@ -83,13 +84,6 @@ namespace Wexflow.Tasks.FileSystemWatcher
             return new TaskStatus(Status.Success);
         }
 
-        public override bool Stop()
-        {
-            base.Stop();
-            StopTask = true;
-            return true;
-        }
-
         private void OnChanged(object source, PollingFileSystemEventArgs e)
         {
             foreach (var change in e.Changes)
@@ -107,7 +101,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                             foreach (var task in tasks)
                             {
                                 task.Run();
-                                Workflow.Logs.AddRange(task.Logs);
+                                CurrentLogs.AddRange(task.Logs);
                             }
                             Files.RemoveAll(f => f.Path == path);
                         }
@@ -125,7 +119,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                         {
                             Info("PollingFileSystemWatcher.OnCreated updating database entry ...");
                             var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                            entry.Logs = string.Join("\r\n", Workflow.Logs);
+                            entry.Logs = string.Join("\r\n", CurrentLogs);
                             Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                             Info("PollingFileSystemWatcher.OnCreated database entry updated.");
                         }
@@ -144,7 +138,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                             foreach (var task in tasks)
                             {
                                 task.Run();
-                                Workflow.Logs.AddRange(task.Logs);
+                                CurrentLogs.AddRange(task.Logs);
                             }
                             Files.RemoveAll(f => f.Path == path);
                         }
@@ -162,7 +156,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                         {
                             Info("PollingFileSystemWatcher.OnChanged updating database entry ...");
                             var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                            entry.Logs = string.Join("\r\n", Workflow.Logs);
+                            entry.Logs = string.Join("\r\n", CurrentLogs);
                             Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                             Info("PollingFileSystemWatcher.OnChanged database entry updated.");
                         }
@@ -181,7 +175,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                             foreach (var task in tasks)
                             {
                                 task.Run();
-                                Workflow.Logs.AddRange(task.Logs);
+                                CurrentLogs.AddRange(task.Logs);
                             }
                             Files.RemoveAll(f => f.Path == path);
                         }
@@ -199,7 +193,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                         {
                             Info("PollingFileSystemWatcher.OnDeleted updating database entry ...");
                             var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                            entry.Logs = string.Join("\r\n", Workflow.Logs);
+                            entry.Logs = string.Join("\r\n", CurrentLogs);
                             Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                             Info("PollingFileSystemWatcher.OnDeleted database entry updated.");
                         }

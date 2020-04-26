@@ -18,6 +18,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
         public static string OnFileCreated { get; private set; }
         public static string OnFileChanged { get; private set; }
         public static string OnFileDeleted { get; private set; }
+        public static List<string> CurrentLogs { get; private set; }
 
         public FileSystemWatcher(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -27,6 +28,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             OnFileCreated = GetSetting("onFileCreated");
             OnFileChanged = GetSetting("onFileChanged");
             OnFileDeleted = GetSetting("onFileDeleted");
+            CurrentLogs = new List<string>();
         }
 
         public override TaskStatus Run()
@@ -62,7 +64,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 Info("FileSystemWatcher Initialized.");
 
                 Info("Begin watching ...");
-                Workflow.Logs.AddRange(Logs);
+                CurrentLogs.AddRange(Logs);
                 while (true)
                 {
                     Thread.Sleep(1);
@@ -103,7 +105,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 foreach (var task in tasks)
                 {
                     task.Run();
-                    Workflow.Logs.AddRange(task.Logs);
+                    CurrentLogs.AddRange(task.Logs);
                 }
                 Files.RemoveAll(f => f.Path == e.FullPath);
             }
@@ -121,7 +123,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             {
                 Info("FileSystemWatcher.OnCreated updating database entry ...");
                 var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                entry.Logs = string.Join("\r\n", Workflow.Logs);
+                entry.Logs = string.Join("\r\n", CurrentLogs);
                 Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                 Info("FileSystemWatcher.OnCreated database entry updated.");
             }
@@ -142,7 +144,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 foreach (var task in tasks)
                 {
                     task.Run();
-                    Workflow.Logs.AddRange(task.Logs);
+                    CurrentLogs.AddRange(task.Logs);
                 }
                 Files.RemoveAll(f => f.Path == e.FullPath);
             }
@@ -160,7 +162,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             {
                 Info("FileSystemWatcher.OnChanged updating database entry ...");
                 var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                entry.Logs = string.Join("\r\n", Workflow.Logs);
+                entry.Logs = string.Join("\r\n", CurrentLogs);
                 Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                 Info("FileSystemWatcher.OnChanged database entry updated.");
             }
@@ -181,7 +183,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 foreach (var task in tasks)
                 {
                     task.Run();
-                    Workflow.Logs.AddRange(task.Logs);
+                    CurrentLogs.AddRange(task.Logs);
                 }
                 Files.RemoveAll(f => f.Path == e.FullPath);
             }
@@ -199,7 +201,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             {
                 Info("FileSystemWatcher.OnDeleted updating database entry ...");
                 var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                entry.Logs = string.Join("\r\n", Workflow.Logs);
+                entry.Logs = string.Join("\r\n", CurrentLogs);
                 Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
                 Info("FileSystemWatcher.OnDeleted database entry updated.");
             }

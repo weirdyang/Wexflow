@@ -46,6 +46,10 @@ namespace Wexflow.Core
         /// </summary>
         public List<string> Logs { get; private set; }
         /// <summary>
+        /// Log messages.
+        /// </summary>
+        public bool IsStopped { get; private set; }
+        /// <summary>
         /// Task files.
         /// </summary>
         public List<FileInf> Files
@@ -86,6 +90,7 @@ namespace Wexflow.Core
 		protected Task(XElement xe, Workflow wf)
         {
             Logs = new List<string>();
+            IsStopped = false;
             _xElement = xe;
             var xId = xe.Attribute("id");
             if (xId == null) throw new Exception("Task id attribute not found.");
@@ -358,9 +363,9 @@ namespace Wexflow.Core
         /// <summary>
         /// Stops the task.
         /// </summary>
-        public virtual bool Stop()
+        public virtual void Stop()
         {
-            return false;
+            IsStopped = true;
         }
 
         private string BuildLogMsg(string msg)
