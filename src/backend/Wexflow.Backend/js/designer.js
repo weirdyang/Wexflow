@@ -2104,9 +2104,12 @@
                             xmlVal += '\t\t<Task id="' + task.Id + '" name="' + Common.escape(task.Name) + '" description="' + Common.escape(task.Description) + '" enabled="' + task.IsEnabled + '">\r\n';
                             for (let j = 0; j < task.Settings.length; j++) {
                                 let setting = task.Settings[j];
-                                //if (setting.Value !== "") {
-                                xmlVal += '\t\t\t<Setting name="' + Common.escape(setting.Name) + '" value="' + Common.escape(setting.Value) + '" />\r\n';
-                                //}
+                                xmlVal += '\t\t\t<Setting name="' + Common.escape(setting.Name) + '"' + ((setting.Name === "selectFiles" || setting.Name === "selectAttachments") && setting.Value === "" ? " " : ' value="' + Common.escape(setting.Value) + '" ');
+                                for (let k = 0; k < setting.Attributes.length; k++) {
+                                    let attr = setting.Attributes[k];
+                                    xmlVal += attr.Name + '="' + Common.escape(attr.Value) + '" ';
+                                }
+                                xmlVal += '/>\r\n';
                             }
                             xmlVal += '\t\t</Task>\r\n';
                         }
