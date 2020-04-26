@@ -18,7 +18,7 @@
 	"FilesDiff": [ "oldFile", "newFile" ],
 	"FilesEncryptor": [ "selectFiles" ],
 	"FilesEqual": [ "file1", "file2" ],
-	"FilesExist": [ "file", "folder" ],
+	"FilesExist": [ "file", "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesInfo": [ "selectFiles" ],
 	"FilesJoiner": [ "selectFiles", "destFolder", "overwrite" ],
 	"FilesLoader": [ "file", "folder", "regexPattern", "recursive", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
