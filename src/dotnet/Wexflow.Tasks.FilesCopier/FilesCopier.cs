@@ -26,7 +26,6 @@ namespace Wexflow.Tasks.FilesCopier
             SmbComputerName = GetSetting("smbComputerName");
             SmbDomain = GetSetting("smbDomain");
             SmbUsername = GetSetting("smbUsername");
-            SmbUsername = GetSetting("smbUsername");
             SmbPassword = GetSetting("smbPassword");
         }
 

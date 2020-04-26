@@ -6,12 +6,16 @@ using System.Threading;
 
 namespace Wexflow.Tasks.FilesMover
 {
-    public class FilesMover:Task
+    public class FilesMover : Task
     {
         public string DestFolder { get; private set; }
         public bool Overwrite { get; private set; }
         public string PreserveFolderStructFrom { get; private set; }
         public bool AllowCreateDirectory { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public FilesMover(XElement xe, Workflow wf)
             : base(xe, wf)
@@ -20,6 +24,10 @@ namespace Wexflow.Tasks.FilesMover
             Overwrite = bool.Parse(GetSetting("overwrite", "false"));
             PreserveFolderStructFrom = GetSetting("preserveFolderStructFrom");
             AllowCreateDirectory = GetSettingBool("allowCreateDirectory", true);
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
@@ -29,8 +37,38 @@ namespace Wexflow.Tasks.FilesMover
             var success = true;
             var atLeastOneSucceed = false;
 
+            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            {
+                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                {
+                    success = MoveFiles(ref atLeastOneSucceed);
+                }
+            }
+            else
+            {
+                success = MoveFiles(ref atLeastOneSucceed);
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool MoveFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             var files = SelectFiles();
-            for (var i = files.Length - 1; i > -1; i--) 
+            for (var i = files.Length - 1; i > -1; i--)
             {
                 var file = files[i];
                 var fileName = Path.GetFileName(file.Path);
@@ -97,25 +135,14 @@ namespace Wexflow.Tasks.FilesMover
                     throw;
                 }
                 catch (Exception e)
-                { 
+                {
                     ErrorFormat("An error occured while moving the file {0} to {1}", e, file.Path, destFilePath);
                     success = false;
                 }
             }
 
-            var status = Status.Success;
+            return success;
 
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
         }
     }
 }
