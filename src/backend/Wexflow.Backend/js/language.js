@@ -114,7 +114,7 @@
     languages["en"]["confirm-delete-workflow"] = "Are you sure you want to delete this workflow?";
     languages["en"]["confirm-delete-setting"] = "Are you sure you want to remove this setting?";
     languages["en"]["confirm-delete-task"] = "Are you sure you want to delete this task?";
-    languages["en"]["confirm-cron"] = "The cron expression format is not valid.\nPlease read the documentation?";
+    languages["en"]["confirm-cron"] = "The cron expression format is not valid.\nPlease read the documentation.";
     languages["en"]["confirm-delete-var"] = "Are you sure you want to delete this variable?";
     languages["en"]["confirm-delete-workflows"] = "Are you sure you want to delete selected workflows?";
     languages["en"]["toast-task-names-error"] = "An error occurred while retrieving task names.";
