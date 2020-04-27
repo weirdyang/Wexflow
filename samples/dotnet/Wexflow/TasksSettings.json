@@ -68,7 +68,7 @@
 	"SevenZip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha1": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha256": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"Sha512": [ "selectFiles" ],
+	"Sha512": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Slack": [ "selectFiles", "token" ],
 	"SpeechToText": [ "selectFiles" ],
 	"Sql": [ "selectFiles", "type", "connectionString", "sql" ],
