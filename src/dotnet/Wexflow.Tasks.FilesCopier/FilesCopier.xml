@@ -16,6 +16,8 @@
     <Setting name="destFolder" value="$string" />
     <!--- Optional and defaults to false. true to overwrite the files located in the destination folder, false otherwise.-->
     <Setting name="overwrite" value="true|false" />
+    <!-- Optional and defaults to true. true to create destination directory if it does not exist. -->
+    <Setting name="allowCreateDirectory" value="true|false" />
 
     <!-- Optional. Samba computer name. -->
     <Setting name="smbComputerName" value="$string" />
@@ -39,7 +41,5 @@
         D:\Backup\Folder-2\file2.txt
      -->
     <Setting name="preserveFolderStructFrom" value="$string" />
-    <!-- Optional and defaults to true. true to create destination directory if it does not exist. -->
-    <Setting name="allowCreateDirectory" value="true|false" />
   </Task>
 </Tasks>

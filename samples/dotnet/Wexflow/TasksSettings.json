@@ -93,7 +93,7 @@
 	"UnSevenZip": ["selectFiles", "destDir"],
 	"Untar": ["selectFiles", "destDir"],
 	"Untgz": [ "selectFiles", "destDir" ],
-	"Unzip": [ "selectFiles", "destDir", "password", "overwrite", "createSubDirectoryWithDateTime" ],
+	"Unzip": [ "selectFiles", "destDir", "password", "overwrite", "createSubDirectoryWithDateTime", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Vimeo": [ "token" ],
 	"VimeoListUploads": [ "token" ],
 	"Wait": [ "duration" ],

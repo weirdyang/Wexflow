@@ -14,23 +14,73 @@ namespace Wexflow.Tasks.Unzip
         public string Password { get; private set; }
         public bool CreateSubDirectoryWithDateTime { get; private set; }
         public bool Overwrite { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Unzip(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Unzip(XElement xe, Workflow wf) : base(xe, wf)
         {
             DestDir = GetSetting("destDir");
             Password = GetSetting("password", string.Empty);
             CreateSubDirectoryWithDateTime = GetSettingBool("createSubDirectoryWithDateTime", true);
             Overwrite = GetSettingBool("overwrite", false);
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Extracting ZIP archives...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UnzipFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UnzipFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+
+        private bool UnzipFiles(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             var zips = SelectFiles();
 
             if (zips.Length > 0)
@@ -55,7 +105,7 @@ namespace Wexflow.Tasks.Unzip
 
                         InfoFormat("ZIP {0} extracted to {1}", zip.Path, destFolder);
 
-                        if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                        if (!atLeastOneSuccess) atLeastOneSuccess = true;
                     }
                     catch (ThreadAbortException)
                     {
@@ -69,22 +119,10 @@ namespace Wexflow.Tasks.Unzip
                 }
             }
 
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
-        public void ExtractZipFile(string archiveFilenameIn, string password, string outFolder, bool overwrite)
+        private void ExtractZipFile(string archiveFilenameIn, string password, string outFolder, bool overwrite)
         {
             ZipFile zf = null;
             try
