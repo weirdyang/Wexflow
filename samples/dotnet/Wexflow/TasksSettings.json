@@ -16,7 +16,7 @@
 	"FilesCopier": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesDecryptor": [ "selectFiles" ],
 	"FilesDiff": [ "oldFile", "newFile", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"FilesEncryptor": [ "selectFiles" ],
+	"FilesEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesEqual": [ "file1", "file2", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesExist": [ "file", "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesInfo": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
