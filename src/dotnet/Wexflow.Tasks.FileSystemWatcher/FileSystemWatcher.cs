@@ -18,6 +18,10 @@ namespace Wexflow.Tasks.FileSystemWatcher
         public static string OnFileCreated { get; private set; }
         public static string OnFileChanged { get; private set; }
         public static string OnFileDeleted { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
         public static List<string> CurrentLogs { get; private set; }
 
         public FileSystemWatcher(XElement xe, Workflow wf) : base(xe, wf)
@@ -28,6 +32,10 @@ namespace Wexflow.Tasks.FileSystemWatcher
             OnFileCreated = GetSetting("onFileCreated");
             OnFileChanged = GetSetting("onFileChanged");
             OnFileDeleted = GetSetting("onFileDeleted");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
             CurrentLogs = new List<string>();
         }
 
@@ -37,37 +45,28 @@ namespace Wexflow.Tasks.FileSystemWatcher
 
             try
             {
-                if (!IO.Directory.Exists(FolderToWatch))
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
                 {
-                    ErrorFormat("The folder {0} does not exist.", FolderToWatch);
-                    return new TaskStatus(Status.Error);
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        if (!Directory.Exists(FolderToWatch))
+                        {
+                            ErrorFormat("The folder {0} does not exist.", FolderToWatch);
+                            return new TaskStatus(Status.Error);
+                        }
+
+                        InitFileSystemWatcher();
+                    }
                 }
-
-                Info("Initializing FileSystemWatcher...");
-                Watcher = new IO.FileSystemWatcher
+                else
                 {
-                    Path = FolderToWatch,
-                    Filter = Filter,
-                    IncludeSubdirectories = IncludeSubFolders
-                };
+                    if (!Directory.Exists(FolderToWatch))
+                    {
+                        ErrorFormat("The folder {0} does not exist.", FolderToWatch);
+                        return new TaskStatus(Status.Error);
+                    }
 
-                // Add event handlers.
-                Watcher.Created += OnCreated;
-                Watcher.Changed += OnChanged;
-                Watcher.Deleted += OnDeleted;
-
-                // Begin watching.
-                Watcher.EnableRaisingEvents = true;
-                InfoFormat("FileSystemWatcher.Path={0}", Watcher.Path);
-                InfoFormat("FileSystemWatcher.Filter={0}", Watcher.Filter);
-                InfoFormat("FileSystemWatcher.EnableRaisingEvents={0}", Watcher.EnableRaisingEvents);
-                Info("FileSystemWatcher Initialized.");
-
-                Info("Begin watching ...");
-                CurrentLogs.AddRange(Logs);
-                while (true)
-                {
-                    Thread.Sleep(1);
+                    InitFileSystemWatcher();
                 }
             }
             catch (ThreadAbortException)
@@ -86,15 +85,44 @@ namespace Wexflow.Tasks.FileSystemWatcher
                     Watcher.EnableRaisingEvents = false;
                     Watcher.Dispose();
                 }
-                ErrorFormat("An error occured while watching the folder {0}. Error: {1}", FolderToWatch, e.Message);
-                return new TaskStatus(Status.Error, false);
+                ErrorFormat("An error occured while initializing FileSystemWatcher.", e);
             }
 
-            //Info("Task finished");
-            //return new TaskStatus(Status.Success);
+            Info("Task finished");
+            return new TaskStatus(Status.Success);
         }
 
-        private void OnCreated(object source, IO.FileSystemEventArgs e)
+        private void InitFileSystemWatcher()
+        {
+            Info("Initializing FileSystemWatcher...");
+            Watcher = new IO.FileSystemWatcher
+            {
+                Path = FolderToWatch,
+                Filter = Filter,
+                IncludeSubdirectories = IncludeSubFolders
+            };
+
+            // Add event handlers.
+            Watcher.Created += OnCreated;
+            Watcher.Changed += OnChanged;
+            Watcher.Deleted += OnDeleted;
+
+            // Begin watching.
+            Watcher.EnableRaisingEvents = true;
+            InfoFormat("FileSystemWatcher.Path={0}", Watcher.Path);
+            InfoFormat("FileSystemWatcher.Filter={0}", Watcher.Filter);
+            InfoFormat("FileSystemWatcher.EnableRaisingEvents={0}", Watcher.EnableRaisingEvents);
+            Info("FileSystemWatcher Initialized.");
+
+            Info("Begin watching ...");
+            CurrentLogs.AddRange(Logs);
+            while (true)
+            {
+                Thread.Sleep(1);
+            }
+        }
+
+        private void OnCreated(object source, FileSystemEventArgs e)
         {
             Info("FileSystemWatcher.OnCreated started.");
             try
@@ -133,7 +161,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             }
         }
 
-        private void OnChanged(object source, IO.FileSystemEventArgs e)
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
             Info("FileSystemWatcher.OnChanged started.");
             try
@@ -172,7 +200,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             }
         }
 
-        private void OnDeleted(object source, IO.FileSystemEventArgs e)
+        private void OnDeleted(object source, FileSystemEventArgs e)
         {
             Info("FileSystemWatcher.OnDeleted started.");
             try

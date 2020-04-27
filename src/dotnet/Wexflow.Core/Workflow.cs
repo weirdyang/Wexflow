@@ -1102,11 +1102,11 @@ namespace Wexflow.Core
                     finally
                     {
                         // Cleanup
-                        if (!_stopCalled)
-                        {
-                            Logs.Clear();
-                        }
-
+                        //if (!_stopCalled)
+                        //{
+                        //    Logs.Clear();
+                        //}
+                        Logs.Clear();
                         foreach (List<FileInf> files in FilesPerTask.Values) files.Clear();
                         foreach (List<Entity> entities in EntitiesPerTask.Values) entities.Clear();
                         _thread = null;
@@ -1549,6 +1549,10 @@ namespace Wexflow.Core
             {
                 try
                 {
+                    foreach (var task in Tasks)
+                    {
+                        Logs.AddRange(task.Logs);
+                    }
                     _stopCalled = true;
                     _thread.Abort();
                     var logs = string.Join("\r\n", Logs);
