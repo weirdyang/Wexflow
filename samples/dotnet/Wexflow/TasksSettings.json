@@ -48,7 +48,7 @@
 	"InstagramUploadVideo": [ "selectFiles", "username", "password", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"IsoCreator": [ "srcDir", "volumeIdentifier", "isoFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"IsoExtractor": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"JsonToYaml": ["selectFiles"],
+	"JsonToYaml": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ListEntities": [ ],
 	"ListFiles": [ ],
 	"MailsReceiver": [ "host", "port", "enableSsl", "user", "password", "messageCount", "deleteMessages", "protocol" ],
