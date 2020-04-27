@@ -7,8 +7,13 @@ using Wexflow.Core;
 
 namespace Wexflow.Tasks.ScssToCss
 {
-    public class ScssToCss:Task
+    public class ScssToCss : Task
     {
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
         public ScssToCss(XElement xe, Workflow wf) : base(xe, wf)
         {
         }
@@ -20,6 +25,47 @@ namespace Wexflow.Tasks.ScssToCss
             var status = Status.Success;
             var success = true;
             var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ConvertFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ConvertFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while converting files.", e);
+                success = false;
+            }
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool ConvertFiles(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var scssFiles = SelectFiles();
 
             foreach (var scssFile in scssFiles)
@@ -45,18 +91,7 @@ namespace Wexflow.Tasks.ScssToCss
                     success = false;
                 }
             }
-
-            if (!success && atLeastOneSuccess)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
     }
 }

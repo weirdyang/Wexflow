@@ -64,7 +64,7 @@
 	"ProcessKiller": [ "processName" ],
 	"ProcessLauncher": [ "selectFiles", "processPath", "processCmd", "hideGui", "generatesFiles" ],
 	"Rmdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"ScssToCss": [ "selectFiles" ],
+	"ScssToCss": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"SevenZip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha1": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha256": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
