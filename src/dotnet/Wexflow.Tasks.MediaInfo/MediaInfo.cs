@@ -8,28 +8,49 @@ namespace Wexflow.Tasks.MediaInfo
 {
     public class MediaInfo : Task
     {
-        private static bool _success = true;
-        private static bool _atLeastOneSucceed;
+        private bool _success = true;
+        private bool _atLeastOneSucceed = false;
 
-        public MediaInfo(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public MediaInfo(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Generating MediaInfo informations...");
 
-            var files = SelectFiles();
 
-            if (files.Length > 0)
+            try
             {
-                var mediaInfoPath = Path.Combine(Workflow.WorkflowTempFolder,
-                    string.Format("MediaInfo_{0:yyyy-MM-dd-HH-mm-ss-fff}.xml", DateTime.Now));
-
-                var xdoc = Inform(files);
-                xdoc.Save(mediaInfoPath);
-                Files.Add(new FileInf(mediaInfoPath, Id));
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        InformFiles();
+                    }
+                }
+                else
+                {
+                    InformFiles();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while generating MediaInfo information.", e);
+                _success = false;
             }
 
             var status = Core.Status.Success;
@@ -44,10 +65,25 @@ namespace Wexflow.Tasks.MediaInfo
             }
 
             Info("Task finished.");
-            return new TaskStatus(status, false);
+            return new TaskStatus(status);
         }
 
-        public XDocument Inform(FileInf[] files)
+        private void InformFiles()
+        {
+            var files = SelectFiles();
+
+            if (files.Length > 0)
+            {
+                var mediaInfoPath = Path.Combine(Workflow.WorkflowTempFolder,
+                    string.Format("MediaInfo_{0:yyyy-MM-dd-HH-mm-ss-fff}.xml", DateTime.Now));
+
+                var xdoc = Inform(files);
+                xdoc.Save(mediaInfoPath);
+                Files.Add(new FileInf(mediaInfoPath, Id));
+            }
+        }
+
+        private XDocument Inform(FileInf[] files)
         {
             var xdoc = new XDocument(new XElement("Files"));
             foreach (FileInf file in files)

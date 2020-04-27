@@ -54,7 +54,7 @@
 	"MailsReceiver": [ "host", "port", "enableSsl", "user", "password", "messageCount", "deleteMessages", "protocol" ],
 	"MailsSender": [ "selectFiles", "selectAttachments", "host", "port", "enableSsl", "user", "password" ],
 	"Md5": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"MediaInfo": [ "selectFiles" ],
+	"MediaInfo": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"MessageCorrect": [ "checkString" ],
 	"Mkdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Movedir": [ "folder", "destinationFolder", "overwrite", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
