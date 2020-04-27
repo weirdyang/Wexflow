@@ -42,7 +42,7 @@
 	"ImagesConcat": [ "selectFiles" ],
 	"ImagesCropper": [ "selectFiles", "width", "height", "x", "y" ],
 	"ImagesOverlay": [ "selectFiles" ],
-	"ImagesResizer": [ "selectFiles", "width", "height" ],
+	"ImagesResizer": [ "selectFiles", "width", "height", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"InstagramUploadImage": [ "selectFiles", "username", "password" ],
 	"InstagramUploadVideo": [ "selectFiles", "username", "password" ],
