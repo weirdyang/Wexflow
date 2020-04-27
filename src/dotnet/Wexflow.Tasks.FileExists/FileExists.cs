@@ -5,32 +5,54 @@ using System.Threading;
 
 namespace Wexflow.Tasks.FileExists
 {
-    public class FileExists:Task
+    public class FileExists : Task
     {
         public string File { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public FileExists(XElement xe, Workflow wf): base(xe, wf)
+        public FileExists(XElement xe, Workflow wf) : base(xe, wf)
         {
             File = GetSetting("file");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Checking file...");
-            
-            bool success;
+
+            var success = false;
 
             try
             {
-                success = System.IO.File.Exists(File);
 
-                if (success)
+                try
                 {
-                    InfoFormat("The file {0} exist.", File);
+                    if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                    {
+                        using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                        {
+                            success = CheckFile();
+                        }
+                    }
+                    else
+                    {
+                        success = CheckFile();
+                    }
                 }
-                else
+                catch (ThreadAbortException)
                 {
-                    InfoFormat("The file {0} does not exist.", File);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    ErrorFormat("An error occured while copying files.", e);
+                    success = false;
                 }
 
             }
@@ -47,6 +69,22 @@ namespace Wexflow.Tasks.FileExists
             Info("Task finished");
 
             return new TaskStatus(Status.Success, success);
+        }
+
+        private bool CheckFile()
+        {
+            var success = System.IO.File.Exists(File);
+
+            if (success)
+            {
+                InfoFormat("The file {0} exist.", File);
+            }
+            else
+            {
+                InfoFormat("The file {0} does not exist.", File);
+            }
+
+            return success;
         }
     }
 }

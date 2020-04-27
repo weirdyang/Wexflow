@@ -10,7 +10,7 @@
 	"ExecCs": [ "selectFiles" ],
 	"ExecVb": [ "selectFiles" ],
 	"FileContentMatch": [ "file", "folder", "recursive" , "pattern" ],
-	"FileExists": [ "file" ],
+	"FileExists": [ "file", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FileMatch": [ "dir", "pattern", "recurssive" ],
 	"FilesConcat": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesCopier": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
