@@ -67,7 +67,7 @@
 	"ScssToCss": [ "selectFiles" ],
 	"SevenZip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha1": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"Sha256": [ "selectFiles" ],
+	"Sha256": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha512": [ "selectFiles" ],
 	"Slack": [ "selectFiles", "token" ],
 	"SpeechToText": [ "selectFiles" ],
