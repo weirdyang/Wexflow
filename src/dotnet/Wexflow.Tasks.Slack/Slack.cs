@@ -9,30 +9,82 @@ namespace Wexflow.Tasks.Slack
 {
     public class Slack : Task
     {
-        public string Token { get; }
+        public string Token { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public Slack(XElement xe, Workflow wf) : base(xe, wf)
         {
             Token = GetSetting("token");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Sending slack messages...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = SendMessages(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = SendMessages(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while sending messages.", e);
+                success = false;
+            }
+
+            var tstatus = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                tstatus = Status.Warning;
+            }
+            else if (!success)
+            {
+                tstatus = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(tstatus);
+        }
+
+        private bool SendMessages(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var files = SelectFiles();
 
             if (files.Length > 0)
             {
                 ManualResetEventSlim clientReady = new ManualResetEventSlim(false);
                 SlackSocketClient client = new SlackSocketClient(Token);
-                client.Connect((connected) => {
+                client.Connect((connected) =>
+                {
                     // This is called once the client has emitted the RTM start command
                     clientReady.Set();
-                }, () => {
+                }, () =>
+                {
                     // This is called once the RTM client has connected to the end point
                 });
                 client.OnMessageReceived += (message) =>
@@ -56,7 +108,7 @@ namespace Wexflow.Tasks.Slack
                             var dmchannel = client.DirectMessages.Find(x => x.user.Equals(user.id));
                             client.PostMessage((mr) => Info("Message '" + text + "' sent to " + dmchannel.id + "."), dmchannel.id, text);
 
-                            if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                            if (!atLeastOneSuccess) atLeastOneSuccess = true;
                         }
 
                     }
@@ -72,19 +124,7 @@ namespace Wexflow.Tasks.Slack
                 }
             }
 
-            var tstatus = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                tstatus = Status.Warning;
-            }
-            else if (!success)
-            {
-                tstatus = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(tstatus);
+            return success;
         }
 
     }
