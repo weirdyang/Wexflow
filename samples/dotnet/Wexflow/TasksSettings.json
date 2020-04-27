@@ -40,7 +40,7 @@
 	"HttpPost": [ "url", "params" ],
 	"HttpPut": [ "url", "params" ],
 	"ImagesConcat": [ "selectFiles" ],
-	"ImagesCropper": [ "selectFiles", "width", "height", "x", "y" ],
+	"ImagesCropper": [ "selectFiles", "width", "height", "x", "y", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesOverlay": [ "selectFiles" ],
 	"ImagesResizer": [ "selectFiles", "width", "height", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
