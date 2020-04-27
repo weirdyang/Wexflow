@@ -8,8 +8,12 @@ namespace Wexflow.Tasks.FilesInfo
 {
     public class FilesInfo : Task
     {
-        public FilesInfo(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public FilesInfo(XElement xe, Workflow wf) : base(xe, wf)
         {
         }
 
@@ -17,9 +21,51 @@ namespace Wexflow.Tasks.FilesInfo
         {
             Info("Generating files informations...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = GenerateInfo(ref atLeastOneSucceed);
+                    }
+                }
+                else
+                {
+                    success = GenerateInfo(ref atLeastOneSucceed);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while generating files info.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool GenerateInfo(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)
@@ -58,7 +104,7 @@ namespace Wexflow.Tasks.FilesInfo
                             xdoc.Root.Add(xfile);
                         }
                         InfoFormat("File information of the file {0} generated.", file.Path);
-                        
+
                         if (!atLeastOneSucceed) atLeastOneSucceed = true;
                     }
                     catch (ThreadAbortException)
@@ -74,20 +120,7 @@ namespace Wexflow.Tasks.FilesInfo
                 xdoc.Save(filesInfoPath);
                 Files.Add(new FileInf(filesInfoPath, Id));
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
     }
 }

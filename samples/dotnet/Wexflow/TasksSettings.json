@@ -19,7 +19,7 @@
 	"FilesEncryptor": [ "selectFiles" ],
 	"FilesEqual": [ "file1", "file2", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesExist": [ "file", "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"FilesInfo": [ "selectFiles" ],
+	"FilesInfo": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesJoiner": [ "selectFiles", "destFolder", "overwrite", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesLoader": [ "file", "folder", "regexPattern", "recursive", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesLoaderEx": [ "file", "folder", "regexPattern", "recursive", "addMaxCreateDate", "addMinCreateDate", "addMaxModifyDate", "addMinModifyDate", "removeMaxCreateDate", "removeMinCreateDate", "removeMaxModifyDate", "removeMinModifyDate" ],
