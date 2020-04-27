@@ -31,7 +31,7 @@
 	"FolderExists": ["folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword"],
 	"Ftp": [ "selectFiles", "command", "protocol", "encryption", "server", "port", "user", "password", "privateKeyPath", "passphrase", "path", "retryCount", "retryTimeout", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Guid": [ "guidCount" ],
-	"HtmlToPdf": [ "selectFiles" ],
+	"HtmlToPdf": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"HtmlToText": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Http": [ "url" ],
 	"HttpDelete": [ "url", "params" ],

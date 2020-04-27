@@ -11,18 +11,68 @@ namespace Wexflow.Tasks.HtmlToPdf
 {
     public class HtmlToPdf : Task
     {
-        public HtmlToPdf(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public HtmlToPdf(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Generating PDF files from HTML files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ConvertFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ConvertFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while converting files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool ConvertFiles(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var files = SelectFiles();
 
             if (files.Length > 0)
@@ -50,7 +100,7 @@ namespace Wexflow.Tasks.HtmlToPdf
                         Files.Add(new FileInf(pdfPath, Id));
                         InfoFormat("PDF {0} generated from the file {1}", pdfPath, file.Path);
 
-                        if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                        if (!atLeastOneSuccess) atLeastOneSuccess = true;
                     }
                     catch (ThreadAbortException)
                     {
@@ -63,32 +113,8 @@ namespace Wexflow.Tasks.HtmlToPdf
                     }
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
-        /*private void Converter_Error(object sender, TuesPechkin.ErrorEventArgs e)
-        {
-           Error(e.ErrorMessage);
-        }
-
-        private void ByteArrayToFile(string fileName, byte[] byteArray)
-        {
-            FileStream fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            fileStream.Write(byteArray, 0, byteArray.Length);
-            fileStream.Close();
-        }*/
     }
 }
