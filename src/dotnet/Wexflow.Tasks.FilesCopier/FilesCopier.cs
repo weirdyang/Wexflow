@@ -34,7 +34,7 @@ namespace Wexflow.Tasks.FilesCopier
             Info("Copying files...");
 
             var success = true;
-            var atLeastOneSucceed = false;
+            var atLeastOneSuccess = false;
 
             try
             {
@@ -42,12 +42,12 @@ namespace Wexflow.Tasks.FilesCopier
                 {
                     using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
                     {
-                        success = CopyFiles(ref atLeastOneSucceed);
+                        success = CopyFiles(ref atLeastOneSuccess);
                     }
                 }
                 else
                 {
-                    success = CopyFiles(ref atLeastOneSucceed);
+                    success = CopyFiles(ref atLeastOneSuccess);
                 }
             }
             catch (ThreadAbortException)
@@ -62,7 +62,7 @@ namespace Wexflow.Tasks.FilesCopier
 
             var status = Status.Success;
 
-            if (!success && atLeastOneSucceed)
+            if (!success && atLeastOneSuccess)
             {
                 status = Status.Warning;
             }
@@ -75,7 +75,7 @@ namespace Wexflow.Tasks.FilesCopier
             return new TaskStatus(status);
         }
 
-        private bool CopyFiles(ref bool atLeastOneSucceed)
+        private bool CopyFiles(ref bool atLeastOneSuccess)
         {
             var success = true;
             var files = SelectFiles();
@@ -113,7 +113,7 @@ namespace Wexflow.Tasks.FilesCopier
                     File.Copy(file.Path, destPath, Overwrite);
                     Files.Add(new FileInf(destPath, Id));
                     InfoFormat("File copied: {0} -> {1}", file.Path, destPath);
-                    if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                    if (!atLeastOneSuccess) atLeastOneSuccess = true;
                 }
                 catch (ThreadAbortException)
                 {

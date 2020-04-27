@@ -11,34 +11,75 @@ namespace Wexflow.Tasks.TextsEncryptor
 {
     public class TextsEncryptor : Task
     {
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
         public TextsEncryptor(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Encrypting files...");
-            Status status = Status.Success;
-            bool succeeded = true;
-            bool atLeastOneSuccess = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = EncryptFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = EncryptFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool EncryptFiles(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             try
             {
                 var files = SelectFiles();
                 foreach (var file in files)
                 {
                     string destPath = Path.Combine(Workflow.WorkflowTempFolder, file.FileName);
-                    succeeded &= Encrypt(file.Path, destPath, Workflow.PassPhrase);
-                    if (!atLeastOneSuccess && succeeded) atLeastOneSuccess = true;
-                }
-
-                if (!succeeded && atLeastOneSuccess)
-                {
-                    status = Status.Warning;
-                }
-                else if (!succeeded)
-                {
-                    status = Status.Error;
+                    success &= Encrypt(file.Path, destPath, Workflow.PassPhrase);
+                    if (!atLeastOneSuccess && success) atLeastOneSuccess = true;
                 }
             }
             catch (ThreadAbortException)
@@ -48,11 +89,9 @@ namespace Wexflow.Tasks.TextsEncryptor
             catch (Exception e)
             {
                 ErrorFormat("An error occured while encrypting files: {0}", e.Message);
-                status = Status.Error;
+                success = false;
             }
-
-            Info("Task finished");
-            return new TaskStatus(status);
+            return success;
         }
 
         private bool Encrypt(string inputFile, string outputFile, string passphrase)

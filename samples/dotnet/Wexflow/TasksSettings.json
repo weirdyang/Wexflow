@@ -78,7 +78,7 @@
 	"Sync": [ "srcFolder", "destFolder" ],
 	"Tar": [ "selectFiles", "zipFileName" ],
 	"TextsDecryptor": [ "selectFiles" ],
-	"TextsEncryptor": [ "selectFiles" ],
+	"TextsEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"TextToPdf": [ "selectFiles" ],
 	"TextToSpeech": [ "selectFiles" ],
 	"Tgz": [ "selectFiles", "tgzFileName" ],
