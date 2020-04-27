@@ -9,21 +9,70 @@ namespace Wexflow.Tasks.Vimeo
 {
     public class Vimeo : Task
     {
-        public string Token { get; }
+        public string Token { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Vimeo(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Vimeo(XElement xe, Workflow wf) : base(xe, wf)
         {
             Token = GetSetting("token");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Uploading videos...");
 
-            bool succeeded = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UploadVideos(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UploadVideos(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while uploading videos.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool UploadVideos(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             try
             {
                 var files = SelectFiles();
@@ -46,12 +95,12 @@ namespace Wexflow.Tasks.Vimeo
                                 var videoId = vimeoApi.UploadVideo(filePath, title, desc, (l1, l2) => { });
                                 InfoFormat("Video {0} uploaded to Vimeo. VideoId: {1}", filePath, videoId);
 
-                                if (succeeded && !atLeastOneSucceed) atLeastOneSucceed = true;
+                                if (success && !atLeastOneSuccess) atLeastOneSuccess = true;
                             }
                             catch (Exception e)
                             {
                                 ErrorFormat("An error occured while uploading the file {0}: {1}", filePath, e.Message);
-                                succeeded = false;
+                                success = false;
                             }
                         }
                     }
@@ -62,7 +111,7 @@ namespace Wexflow.Tasks.Vimeo
                     catch (Exception e)
                     {
                         ErrorFormat("An error occured while uploading the file {0}: {1}", file.Path, e.Message);
-                        succeeded = false;
+                        success = false;
                     }
                 }
 
@@ -74,22 +123,9 @@ namespace Wexflow.Tasks.Vimeo
             catch (Exception e)
             {
                 ErrorFormat("An error occured while uploading videos: {0}", e.Message);
-                return new TaskStatus(Status.Error);
+                success = false;
             }
-
-            var status = Status.Success;
-
-            if (!succeeded && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!succeeded)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
 
     }

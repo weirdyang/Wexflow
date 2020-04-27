@@ -94,7 +94,7 @@
 	"Untar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Untgz": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Unzip": [ "selectFiles", "destDir", "password", "overwrite", "createSubDirectoryWithDateTime", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"Vimeo": [ "token" ],
+	"Vimeo": [ "token", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"VimeoListUploads": [ "token" ],
 	"Wait": [ "duration" ],
 	"WebToHtml": [ "url" ],
