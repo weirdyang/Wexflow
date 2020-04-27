@@ -56,7 +56,7 @@
 	"Md5": [ "selectFiles" ],
 	"MediaInfo": [ "selectFiles" ],
 	"MessageCorrect": [ "checkString" ],
-	"Mkdir": [ "folder" ],
+	"Mkdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Movedir": [ "folder", "destinationFolder", "overwrite" ],
 	"Now": [ "culture", "format" ],
 	"Ping": [ "server" ],
