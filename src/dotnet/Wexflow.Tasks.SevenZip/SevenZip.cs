@@ -11,19 +11,64 @@ namespace Wexflow.Tasks.SevenZip
     public class SevenZip : Task
     {
         public string ZipFileName { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public SevenZip(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public SevenZip(XElement xe, Workflow wf) : base(xe, wf)
         {
             ZipFileName = GetSetting("zipFileName");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Zipping files...");
 
-            bool success = true;
+            var success = true;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = CreateZip();
+                    }
+                }
+                else
+                {
+                    success = CreateZip();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while creating 7z.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool CreateZip()
+        {
+            var success = true;
             var files = SelectFiles();
             if (files.Length > 0)
             {
@@ -49,16 +94,7 @@ namespace Wexflow.Tasks.SevenZip
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
     }
 }

@@ -65,7 +65,7 @@
 	"ProcessLauncher": [ "selectFiles", "processPath", "processCmd", "hideGui", "generatesFiles" ],
 	"Rmdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ScssToCss": [ "selectFiles" ],
-	"SevenZip": [ "selectFiles", "zipFileName" ],
+	"SevenZip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha1": [ "selectFiles" ],
 	"Sha256": [ "selectFiles" ],
 	"Sha512": [ "selectFiles" ],
