@@ -103,6 +103,6 @@
 	"Workflow": [ "wexflowWebServiceUri", "action", "id" ],
 	"XmlToCsv": [ "selectFiles", "separator", "quote", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Xslt": [ "selectFiles", "xsltPath", "outputFormat", "removeWexflowProcessingNodes", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"YamlToJson": [ "selectFiles" ],
+	"YamlToJson": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Zip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ]
 }
