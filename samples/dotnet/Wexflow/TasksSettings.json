@@ -1,6 +1,6 @@
 {
 	"Approval": [ ],
-	"CsvToJson": [ "selectFiles", "separator" ],
+	"CsvToJson": [ "selectFiles", "separator", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"CsvToSql": [ "selectFiles", "tableName", "separator" ],
 	"CsvToXml": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"CsvToYaml": [ "selectFiles", "separator" ],
