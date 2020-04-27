@@ -90,7 +90,7 @@
 	"UglifyHtml": [ "selectFiles" ],
 	"UglifyJs": [ "selectFiles" ],
 	"Unrar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"UnSevenZip": [ "selectFiles", "destDir" ],
+	"UnSevenZip": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Untar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Untgz": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Unzip": [ "selectFiles", "destDir", "password", "overwrite", "createSubDirectoryWithDateTime", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],

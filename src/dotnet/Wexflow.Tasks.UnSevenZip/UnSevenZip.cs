@@ -13,20 +13,69 @@ namespace Wexflow.Tasks.UnSevenZip
     public class UnSevenZip : Task
     {
         public string DestDir { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public UnSevenZip(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public UnSevenZip(XElement xe, Workflow wf) : base(xe, wf)
         {
             DestDir = GetSetting("destDir");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Extracting 7Z archives...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ExtractFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ExtractFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while extracting archives.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool ExtractFiles(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             var rars = SelectFiles();
 
             if (rars.Length > 0)
@@ -48,7 +97,7 @@ namespace Wexflow.Tasks.UnSevenZip
 
                         InfoFormat("7Z {0} extracted to {1}", rar.Path, destFolder);
 
-                        if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                        if (!atLeastOneSuccess) atLeastOneSuccess = true;
                     }
                     catch (ThreadAbortException)
                     {
@@ -61,23 +110,10 @@ namespace Wexflow.Tasks.UnSevenZip
                     }
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
-        public void Extract7Z(string rarFileName, string targetDir)
+        private void Extract7Z(string rarFileName, string targetDir)
         {
             using (var archive = SevenZipArchive.Open(rarFileName))
             {
