@@ -43,7 +43,7 @@
 	"ImagesCropper": [ "selectFiles", "width", "height", "x", "y" ],
 	"ImagesOverlay": [ "selectFiles" ],
 	"ImagesResizer": [ "selectFiles", "width", "height" ],
-	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat" ],
+	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"InstagramUploadImage": [ "selectFiles", "username", "password" ],
 	"InstagramUploadVideo": [ "selectFiles", "username", "password" ],
 	"IsoCreator": [ "srcDir", "volumeIdentifier", "isoFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],

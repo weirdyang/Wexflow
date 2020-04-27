@@ -21,25 +21,75 @@ namespace Wexflow.Tasks.ImagesTransformer
         Wmf
     }
 
-    public class ImagesTransformer:Task
+    public class ImagesTransformer : Task
     {
         public string OutputFilePattern { get; private set; }
         public ImgFormat OutputFormat { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public ImagesTransformer(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public ImagesTransformer(XElement xe, Workflow wf) : base(xe, wf)
         {
             OutputFilePattern = GetSetting("outputFilePattern");
             OutputFormat = (ImgFormat)Enum.Parse(typeof(ImgFormat), GetSetting("outputFormat"), true);
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Transforming images...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = Transform(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = Transform(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while transforming images.", e);
+                success = false;
+            }
+
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool Transform(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             foreach (FileInf file in SelectFiles())
             {
                 try
@@ -82,8 +132,8 @@ namespace Wexflow.Tasks.ImagesTransformer
                     }
                     Files.Add(new FileInf(destFilePath, Id));
                     InfoFormat("Image {0} transformed to {1}", file.Path, destFilePath);
-                    
-                    if (!atLeastOneSucceed) atLeastOneSucceed = true;
+
+                    if (!atLeastOneSuccess) atLeastOneSuccess = true;
                 }
                 catch (ThreadAbortException)
                 {
@@ -95,20 +145,8 @@ namespace Wexflow.Tasks.ImagesTransformer
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
+
     }
 }
