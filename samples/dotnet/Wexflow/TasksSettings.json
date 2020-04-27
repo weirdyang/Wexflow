@@ -77,7 +77,7 @@
 	"SshCmd": [ "host", "port", "username", "password", "cmd", "timeout" ],
 	"Sync": [ "srcFolder", "destFolder" ],
 	"Tar": [ "selectFiles", "zipFileName" ],
-	"TextsDecryptor": [ "selectFiles" ],
+	"TextsDecryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"TextsEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"TextToPdf": [ "selectFiles" ],
 	"TextToSpeech": [ "selectFiles" ],
