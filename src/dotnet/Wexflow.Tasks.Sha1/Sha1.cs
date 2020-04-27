@@ -10,18 +10,68 @@ namespace Wexflow.Tasks.Sha1
 {
     public class Sha1 : Task
     {
-        public Sha1(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public Sha1(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Generating SHA-1 hashes...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = GenerateSha1(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = GenerateSha1(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while generaing SHA1.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool GenerateSha1(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)
@@ -43,8 +93,8 @@ namespace Wexflow.Tasks.Sha1
                                 new XAttribute("sha1", sha1)));
                         }
                         InfoFormat("SHA-1 hash of the file {0} is {1}", file.Path, sha1);
-                        
-                        if (!atLeastOneSucceed) atLeastOneSucceed = true;
+
+                        if (!atLeastOneSuccess) atLeastOneSuccess = true;
                     }
                     catch (ThreadAbortException)
                     {
@@ -59,20 +109,7 @@ namespace Wexflow.Tasks.Sha1
                 xdoc.Save(md5Path);
                 Files.Add(new FileInf(md5Path, Id));
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
         private string GetSha1(string filePath)

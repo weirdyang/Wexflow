@@ -66,7 +66,7 @@
 	"Rmdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ScssToCss": [ "selectFiles" ],
 	"SevenZip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"Sha1": [ "selectFiles" ],
+	"Sha1": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Sha256": [ "selectFiles" ],
 	"Sha512": [ "selectFiles" ],
 	"Slack": [ "selectFiles", "token" ],
