@@ -12,19 +12,65 @@ namespace Wexflow.Tasks.Sync
     {
         public string SrcFolder { get; private set; }
         public string DestFolder { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public Sync(XElement xe, Workflow wf) : base(xe, wf)
         {
             SrcFolder = GetSetting("srcFolder");
             DestFolder = GetSetting("destFolder");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Synchronising folders...");
 
-            bool success = true;
+            var success = true;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = SyncFolders();
+                    }
+                }
+                else
+                {
+                    success = SyncFolders();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool SyncFolders()
+        {
+            var success = true;
             try
             {
                 const string idFileName = "filesync.id";
@@ -56,19 +102,10 @@ namespace Wexflow.Tasks.Sync
                 Logger.ErrorFormat("Error from File Sync Provider: {0}\n", e.Message);
                 success = false;
             }
-
-            var status = Status.Success;
-
-            if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
-        public void DetectChangesOnFileSystemReplica(
+        private void DetectChangesOnFileSystemReplica(
             Guid replicaId, string replicaRootPath,
             FileSyncScopeFilter filter, FileSyncOptions options)
         {

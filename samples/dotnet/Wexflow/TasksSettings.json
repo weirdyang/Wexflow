@@ -75,7 +75,7 @@
 	"SqlToCsv": [ "selectFiles", "type", "connectionString", "sql", "doNotGenerateFilesIfEmpty" ],
 	"SqlToXml": [ "selectFiles", "type", "connectionString", "sql" ],
 	"SshCmd": [ "host", "port", "username", "password", "cmd", "timeout" ],
-	"Sync": [ "srcFolder", "destFolder" ],
+	"Sync": [ "srcFolder", "destFolder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Tar": [ "selectFiles", "zipFileName" ],
 	"TextsDecryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"TextsEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
