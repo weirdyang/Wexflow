@@ -12,34 +12,84 @@ using Wexflow.Core;
 
 namespace Wexflow.Tasks.InstagramUploadImage
 {
-    public class InstagramUploadImage:Task
+    public class InstagramUploadImage : Task
     {
-        public string Username { get; }
-        public string Password { get; }
+        public string Username { get; private set; }
+        public string Password { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public InstagramUploadImage(XElement xe, Workflow wf) : base(xe, wf)
         {
             Username = GetSetting("username");
             Password = GetSetting("password");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Uploading images...");
 
-            bool succeeded = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
             try
             {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UploadImages(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UploadImages(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while uploading images.", e);
+                success = false;
+            }
 
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool UploadImages(ref bool atLeastOneSuccess)
+        {
+            var success = true;
+            try
+            {
                 var authTask = Authenticate();
                 authTask.Wait();
 
                 if (authTask.Result == null)
                 {
                     Error("An error occured while authenticating.");
-                    return new TaskStatus(Status.Error);
+                    success = false;
+                    return success;
                 }
                 else
                 {
@@ -61,9 +111,9 @@ namespace Wexflow.Tasks.InstagramUploadImage
 
                             var uploadImageTask = UploadImage(authTask.Result, filePath, caption);
                             uploadImageTask.Wait();
-                            succeeded &= uploadImageTask.Result;
+                            success &= uploadImageTask.Result;
 
-                            if (succeeded && !atLeastOneSucceed) atLeastOneSucceed = true;
+                            if (success && !atLeastOneSuccess) atLeastOneSuccess = true;
                         }
                     }
                     catch (ThreadAbortException)
@@ -73,7 +123,7 @@ namespace Wexflow.Tasks.InstagramUploadImage
                     catch (Exception e)
                     {
                         ErrorFormat("An error occured while uploading the image {0}: {1}", file.Path, e.Message);
-                        succeeded = false;
+                        success = false;
                     }
                 }
 
@@ -85,22 +135,10 @@ namespace Wexflow.Tasks.InstagramUploadImage
             catch (Exception e)
             {
                 ErrorFormat("An error occured while uploading images: {0}", e.Message);
-                return new TaskStatus(Status.Error);
+                success = false;
+                return success;
             }
-
-            var status = Status.Success;
-
-            if (!succeeded && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!succeeded)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
 
         private async System.Threading.Tasks.Task<IInstaApi> Authenticate()
@@ -180,7 +218,7 @@ namespace Wexflow.Tasks.InstagramUploadImage
                 {
                     InfoFormat("Unable to upload image: {0}", result.Info.Message);
                     return false;
-                    
+
                 }
 
                 InfoFormat("Media created: {0}, {1}", result.Value.Pk, result.Value.Caption.Text);
@@ -191,7 +229,7 @@ namespace Wexflow.Tasks.InstagramUploadImage
                 ErrorFormat("An error occured while uploading the image: {0}", e, filePath);
                 return false;
             }
-            
+
         }
 
     }
