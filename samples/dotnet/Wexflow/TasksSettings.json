@@ -46,7 +46,7 @@
 	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat" ],
 	"InstagramUploadImage": [ "selectFiles", "username", "password" ],
 	"InstagramUploadVideo": [ "selectFiles", "username", "password" ],
-	"IsoCreator": [ "srcDir", "volumeIdentifier", "isoFileName" ],
+	"IsoCreator": [ "srcDir", "volumeIdentifier", "isoFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"IsoExtractor": [ "selectFiles", "destDir" ],
 	"JsonToYaml": ["selectFiles"],
 	"ListEntities": [ ],
