@@ -88,7 +88,7 @@
 	"Twitter": [ "selectFiles", "consumerKey", "consumerSecret", "accessToken", "accessTokenSecret", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"UglifyCss": [ "selectFiles" ],
 	"UglifyHtml": [ "selectFiles" ],
-	"UglifyJs": [ "selectFiles" ],
+	"UglifyJs": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Unrar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"UnSevenZip": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Untar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
