@@ -3,7 +3,7 @@
 	"CsvToJson": [ "selectFiles", "separator", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"CsvToSql": [ "selectFiles", "tableName", "separator" ],
 	"CsvToXml": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"CsvToYaml": [ "selectFiles", "separator" ],
+	"CsvToYaml": [ "selectFiles", "separator", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"DatabaseBackup": [ "serverConnection", "databaseName", "backupFilePath", "overwrite" ],
 	"DatabaseRestore": [ "serverConnection", "databaseName", "backupFilePath" ],
 	"EnvironmentVariable": [ "name" ],

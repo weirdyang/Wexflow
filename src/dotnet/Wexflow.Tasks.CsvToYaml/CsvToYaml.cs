@@ -8,22 +8,74 @@ using YamlDotNet.Serialization;
 
 namespace Wexflow.Tasks.CsvToYaml
 {
-    public class CsvToYaml:Task
+    public class CsvToYaml : Task
     {
         public string Separator { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public CsvToYaml(XElement xe, Workflow wf) : base(xe, wf)
         {
             Separator = GetSetting("separator", ";");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Converting CSV files to YAML files...");
 
-            var status = Status.Success;
+
             var success = true;
             var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ConvertFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ConvertFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while converting files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+
+        private bool ConvertFiles(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var csvFiles = SelectFiles();
 
             foreach (var csvFile in csvFiles)
@@ -48,19 +100,8 @@ namespace Wexflow.Tasks.CsvToYaml
                 }
             }
 
-            if (!success && atLeastOneSuccess)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
-
 
         private string Convert(string path, string separator)
         {
