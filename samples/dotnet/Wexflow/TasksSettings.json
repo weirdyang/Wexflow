@@ -52,7 +52,7 @@
 	"ListEntities": [ ],
 	"ListFiles": [ ],
 	"MailsReceiver": [ "host", "port", "enableSsl", "user", "password", "messageCount", "deleteMessages", "protocol" ],
-	"MailsSender": [ "selectFiles", "selectAttachments", "host", "port", "enableSsl", "user", "password" ],
+	"MailsSender": [ "selectFiles", "selectAttachments", "host", "port", "enableSsl", "user", "password", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Md5": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"MediaInfo": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"MessageCorrect": [ "checkString" ],

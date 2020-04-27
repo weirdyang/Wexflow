@@ -8,17 +8,20 @@ using System.Threading;
 
 namespace Wexflow.Tasks.MailsSender
 {
-    public class MailsSender:Task
+    public class MailsSender : Task
     {
-        public string Host { get; }
-        public int Port { get; }
-        public bool EnableSsl { get; }
-        public string User { get; }
-        public string Password { get; }
-        public bool IsBodyHtml { get; }
+        public string Host { get; private set; }
+        public int Port { get; private set; }
+        public bool EnableSsl { get; private set; }
+        public string User { get; private set; }
+        public string Password { get; private set; }
+        public bool IsBodyHtml { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public MailsSender(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public MailsSender(XElement xe, Workflow wf) : base(xe, wf)
         {
             Host = GetSetting("host");
             Port = int.Parse(GetSetting("port"));
@@ -26,15 +29,61 @@ namespace Wexflow.Tasks.MailsSender
             User = GetSetting("user");
             Password = GetSetting("password");
             IsBodyHtml = bool.Parse(GetSetting("isBodyHtml", "true"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Sending mails...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = SendMails(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = SendMails(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while sending Emails.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool SendMails(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             try
             {
                 FileInf[] attachments = SelectAttachments();
@@ -58,7 +107,7 @@ namespace Wexflow.Tasks.MailsSender
                         }
                         catch (Exception e)
                         {
-							ErrorFormat("An error occured while parsing the mail {0}. Please check the XML configuration according to the documentation. Error: {1}", count, e.Message);
+                            ErrorFormat("An error occured while parsing the mail {0}. Please check the XML configuration according to the documentation. Error: {1}", count, e.Message);
                             success = false;
                             count++;
                             continue;
@@ -69,8 +118,8 @@ namespace Wexflow.Tasks.MailsSender
                             mail.Send(Host, Port, EnableSsl, User, Password, IsBodyHtml);
                             InfoFormat("Mail {0} sent.", count);
                             count++;
-                            
-                            if (!atLeastOneSucceed) atLeastOneSucceed = true;
+
+                            if (!atLeastOneSuccess) atLeastOneSuccess = true;
                         }
                         catch (ThreadAbortException)
                         {
@@ -93,23 +142,10 @@ namespace Wexflow.Tasks.MailsSender
                 ErrorFormat("An error occured while sending mails.", e);
                 success = false;
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
-        public FileInf[] SelectAttachments()
+        private FileInf[] SelectAttachments()
         {
             var files = new List<FileInf>();
             foreach (var xSelectFile in GetXSettings("selectAttachments"))
@@ -126,8 +162,8 @@ namespace Wexflow.Tasks.MailsSender
                 else
                 {
                     var qf = (from lf in Workflow.FilesPerTask.Values
-                        from f in QueryFiles(lf, xSelectFile)
-                        select f).Distinct().ToArray();
+                              from f in QueryFiles(lf, xSelectFile)
+                              select f).Distinct().ToArray();
 
                     files.AddRange(qf);
                 }
