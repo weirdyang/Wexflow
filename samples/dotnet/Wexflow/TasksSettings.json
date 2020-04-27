@@ -45,7 +45,7 @@
 	"ImagesResizer": [ "selectFiles", "width", "height", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"InstagramUploadImage": [ "selectFiles", "username", "password", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"InstagramUploadVideo": [ "selectFiles", "username", "password" ],
+	"InstagramUploadVideo": [ "selectFiles", "username", "password", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"IsoCreator": [ "srcDir", "volumeIdentifier", "isoFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"IsoExtractor": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"JsonToYaml": ["selectFiles"],

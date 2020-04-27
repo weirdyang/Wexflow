@@ -14,22 +14,72 @@ namespace Wexflow.Tasks.InstagramUploadVideo
 {
     public class InstagramUploadVideo : Task
     {
-        public string Username { get; }
-        public string Password { get; }
+        public string Username { get; private set; }
+        public string Password { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public InstagramUploadVideo(XElement xe, Workflow wf) : base(xe, wf)
         {
             Username = GetSetting("username");
             Password = GetSetting("password");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Uploading videos...");
 
-            bool succeeded = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UploadVideos(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UploadVideos(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while uploading videos.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool UploadVideos(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             try
             {
 
@@ -39,7 +89,7 @@ namespace Wexflow.Tasks.InstagramUploadVideo
                 if (authTask.Result == null)
                 {
                     Error("An error occured while authenticating.");
-                    return new TaskStatus(Status.Error);
+                    return false;
                 }
                 else
                 {
@@ -62,9 +112,9 @@ namespace Wexflow.Tasks.InstagramUploadVideo
 
                             var uploadVideoTask = UploadVideo(authTask.Result, filePath, thumbnailPath, caption);
                             uploadVideoTask.Wait();
-                            succeeded &= uploadVideoTask.Result;
+                            success &= uploadVideoTask.Result;
 
-                            if (succeeded && !atLeastOneSucceed) atLeastOneSucceed = true;
+                            if (success && !atLeastOneSuccess) atLeastOneSuccess = true;
                         }
                     }
                     catch (ThreadAbortException)
@@ -74,7 +124,7 @@ namespace Wexflow.Tasks.InstagramUploadVideo
                     catch (Exception e)
                     {
                         ErrorFormat("An error occured while uploading the video {0}: {1}", file.Path, e.Message);
-                        succeeded = false;
+                        success = false;
                     }
                 }
 
@@ -86,22 +136,9 @@ namespace Wexflow.Tasks.InstagramUploadVideo
             catch (Exception e)
             {
                 ErrorFormat("An error occured while uploading videos: {0}", e.Message);
-                return new TaskStatus(Status.Error);
+                return false;
             }
-
-            var status = Status.Success;
-
-            if (!succeeded && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!succeeded)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
 
         private async System.Threading.Tasks.Task<IInstaApi> Authenticate()
