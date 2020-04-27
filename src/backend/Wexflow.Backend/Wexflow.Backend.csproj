@@ -117,6 +117,7 @@
     <Content Include="css\users.min.css" />
     <Content Include="designer.html" />
     <Content Include="forgot-password.html" />
+    <Content Include="images\da.png" />
     <Content Include="images\delete.png" />
     <Content Include="images\en.png" />
     <Content Include="images\fr.png" />
