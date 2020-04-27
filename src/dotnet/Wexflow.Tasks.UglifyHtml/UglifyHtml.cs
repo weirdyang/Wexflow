@@ -8,19 +8,70 @@ using Wexflow.Core;
 
 namespace Wexflow.Tasks.UglifyHtml
 {
-    public class UglifyHtml:Task
+    public class UglifyHtml : Task
     {
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
         public UglifyHtml(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Uglifying HTML files...");
 
-            var status = Status.Success;
+
             var success = true;
             var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UglifyHtmlFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UglifyHtmlFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while uglifying HTML files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool UglifyHtmlFiles(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var htmlFiles = SelectFiles();
 
             foreach (var htmlFile in htmlFiles)
@@ -52,18 +103,7 @@ namespace Wexflow.Tasks.UglifyHtml
                     success = false;
                 }
             }
-
-            if (!success && atLeastOneSuccess)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
     }
 }
