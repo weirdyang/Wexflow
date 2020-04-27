@@ -9,20 +9,69 @@ namespace Wexflow.Tasks.FilesSplitter
     public class FilesSplitter : Task
     {
         public int ChunkSize { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public FilesSplitter(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public FilesSplitter(XElement xe, Workflow wf) : base(xe, wf)
         {
             ChunkSize = int.Parse(GetSetting("chunkSize"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Splitting files into chunks...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = SplitFiles(ref atLeastOneSucceed);
+                    }
+                }
+                else
+                {
+                    success = SplitFiles(ref atLeastOneSucceed);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while splitting files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool SplitFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)
@@ -57,7 +106,7 @@ namespace Wexflow.Tasks.FilesSplitter
                         }
 
                         InfoFormat("The file {0} was splitted into {1} chunks.", file.Path, index + 1);
-                        
+
                         if (!atLeastOneSucceed) atLeastOneSucceed = true;
                     }
                     catch (ThreadAbortException)
@@ -71,20 +120,7 @@ namespace Wexflow.Tasks.FilesSplitter
                     }
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
     }
 }
