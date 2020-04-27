@@ -81,7 +81,7 @@
 	"TextsEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"TextToPdf": [ "selectFiles" ],
 	"TextToSpeech": [ "selectFiles" ],
-	"Tgz": [ "selectFiles", "tgzFileName" ],
+	"Tgz": [ "selectFiles", "tgzFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Torrent": [ "selectFiles", "saveFolder" ],
 	"Touch": [ "file", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Twilio": [ "accountSid", "authToken", "from", "to", "message" ],
