@@ -9,24 +9,74 @@ namespace Wexflow.Tasks.FilesConcat
 {
     public class FilesConcat : Task
     {
-        public FilesConcat(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public FilesConcat(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Concatenating files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ConcatFiles(ref atLeastOneSucceed);
+                    }
+                }
+                else
+                {
+                    success = ConcatFiles(ref atLeastOneSucceed);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while concatenating the files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool ConcatFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)
             {
                 StringBuilder builder = new StringBuilder();
-                for(int i = 0; i<files.Length; i++)
+                for (int i = 0; i < files.Length; i++)
                 {
                     var file = files[i];
                     builder.Append(Path.GetFileNameWithoutExtension(file.FileName));
@@ -44,7 +94,7 @@ namespace Wexflow.Tasks.FilesConcat
                 }
 
                 using (var output = File.Create(concatPath))
-                { 
+                {
                     foreach (FileInf file in files)
                     {
                         try
@@ -75,20 +125,8 @@ namespace Wexflow.Tasks.FilesConcat
 
                 Files.Add(new FileInf(concatPath, Id));
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
+
     }
 }
