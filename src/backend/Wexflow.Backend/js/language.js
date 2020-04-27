@@ -3,8 +3,8 @@
 
     let codes = [
         { Name: "English", Code: "en", Icon: "images/en.png" },
-        { Name: "Français", Code: "fr", Icon: "images/fr.png" }
-	    { Name: "Dansk", Code: "da", Icon: "images/da.png" }
+        { Name: "Français", Code: "fr", Icon: "images/fr.png" },
+	{ Name: "Dansk", Code: "da", Icon: "images/da.png" }
     ];
 
     let languages = {};
