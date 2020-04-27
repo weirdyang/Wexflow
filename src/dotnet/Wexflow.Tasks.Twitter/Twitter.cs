@@ -9,10 +9,14 @@ namespace Wexflow.Tasks.Twitter
 {
     public class Twitter : Task
     {
-        public string ConsumerKey { get; }
-        public string ConsumerSecret { get; }
-        public string AccessToken { get; }
-        public string AccessTokenSecret { get; }
+        public string ConsumerKey { get; private set; }
+        public string ConsumerSecret { get; private set; }
+        public string AccessToken { get; private set; }
+        public string AccessTokenSecret { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public Twitter(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -20,15 +24,61 @@ namespace Wexflow.Tasks.Twitter
             ConsumerSecret = GetSetting("consumerSecret");
             AccessToken = GetSetting("accessToken");
             AccessTokenSecret = GetSetting("accessTokenSecret");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Sending tweets...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = SendTweets(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = SendTweets(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while sending tweets.", e);
+                success = false;
+            }
+
+            var tstatus = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                tstatus = Status.Warning;
+            }
+            else if (!success)
+            {
+                tstatus = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(tstatus);
+        }
+
+        private bool SendTweets(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)
@@ -47,7 +97,8 @@ namespace Wexflow.Tasks.Twitter
                         var latestException = ExceptionHandler.GetLastException();
                         ErrorFormat("The following error occured : '{0}'", latestException.TwitterDescription);
                         Error("Authentication failed.");
-                        return new TaskStatus(Status.Error);
+                        success = false;
+                        return success;
                     }
                     Info("Authentication succeeded.");
                 }
@@ -58,7 +109,8 @@ namespace Wexflow.Tasks.Twitter
                 catch (Exception e)
                 {
                     ErrorFormat("Authentication failed: {0}", e.Message);
-                    return new TaskStatus(Status.Error);
+                    success = false;
+                    return success;
                 }
 
                 foreach (FileInf file in files)
@@ -74,7 +126,7 @@ namespace Wexflow.Tasks.Twitter
                             {
                                 InfoFormat("Tweet '{0}' sent. Id: {1}", status, tweet.Id);
 
-                                if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                                if (!atLeastOneSuccess) atLeastOneSuccess = true;
                             }
                             else
                             {
@@ -95,20 +147,8 @@ namespace Wexflow.Tasks.Twitter
                     }
                 }
             }
-
-            var tstatus = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                tstatus = Status.Warning;
-            }
-            else if (!success)
-            {
-                tstatus = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(tstatus);
+            return success;
         }
+
     }
 }
