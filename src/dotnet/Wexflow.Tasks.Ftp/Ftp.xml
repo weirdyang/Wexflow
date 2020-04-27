@@ -38,5 +38,14 @@
     <Setting name="retryCount" value="$int" />
     <!-- Optional and defaults to 1500 (milliseconds). The retry timeout between two tries. -->
     <Setting name="retryTimeout" value="$int" />
+
+    <!-- Optional. Samba computer name. -->
+    <Setting name="smbComputerName" value="$string" />
+    <!-- Optional. Samba domain name. -->
+    <Setting name="smbDomain" value="$string" />
+    <!-- Optional. Samba username. -->
+    <Setting name="smbUsername" value="$string" />
+    <!-- Optional. Samba password. -->
+    <Setting name="smbPassword" value="$string" />
   </Task>
 </Tasks>

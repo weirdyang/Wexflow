@@ -29,7 +29,7 @@
 	"FilesSplitter": [ "selectFiles", "chunkSize", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FileSystemWatcher": [ "folderToWatch", "filter", "includeSubFolders", "onFileCreated", "onFileChanged", "onFileDeleted" ],
 	"FolderExists": ["folder"],
-	"Ftp": [ "selectFiles", "command", "protocol", "encryption", "server", "port", "user", "password", "privateKeyPath", "passphrase", "path", "retryCount", "retryTimeout" ],
+	"Ftp": [ "selectFiles", "command", "protocol", "encryption", "server", "port", "user", "password", "privateKeyPath", "passphrase", "path", "retryCount", "retryTimeout", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Guid": [ "guidCount" ],
 	"HtmlToPdf": ["selectFiles"],
 	"HtmlToText": ["selectFiles"],

@@ -6,7 +6,7 @@ using System.Threading;
 namespace Wexflow.Tasks.Ftp
 {
     public enum FtpCommad
-    { 
+    {
         List,
         Upload,
         Download,
@@ -14,19 +14,23 @@ namespace Wexflow.Tasks.Ftp
     }
 
     public enum EncryptionMode
-    { 
+    {
         Explicit,
         Implicit
     }
 
-    public class Ftp: Task
+    public class Ftp : Task
     {
         private readonly PluginBase _plugin;
         private readonly FtpCommad _cmd;
         private readonly int _retryCount;
         private readonly int _retryTimeout;
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Ftp(XElement xe, Workflow wf): base(xe, wf)
+        public Ftp(XElement xe, Workflow wf) : base(xe, wf)
         {
             var server = GetSetting("server");
             var port = int.Parse(GetSetting("port"));
@@ -35,7 +39,7 @@ namespace Wexflow.Tasks.Ftp
             var path = GetSetting("path");
             var protocol = (Protocol)Enum.Parse(typeof(Protocol), GetSetting("protocol"), true);
             switch (protocol)
-            { 
+            {
                 case Protocol.Ftp:
                     _plugin = new PluginFtp(this, server, port, user, password, path);
                     break;
@@ -52,15 +56,61 @@ namespace Wexflow.Tasks.Ftp
             _cmd = (FtpCommad)Enum.Parse(typeof(FtpCommad), GetSetting("command"), true);
             _retryCount = int.Parse(GetSetting("retryCount", "3"));
             _retryTimeout = int.Parse(GetSetting("retryTimeout", "1500"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Processing files...");
-            
-            bool success = true;
-            bool atLeastOneSucceed = false;
 
+            var success = true;
+            var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = DoWork(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = DoWork(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool DoWork(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             if (_cmd == FtpCommad.List)
             {
                 int r = 0;
@@ -70,7 +120,7 @@ namespace Wexflow.Tasks.Ftp
                     {
                         var files = _plugin.List();
                         Files.AddRange(files);
-                        if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                        if (!atLeastOneSuccess) atLeastOneSuccess = true;
                         break;
                     }
                     catch (ThreadAbortException)
@@ -95,7 +145,7 @@ namespace Wexflow.Tasks.Ftp
                 }
             }
             else
-            { 
+            {
                 var files = SelectFiles();
                 for (int i = files.Length - 1; i > -1; i--)
                 {
@@ -120,7 +170,7 @@ namespace Wexflow.Tasks.Ftp
                                     break;
                             }
 
-                            if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                            if (!atLeastOneSuccess) atLeastOneSuccess = true;
                             break;
                         }
                         catch (ThreadAbortException)
@@ -145,20 +195,8 @@ namespace Wexflow.Tasks.Ftp
                     }
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if(!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
+
     }
 }
