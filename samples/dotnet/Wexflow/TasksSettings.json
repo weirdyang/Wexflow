@@ -86,7 +86,7 @@
 	"Touch": [ "file", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Twilio": [ "accountSid", "authToken", "from", "to", "message" ],
 	"Twitter": [ "selectFiles", "consumerKey", "consumerSecret", "accessToken", "accessTokenSecret", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"UglifyCss": [ "selectFiles" ],
+	"UglifyCss": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"UglifyHtml": [ "selectFiles" ],
 	"UglifyJs": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Unrar": [ "selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],

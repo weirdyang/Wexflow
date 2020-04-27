@@ -8,19 +8,71 @@ using Wexflow.Core;
 
 namespace Wexflow.Tasks.UglifyCss
 {
-    public class UglifyCss:Task
+    public class UglifyCss : Task
     {
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
         public UglifyCss(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Uglifying CSS files...");
 
-            var status = Status.Success;
+
             var success = true;
             var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = UglifyCssFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = UglifyCssFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while uglifying CSS files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool UglifyCssFiles(ref bool atLeastOneSuccess)
+        {
+            var success = false;
             var cssFiles = SelectFiles();
 
             foreach (var cssFile in cssFiles)
@@ -53,17 +105,7 @@ namespace Wexflow.Tasks.UglifyCss
                 }
             }
 
-            if (!success && atLeastOneSuccess)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
     }
 }
