@@ -21,5 +21,14 @@
 
     <!-- The regex pattern. It is case sensitive! Ex: .*\.boo -->
     <Setting name="pattern" value=".*\.txt" />
+
+    <!-- Optional. Samba computer name. -->
+    <Setting name="smbComputerName" value="$string" />
+    <!-- Optional. Samba domain name. -->
+    <Setting name="smbDomain" value="$string" />
+    <!-- Optional. Samba username. -->
+    <Setting name="smbUsername" value="$string" />
+    <!-- Optional. Samba password. -->
+    <Setting name="smbPassword" value="$string" />
   </Task>
 </Tasks>

@@ -9,7 +9,7 @@
 	"EnvironmentVariable": [ "name" ],
 	"ExecCs": [ "selectFiles" ],
 	"ExecVb": [ "selectFiles" ],
-	"FileContentMatch": [ "file", "folder", "recursive" , "pattern" ],
+	"FileContentMatch": [ "file", "folder", "recursive" , "pattern", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FileExists": [ "file", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FileMatch": [ "dir", "pattern", "recurssive", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesConcat": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],

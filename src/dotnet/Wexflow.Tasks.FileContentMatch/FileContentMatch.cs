@@ -9,10 +9,14 @@ namespace Wexflow.Tasks.FileContentMatch
 {
     public class FileContentMatch : Task
     {
-        public string[] FilesToCheck { get; }
-        public string[] FoldersToCheck { get; }
-        public bool Recursive { get; }
-        public string Pattern { get; }
+        public string[] FilesToCheck { get; private set; }
+        public string[] FoldersToCheck { get; private set; }
+        public bool Recursive { get; private set; }
+        public string Pattern { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
         public FileContentMatch(XElement xe, Workflow wf) : base(xe, wf)
         {
@@ -20,12 +24,54 @@ namespace Wexflow.Tasks.FileContentMatch
             FoldersToCheck = GetSettings("folder");
             Recursive = bool.Parse(GetSetting("recursive", "false"));
             Pattern = GetSetting("pattern");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Checking file...");
 
+            var success = true;
+            TaskStatus status = null;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = CheckFile(ref status);
+                    }
+                }
+                else
+                {
+                    success = CheckFile(ref status);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            Info("Task finished");
+
+            if (status != null)
+            {
+                return status;
+            }
+            return new TaskStatus(Status.Success, success);
+        }
+
+        private bool CheckFile(ref TaskStatus status)
+        {
             var success = true;
             try
             {
@@ -87,12 +133,10 @@ namespace Wexflow.Tasks.FileContentMatch
             catch (Exception e)
             {
                 ErrorFormat("An error occured while checking thes files. Error: {0}", e.Message);
-                return new TaskStatus(Status.Error, false);
+                status = new TaskStatus(Status.Error, false);
             }
 
-            Info("Task finished");
-
-            return new TaskStatus(Status.Success, success);
+            return success;
         }
     }
 }
