@@ -26,23 +26,35 @@ namespace Wexflow.Tasks.FilesRemover
             Info("Removing files...");
 
             var success = true;
-            var atLeastOneSucceed = false;
+            var atLeastOneSuccess = false;
 
-            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            try
             {
-                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
                 {
-                    success = RemoveFiles(ref atLeastOneSucceed);
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = RemoveFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = RemoveFiles(ref atLeastOneSuccess);
                 }
             }
-            else
+            catch (ThreadAbortException)
             {
-                success = RemoveFiles(ref atLeastOneSucceed);
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while removing files.", e);
+                success = false;
             }
 
             var status = Status.Success;
 
-            if (!success && atLeastOneSucceed)
+            if (!success && atLeastOneSuccess)
             {
                 status = Status.Warning;
             }

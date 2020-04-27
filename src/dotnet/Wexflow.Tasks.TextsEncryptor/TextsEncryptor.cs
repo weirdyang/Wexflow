@@ -50,7 +50,7 @@ namespace Wexflow.Tasks.TextsEncryptor
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while encrypting files.", e);
                 success = false;
             }
 

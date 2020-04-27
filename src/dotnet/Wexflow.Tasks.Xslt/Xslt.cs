@@ -60,7 +60,7 @@ namespace Wexflow.Tasks.Xslt
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while processing files.", e);
                 success = false;
             }
 

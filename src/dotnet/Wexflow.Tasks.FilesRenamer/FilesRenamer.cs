@@ -29,23 +29,35 @@ namespace Wexflow.Tasks.FilesRenamer
             Info("Renaming files...");
 
             var success = true;
-            var atLeastOneSucceed = false;
+            var atLeastOneSuccess = false;
 
-            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            try
             {
-                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
                 {
-                    success = RenameFiles(ref atLeastOneSucceed);
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = RenameFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = RenameFiles(ref atLeastOneSuccess);
                 }
             }
-            else
+            catch (ThreadAbortException)
             {
-                success = RenameFiles(ref atLeastOneSucceed);
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while renaming files.", e);
+                success = false;
             }
 
             var status = Status.Success;
 
-            if (!success && atLeastOneSucceed)
+            if (!success && atLeastOneSuccess)
             {
                 status = Status.Warning;
             }

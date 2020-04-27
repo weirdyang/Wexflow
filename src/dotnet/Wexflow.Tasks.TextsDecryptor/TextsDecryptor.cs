@@ -51,7 +51,7 @@ namespace Wexflow.Tasks.TextsDecryptor
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while decrypting files.", e);
                 success = false;
             }
 

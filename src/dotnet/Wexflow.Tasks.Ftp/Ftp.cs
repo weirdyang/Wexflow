@@ -89,7 +89,7 @@ namespace Wexflow.Tasks.Ftp
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while processing.", e);
                 success = false;
             }
 

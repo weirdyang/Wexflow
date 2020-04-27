@@ -104,5 +104,5 @@
 	"XmlToCsv": [ "selectFiles" ],
 	"Xslt": [ "selectFiles", "xsltPath", "outputFormat", "removeWexflowProcessingNodes", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"YamlToJson": [ "selectFiles" ],
-	"Zip": [ "selectFiles", "zipFileName" ]
+	"Zip": [ "selectFiles", "zipFileName", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ]
 }

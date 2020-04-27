@@ -49,7 +49,7 @@ namespace Wexflow.Tasks.FolderExists
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while checking the folder.", e);
                 success = false;
             }
 

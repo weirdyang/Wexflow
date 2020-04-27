@@ -57,7 +57,7 @@ namespace Wexflow.Tasks.FileContentMatch
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while checking the file.", e);
                 success = false;
             }
 

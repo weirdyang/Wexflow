@@ -55,7 +55,6 @@ namespace Wexflow.Tasks.FilesDiff
             catch (Exception e)
             {
                 ErrorFormat("An error occured while checking the files: {0}", e.Message);
-
                 ts = new TaskStatus(Status.Error);
             }
 

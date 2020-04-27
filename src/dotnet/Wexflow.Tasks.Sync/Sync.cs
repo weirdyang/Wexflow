@@ -53,7 +53,7 @@ namespace Wexflow.Tasks.Sync
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while synchronizing folders.", e);
                 success = false;
             }
 

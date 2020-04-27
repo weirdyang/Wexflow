@@ -10,19 +10,64 @@ namespace Wexflow.Tasks.Zip
     public class Zip : Task
     {
         public string ZipFileName { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Zip(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Zip(XElement xe, Workflow wf) : base(xe, wf)
         {
             ZipFileName = GetSetting("zipFileName");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Zipping files...");
 
-            bool success = true;
+            var success = true;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ZipFiles();
+                    }
+                }
+                else
+                {
+                    success = ZipFiles();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while zipping files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool ZipFiles()
+        {
+            var success = true;
             var files = SelectFiles();
             if (files.Length > 0)
             {
@@ -86,16 +131,7 @@ namespace Wexflow.Tasks.Zip
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
     }
 }
