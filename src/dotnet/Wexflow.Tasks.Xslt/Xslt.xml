@@ -96,5 +96,14 @@
     <Setting name="removeWexflowProcessingNodes" value="true|false" />
     <!-- Optional and defaults to xml. the output extension. Ex: html-->
     <Setting name="extension" value="$string" />
+
+    <!-- Optional. Samba computer name. -->
+    <Setting name="smbComputerName" value="$string" />
+    <!-- Optional. Samba domain name. -->
+    <Setting name="smbDomain" value="$string" />
+    <!-- Optional. Samba username. -->
+    <Setting name="smbUsername" value="$string" />
+    <!-- Optional. Samba password. -->
+    <Setting name="smbPassword" value="$string" />
   </Task>
 </Tasks>

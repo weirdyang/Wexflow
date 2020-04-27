@@ -102,7 +102,7 @@
 	"Wmi": [ "query" ],
 	"Workflow": [ "wexflowWebServiceUri", "action", "id" ],
 	"XmlToCsv": [ "selectFiles" ],
-	"Xslt": [ "selectFiles", "xsltPath", "outputFormat", "removeWexflowProcessingNodes" ],
+	"Xslt": [ "selectFiles", "xsltPath", "outputFormat", "removeWexflowProcessingNodes", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"YamlToJson": [ "selectFiles" ],
 	"Zip": [ "selectFiles", "zipFileName" ]
 }

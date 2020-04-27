@@ -16,23 +16,73 @@ namespace Wexflow.Tasks.Xslt
         public bool RemoveWexflowProcessingNodes { get; private set; }
         public string Extension { get; private set; }
         public string OutputFormat { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Xslt(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Xslt(XElement xe, Workflow wf) : base(xe, wf)
         {
             XsltPath = GetSetting("xsltPath");
             RemoveWexflowProcessingNodes = bool.Parse(GetSetting("removeWexflowProcessingNodes", "true"));
             Extension = GetSetting("extension", "xml");
             OutputFormat = GetSetting("outputFormat", "{0}_{1:yyyy-MM-dd-HH-mm-ss-fff}.{2}");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Transforming files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = TransformFiles(ref atLeastOneSucceed);
+                    }
+                }
+                else
+                {
+                    success = TransformFiles(ref atLeastOneSucceed);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSucceed)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool TransformFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
             foreach (FileInf file in SelectFiles())
             {
                 var destPath = Path.Combine(Workflow.WorkflowTempFolder,
@@ -99,7 +149,8 @@ namespace Wexflow.Tasks.Xslt
                             break;
                         default:
                             Error("Error in version option. Available options: 1.0, 2.0 or 3.0");
-                            return new TaskStatus(Status.Error, false);
+                            success = false;
+                            break;
                     }
 
                     // Set renameTo and tags from /*//<WexflowProcessing>//<File> nodes
@@ -166,20 +217,7 @@ namespace Wexflow.Tasks.Xslt
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
     }
 }
