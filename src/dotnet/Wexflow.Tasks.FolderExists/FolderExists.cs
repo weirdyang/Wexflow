@@ -1,25 +1,70 @@
 ﻿using System;
-using Wexflow.Core;
-using System.Xml.Linq;
 using System.Threading;
+using System.Xml.Linq;
+using Wexflow.Core;
 
 namespace Wexflow.Tasks.FolderExists
 {
     public class FolderExists : Task
     {
         public string Folder { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public FolderExists(XElement xe, Workflow wf): base(xe, wf)
+        public FolderExists(XElement xe, Workflow wf) : base(xe, wf)
         {
             Folder = GetSetting("folder");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Checking folder...");
-            
-            bool success;
 
+            var success = false;
+            TaskStatus status = null;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = CheckFolder(ref status);
+                    }
+                }
+                else
+                {
+                    success = CheckFolder(ref status);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            Info("Task finished");
+
+            if (status != null)
+            {
+                return status;
+            }
+            return new TaskStatus(Status.Success, success);
+        }
+
+        private bool CheckFolder(ref TaskStatus status)
+        {
+            var success = false;
             try
             {
                 success = System.IO.Directory.Exists(Folder);
@@ -41,12 +86,10 @@ namespace Wexflow.Tasks.FolderExists
             catch (Exception e)
             {
                 ErrorFormat("An error occured while checking the folder {0}. Error: {1}", Folder, e.Message);
-                return new TaskStatus(Status.Error, false);
+                status = new TaskStatus(Status.Error, false);
             }
 
-            Info("Task finished");
-
-            return new TaskStatus(Status.Success, success);
+            return success;
         }
     }
 }
