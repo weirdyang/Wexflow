@@ -2,7 +2,7 @@
 	"Approval": [ ],
 	"CsvToJson": [ "selectFiles", "separator" ],
 	"CsvToSql": [ "selectFiles", "tableName", "separator" ],
-	"CsvToXml": [ "selectFiles" ],
+	"CsvToXml": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"CsvToYaml": [ "selectFiles", "separator" ],
 	"DatabaseBackup": [ "serverConnection", "databaseName", "backupFilePath", "overwrite" ],
 	"DatabaseRestore": [ "serverConnection", "databaseName", "backupFilePath" ],

@@ -15,9 +15,9 @@
   -->
   <Task id="$int" name="Sha512" description="$string" enabled="true|false">
     <!-- 
-      The files loaded by the task having as id $taskId will be
-      used to calculate their SHA-512 hashes.
-    -->
+    The files loaded by the task having as id $taskId will be
+    used to calculate their SHA-512 hashes.
+  -->
     <Setting name="selectFiles" value="$taskId" />
     <Setting name="selectFiles" value="$taskId" />
     <!-- You can add as many selecteFiles as you want.-->
