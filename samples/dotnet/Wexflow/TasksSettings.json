@@ -83,7 +83,7 @@
 	"TextToSpeech": [ "selectFiles" ],
 	"Tgz": [ "selectFiles", "tgzFileName" ],
 	"Torrent": [ "selectFiles", "saveFolder" ],
-	"Touch": [ "file" ],
+	"Touch": [ "file", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Twilio": [ "accountSid", "authToken", "from", "to", "message" ],
 	"Twitter": [ "selectFiles", "consumerKey", "consumerSecret", "accessToken", "accessTokenSecret" ],
 	"UglifyCss": [ "selectFiles" ],
