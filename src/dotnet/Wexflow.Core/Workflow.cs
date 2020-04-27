@@ -210,7 +210,6 @@ namespace Wexflow.Core
         /// </summary>
         public DateTime StartedOn { get; private set; }
 
-        private bool _stopCalled;
         private readonly Queue<Job> _jobsQueue;
         private Thread _thread;
         private HistoryEntry _historyEntry;
@@ -948,7 +947,6 @@ namespace Wexflow.Core
                     try
                     {
                         StartedOn = DateTime.Now;
-                        _stopCalled = false;
                         IsRunning = true;
                         IsRejected = false;
 
@@ -1081,7 +1079,6 @@ namespace Wexflow.Core
                     }
                     catch (ThreadAbortException)
                     {
-                        _stopCalled = true;
                     }
                     catch (Exception e)
                     {
@@ -1102,10 +1099,6 @@ namespace Wexflow.Core
                     finally
                     {
                         // Cleanup
-                        //if (!_stopCalled)
-                        //{
-                        //    Logs.Clear();
-                        //}
                         Logs.Clear();
                         foreach (List<FileInf> files in FilesPerTask.Values) files.Clear();
                         foreach (List<Entity> entities in EntitiesPerTask.Values) entities.Clear();
@@ -1553,7 +1546,6 @@ namespace Wexflow.Core
                     {
                         Logs.AddRange(task.Logs);
                     }
-                    _stopCalled = true;
                     _thread.Abort();
                     var logs = string.Join("\r\n", Logs);
                     IsWaitingForApproval = false;
@@ -1585,7 +1577,6 @@ namespace Wexflow.Core
                     var msg = string.Format("An error occured while stopping the workflow : {0}", this);
                     Logger.Error(msg, e);
                     Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  ERROR - " + msg + "\r\n" + e);
-                    _stopCalled = false;
                 }
             }
 
