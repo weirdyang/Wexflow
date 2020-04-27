@@ -41,7 +41,7 @@
 	"HttpPut": [ "url", "params" ],
 	"ImagesConcat": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesCropper": [ "selectFiles", "width", "height", "x", "y", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"ImagesOverlay": [ "selectFiles" ],
+	"ImagesOverlay": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesResizer": [ "selectFiles", "width", "height", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"ImagesTransformer": [ "selectFiles", "outputFilePattern", "outputFormat", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"InstagramUploadImage": [ "selectFiles", "username", "password" ],

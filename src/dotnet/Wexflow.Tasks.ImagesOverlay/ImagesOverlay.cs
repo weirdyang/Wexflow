@@ -10,16 +10,62 @@ namespace Wexflow.Tasks.ImagesOverlay
 {
     public class ImagesOverlay : Task
     {
-        public ImagesOverlay(XElement xe, Workflow wf)
-          : base(xe, wf)
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
+
+        public ImagesOverlay(XElement xe, Workflow wf) : base(xe, wf)
         {
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Overlaying images...");
-            Status status = Status.Success;
+            var success = true;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = Overlay();
+                    }
+                }
+                else
+                {
+                    success = Overlay();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool Overlay()
+        {
+            var success = true;
             try
             {
                 var imageFiles = SelectFiles();
@@ -31,11 +77,8 @@ namespace Wexflow.Tasks.ImagesOverlay
                     var destPath = Path.Combine(Workflow.WorkflowTempFolder,
                             string.Format("ImagesOverlay_{0:yyyy-MM-dd-HH-mm-ss-fff}{1}", DateTime.Now, extension));
 
-                    var res = OverlayImages(imageFiles, destPath);
-                    if (!res)
-                    {
-                        status = Status.Error;
-                    }
+                    success = OverlayImages(imageFiles, destPath);
+
                 }
                 else if (imageFiles.Length == 1)
                 {
@@ -49,13 +92,10 @@ namespace Wexflow.Tasks.ImagesOverlay
             catch (Exception e)
             {
                 ErrorFormat("An error occured while overlaying images: {0}", e.Message);
-                status = Status.Error;
+                success = false;
             }
-
-            Info("Task finished");
-            return new TaskStatus(status);
+            return success;
         }
-
 
         private bool OverlayImages(FileInf[] imageFiles, string destPath)
         {
@@ -63,7 +103,7 @@ namespace Wexflow.Tasks.ImagesOverlay
             {
                 List<int> imageHeights = new List<int>();
                 List<int> imageWidths = new List<int>();
-                
+
                 foreach (FileInf imageFile in imageFiles)
                 {
                     using (Image img = Image.FromFile(imageFile.Path))
