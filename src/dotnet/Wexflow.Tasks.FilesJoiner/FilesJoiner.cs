@@ -18,22 +18,20 @@ namespace Wexflow.Tasks.FilesJoiner
     {
         public string DestFolder { get; }
         public bool Overwrite { get; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public FilesJoiner(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public FilesJoiner(XElement xe, Workflow wf) : base(xe, wf)
         {
             DestFolder = GetSetting("destFolder", string.Empty);
             Overwrite = bool.Parse(GetSetting("overwrite", "false"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
-
-        //private (string RenamedPath, int Number) GetNumberPart(string path)
-        //{
-        //    var lastUnderscoreIndex = path.LastIndexOf("_", StringComparison.InvariantCulture);
-        //    if (lastUnderscoreIndex == -1) return (path, -1);
-        //    var substring = path.Substring(lastUnderscoreIndex + 1, path.Length - lastUnderscoreIndex - 1);
-        //    var part = int.TryParse(substring, out var result) ? result : -1;
-        //    return part == -1 ? (path, -1) : (path.Remove(lastUnderscoreIndex), part);
-        //}
 
         private int GetNumberPartInt(string path)
         {
@@ -52,33 +50,6 @@ namespace Wexflow.Tasks.FilesJoiner
             var part = int.TryParse(substring, out var result) ? result : -1;
             return part == -1 ? (path) : (path.Remove(lastUnderscoreIndex));
         }
-
-        //private (string FileName, List<FileInf> Files)[] GetFiles()
-        //{
-        //    var files = SelectFiles().Select(f =>
-        //    {
-        //        var infoInt = GetNumberPartInt(f.Path);
-        //        var infoString = GetNumberPartString(f.Path);
-        //        return new
-        //        {
-        //            infoString,
-        //            infoInt,
-        //            FileInf = f
-        //        };
-        //    });
-
-        //    var groupedFiles = files
-        //        .GroupBy(f => f.RenamedPath)
-        //        .Select(g => (
-        //            FileName: Path.GetFileName(g.Key),
-        //            Files: g.ToList()
-        //                .OrderBy(p => p.Number)
-        //                .Select(parts => parts.FileInf)
-        //                .ToList()))
-        //        .ToArray();
-
-        //    return groupedFiles;
-        //}
 
         private GroupedFile[] GetFiles()
         {
@@ -115,15 +86,31 @@ namespace Wexflow.Tasks.FilesJoiner
         {
             Info("Concatenating files...");
 
-            bool success = true;
-            bool atLeastOneSucceed = false;
+            var success = true;
+            var atLeastOneSucceed = false;
 
-            foreach (var file in GetFiles())
+            try
             {
-                if (JoinFiles(file.FileName, file.Files.ToArray()))
-                    atLeastOneSucceed = true;
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = JoinFiles(ref atLeastOneSucceed);
+                    }
+                }
                 else
-                    success = false;
+                {
+                    success = JoinFiles(ref atLeastOneSucceed);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while concatenating files.", e);
+                success = false;
             }
 
             var status = Status.Success;
@@ -138,6 +125,23 @@ namespace Wexflow.Tasks.FilesJoiner
 
             Info("Task finished.");
             return new TaskStatus(status, false);
+        }
+
+        private bool JoinFiles(ref bool atLeastOneSucceed)
+        {
+            var success = true;
+            foreach (var file in GetFiles())
+            {
+                if (JoinFiles(file.FileName, file.Files.ToArray()))
+                {
+                    atLeastOneSucceed = true;
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            return success;
         }
 
         /// <summary>

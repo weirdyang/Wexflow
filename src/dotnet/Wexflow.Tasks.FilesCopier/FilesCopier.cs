@@ -36,16 +36,28 @@ namespace Wexflow.Tasks.FilesCopier
             var success = true;
             var atLeastOneSucceed = false;
 
-            if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+            try
             {
-                using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = CopyFiles(ref atLeastOneSucceed);
+                    }
+                }
+                else
                 {
                     success = CopyFiles(ref atLeastOneSucceed);
                 }
             }
-            else
+            catch (ThreadAbortException)
             {
-                success = CopyFiles(ref atLeastOneSucceed);
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
             }
 
             var status = Status.Success;

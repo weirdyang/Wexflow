@@ -20,7 +20,7 @@
 	"FilesEqual": [ "file1", "file2", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesExist": [ "file", "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesInfo": [ "selectFiles" ],
-	"FilesJoiner": [ "selectFiles", "destFolder", "overwrite" ],
+	"FilesJoiner": [ "selectFiles", "destFolder", "overwrite", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesLoader": [ "file", "folder", "regexPattern", "recursive", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesLoaderEx": [ "file", "folder", "regexPattern", "recursive", "addMaxCreateDate", "addMinCreateDate", "addMaxModifyDate", "addMinModifyDate", "removeMaxCreateDate", "removeMinCreateDate", "removeMaxModifyDate", "removeMinModifyDate" ],
 	"FilesMover": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
