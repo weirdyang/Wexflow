@@ -58,7 +58,7 @@ namespace Wexflow.Tasks.Unzip
             }
             catch (Exception e)
             {
-                ErrorFormat("An error occured while copying files.", e);
+                ErrorFormat("An error occured while extracting archives.", e);
                 success = false;
             }
 

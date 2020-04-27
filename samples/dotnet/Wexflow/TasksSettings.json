@@ -91,7 +91,7 @@
 	"UglifyJs": [ "selectFiles" ],
 	"Unrar": ["selectFiles", "destDir"],
 	"UnSevenZip": ["selectFiles", "destDir"],
-	"Untar": ["selectFiles", "destDir"],
+	"Untar": ["selectFiles", "destDir", "smbComputerName", "smbDomain", "smbUsername", "smbPassword"],
 	"Untgz": [ "selectFiles", "destDir" ],
 	"Unzip": [ "selectFiles", "destDir", "password", "overwrite", "createSubDirectoryWithDateTime", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Vimeo": [ "token" ],

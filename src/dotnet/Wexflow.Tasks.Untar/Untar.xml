@@ -13,5 +13,14 @@
     <!-- You can add as many selecteFiles as you want.-->
     <!-- Required. Destination directory where the archives will be extracted.-->
     <Setting name="destDir" value="$string" />
+
+    <!-- Optional. Samba computer name. -->
+    <Setting name="smbComputerName" value="$string" />
+    <!-- Optional. Samba domain name. -->
+    <Setting name="smbDomain" value="$string" />
+    <!-- Optional. Samba username. -->
+    <Setting name="smbUsername" value="$string" />
+    <!-- Optional. Samba password. -->
+    <Setting name="smbPassword" value="$string" />
   </Task>
 </Tasks>
