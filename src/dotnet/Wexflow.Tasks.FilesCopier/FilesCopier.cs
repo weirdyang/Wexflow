@@ -72,7 +72,7 @@ namespace Wexflow.Tasks.FilesCopier
             }
 
             Info("Task finished.");
-            return new TaskStatus(status, false);
+            return new TaskStatus(status);
         }
 
         private bool CopyFiles(ref bool atLeastOneSucceed)

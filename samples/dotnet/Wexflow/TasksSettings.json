@@ -14,7 +14,7 @@
 	"FileMatch": [ "dir", "pattern", "recurssive" ],
 	"FilesConcat": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesCopier": [ "selectFiles", "destFolder", "overwrite", "preserveFolderStructFrom", "allowCreateDirectory", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"FilesDecryptor": [ "selectFiles" ],
+	"FilesDecryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesDiff": [ "oldFile", "newFile", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesEncryptor": [ "selectFiles", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"FilesEqual": [ "file1", "file2", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
