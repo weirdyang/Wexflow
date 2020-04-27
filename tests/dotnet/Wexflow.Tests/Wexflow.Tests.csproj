@@ -95,6 +95,7 @@
     <Compile Include="FilesJoiner.cs" />
     <Compile Include="FilesLoaderEx.cs" />
     <Compile Include="Slack.cs" />
+    <Compile Include="FileSystemWatcher.cs" />
     <Compile Include="SshCmd.cs" />
     <Compile Include="Twilio.cs" />
     <Compile Include="Vimeo.cs" />
@@ -322,6 +323,10 @@
     <ProjectReference Include="..\..\..\src\dotnet\Wexflow.Tasks.FilesSplitter\Wexflow.Tasks.FilesSplitter.csproj">
       <Project>{7efe7108-621b-49a0-b592-77e402aadbdb}</Project>
       <Name>Wexflow.Tasks.FilesSplitter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\dotnet\Wexflow.Tasks.FileSystemWatcher\Wexflow.Tasks.FileSystemWatcher.csproj">
+      <Project>{9465947f-0326-491d-afba-4b64df1d282b}</Project>
+      <Name>Wexflow.Tasks.FileSystemWatcher</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\dotnet\Wexflow.Tasks.FolderExists\Wexflow.Tasks.FolderExists.csproj">
       <Project>{b7cbd3a6-8473-4ba3-b346-0894ead0d6c9}</Project>

@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.FilesRemover\Wexflow.Tasks.FilesRemover.csproj" />
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.FilesRenamer\Wexflow.Tasks.FilesRenamer.csproj" />
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.FilesSplitter\Wexflow.Tasks.FilesSplitter.csproj" />
+    <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.FileSystemWatcher\Wexflow.Tasks.FileSystemWatcher.csproj" />
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.FolderExists\Wexflow.Tasks.FolderExists.csproj" />
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.Ftp\Wexflow.Tasks.Ftp.csproj" />
     <ProjectReference Include="..\..\..\src\dotnet-core\Wexflow.Tasks.Guid\Wexflow.Tasks.Guid.csproj" />
