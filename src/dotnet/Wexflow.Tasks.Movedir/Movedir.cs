@@ -11,20 +11,58 @@ namespace Wexflow.Tasks.Movedir
         public string Folder { get; private set; }
         public string DestinationFolder { get; private set; }
         public bool Overwrite { get; private set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Movedir(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Movedir(XElement xe, Workflow wf) : base(xe, wf)
         {
             Folder = GetSetting("folder");
             DestinationFolder = GetSetting("destinationFolder");
             Overwrite = bool.Parse(GetSetting("overwrite", "false"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Moving directory...");
 
-            bool succeeded = false;
+            var success = false;
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = MoveDirectory();
+                    }
+                }
+                else
+                {
+                    success = MoveDirectory();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while moving folder.", e);
+                success = false;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(success ? Status.Success : Status.Error, false);
+        }
+
+        private bool MoveDirectory()
+        {
+            var success = false;
             try
             {
                 bool move = true;
@@ -44,7 +82,7 @@ namespace Wexflow.Tasks.Movedir
                 if (move)
                 {
                     Directory.Move(Folder, DestinationFolder);
-                    succeeded = true;
+                    success = true;
                     InfoFormat("Folder moved: {0} -> {1}", Folder, DestinationFolder);
                 }
             }
@@ -56,9 +94,7 @@ namespace Wexflow.Tasks.Movedir
             {
                 ErrorFormat("An error occured while moving the folder {0} to {1}. Error: {2}", Folder, DestinationFolder, e.Message);
             }
-
-            Info("Task finished.");
-            return new TaskStatus(succeeded ? Status.Success : Status.Error, false);
+            return success;
         }
 
         private void DeleteRec(string dir)

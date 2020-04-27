@@ -57,7 +57,7 @@
 	"MediaInfo": [ "selectFiles" ],
 	"MessageCorrect": [ "checkString" ],
 	"Mkdir": [ "folder", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
-	"Movedir": [ "folder", "destinationFolder", "overwrite" ],
+	"Movedir": [ "folder", "destinationFolder", "overwrite", "smbComputerName", "smbDomain", "smbUsername", "smbPassword" ],
 	"Now": [ "culture", "format" ],
 	"Ping": [ "server" ],
 	"ProcessInfo": [ "processName" ],
