@@ -1135,17 +1135,17 @@ namespace Wexflow.Server
                 var user = WexflowServer.WexflowEngine.GetUser(username);
                 if (user.Password.Equals(password))
                 {
-                    string[] taskSettings;
+                    TaskSetting[] taskSettings;
                     try
                     {
                         JObject o = JObject.Parse(File.ReadAllText(WexflowServer.WexflowEngine.TasksSettingsFile));
                         var token = o.SelectToken(args.taskName);
-                        taskSettings = token != null ? token.ToObject<string[]>() : new string[] { };
+                        taskSettings = token != null ? token.ToObject<TaskSetting[]>() : new TaskSetting[] { };
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
-                        taskSettings = new[] { "TasksSettings.json is not valid." };
+                        taskSettings = new TaskSetting[] { new TaskSetting { Name = "TasksSettings.json is not valid." } };
                     }
 
                     var taskSettingsStr = JsonConvert.SerializeObject(taskSettings);

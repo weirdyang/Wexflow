@@ -701,7 +701,7 @@
                                     let cell1Html = "<select class='form-control wf-setting-name'>";
                                     cell1Html += "<option value=''></option>";
                                     for (let i = 0; i < settings.length; i++) {
-                                        let settingName = settings[i];
+                                        let settingName = settings[i].Name;
                                         cell1Html += "<option value='" + settingName + "'" + ">" + settingName + "</option>";
                                     }
                                     cell1Html += "</select>";
@@ -802,6 +802,45 @@
                                             taskSettings += "</tr>";
                                         }
 
+                                        // Add required settings
+                                        const settingsIndex = settings.length;
+                                        let defaultSettingIndex = 0;
+                                        for (let i = 0; i < defaultSettings.length; i++) {
+                                            let settingName = defaultSettings[i].Name;
+                                            let required = defaultSettings[i].Required;
+
+                                            let found = false;
+                                            for (let j = 0; j < settings.length; j++) {
+                                                if (settings[j].Name === settingName) {
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (required === true && found === false) {
+                                                taskSettings += "<tr>";
+                                                taskSettings += "<td>";
+                                                taskSettings += '<p class="wf-setting-name">' + settingName + "</p>";
+                                                taskSettings += "</td>";
+                                                taskSettings += "<td>";
+                                                taskSettings += '<button type="button" class="wf-remove-setting btn btn-danger">' + language.get("wf-remove-setting") + '</button>';
+                                                taskSettings += "</td>";
+                                                taskSettings += "</tr>";
+                                                taskSettings += "<tr>";
+                                                taskSettings += "<td colspan='2'>";
+                                                taskSettings += '<input class="wf-setting-index" type="hidden" value="' + (settingsIndex + defaultSettingIndex) + '"><input class="form-control wf-setting-value" value="" type="text" />';
+                                                taskSettings += "</td>";
+                                                taskSettings += "</tr>";
+
+                                                tasks[index].Settings.push({
+                                                    "Name": settingName,
+                                                    "Value": "",
+                                                    "Attributes": []
+                                                });
+
+                                                defaultSettingIndex++;
+                                            }
+                                        }
+
                                         document.getElementById("task-settings-table").innerHTML = taskSettings;
 
                                         document.getElementById("taskid").value = tasks[index].Id;
@@ -817,6 +856,7 @@
                                                 let res = confirm(language.get("confirm-delete-setting"));
                                                 if (res === true) {
                                                     let innerIndex = parseInt(this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-index").value);
+                                                    console.log(innerIndex);
                                                     tasks[index].Settings = deleteRow(tasks[index].Settings, innerIndex);
                                                     // update indexes
                                                     let indexes = this.parentNode.parentNode.parentNode.querySelectorAll(".wf-setting-index");
@@ -909,6 +949,45 @@
                                             taskSettings += '<input class="wf-setting-index" type="hidden" value="' + i + '"><input class="form-control wf-setting-value" value="' + settingValue + '" type="text" />';
                                             taskSettings += "</td>";
                                             taskSettings += "</tr>";
+                                        }
+
+                                        // Add required settings
+                                        const settingsIndex = settings.length;
+                                        let defaultSettingIndex = 0;
+                                        for (let i = 0; i < defaultSettings.length; i++) {
+                                            let settingName = defaultSettings[i].Name;
+                                            let required = defaultSettings[i].Required;
+
+                                            let found = false;
+                                            for (let j = 0; j < settings.length; j++) {
+                                                if (settings[j].Name === settingName) {
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (required === true && found === false) {
+                                                taskSettings += "<tr>";
+                                                taskSettings += "<td>";
+                                                taskSettings += '<p class="wf-setting-name">' + settingName + "</p>";
+                                                taskSettings += "</td>";
+                                                taskSettings += "<td>";
+                                                taskSettings += '<button type="button" class="wf-remove-setting btn btn-danger">' + language.get("wf-remove-setting") + '</button>';
+                                                taskSettings += "</td>";
+                                                taskSettings += "</tr>";
+                                                taskSettings += "<tr>";
+                                                taskSettings += "<td colspan='2'>";
+                                                taskSettings += '<input class="wf-setting-index" type="hidden" value="' + (settingsIndex + defaultSettingIndex) + '"><input class="form-control wf-setting-value" value="" type="text" />';
+                                                taskSettings += "</td>";
+                                                taskSettings += "</tr>";
+
+                                                tasks[index].Settings.push({
+                                                    "Name": settingName,
+                                                    "Value": "",
+                                                    "Attributes": []
+                                                });
+
+                                                defaultSettingIndex++;
+                                            }
                                         }
 
                                         document.getElementById("task-settings-table").innerHTML = taskSettings;
