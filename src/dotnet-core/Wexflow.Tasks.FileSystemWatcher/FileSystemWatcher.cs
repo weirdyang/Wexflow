@@ -43,7 +43,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
                 }
 
                 Info("Initializing PollingFileSystemWatcher...");
-                Watcher = new PollingFileSystemWatcher(FolderToWatch, Filter);
+                Watcher = new PollingFileSystemWatcher(FolderToWatch, Filter, new EnumerationOptions { RecurseSubdirectories = IncludeSubFolders });
 
                 // Add event handlers.
                 Watcher.ChangedDetailed += OnChanged;
