@@ -144,10 +144,11 @@ copy dotnet-core\windows\install-MariaDB.bat %dstDir%
 dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
 :: License
-:: copy ..\LICENSE.txt %dstDir%
+copy ..\LICENSE.txt %dstDir%
 
 :: Documentation
-copy "..\src\dotnet\Wexflow.Core\Workflow.xml" %dstDir%\Documentation\
+copy "dotnet-core\doc\_README.txt" %dstDir%\Documentation\
+copy "..\src\dotnet\Wexflow.Core\Workflow.xml" %dstDir%\Documentation\_Workflow.xml
 copy "..\src\dotnet\Wexflow.Tasks.CsvToXml\CsvToXml.xml" %dstDir%\Documentation\
 copy "..\src\dotnet\Wexflow.Tasks.FileExists\FileExists.xml" %dstDir%\Documentation\
 copy "..\src\dotnet\Wexflow.Tasks.FilesConcat\FilesConcat.xml" %dstDir%\Documentation\
