@@ -51,7 +51,7 @@ Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\Wexflow.Server.exe"; DestD
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\Wexflow.Server.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\swagger-ui\*"; DestDir: "{app}\swagger-ui"; Flags: ignoreversion recursesubdirs
-Source: "..\src\dotnet\Wexflow.Core.SQLite\bin\x64\Release\x64\SQLite.Interop.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\dotnet\Wexflow.Core.Db.SQLite\bin\x64\Release\x64\SQLite.Interop.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\chromedriver.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\7z.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\x64\MediaInfo.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -236,12 +236,17 @@ Source: "..\src\dotnet\Wexflow.Tasks.FileSystemWatcher\FileSystemWatcher.xml"; D
 Source: "..\LICENSE.txt"; DestDir: "{app}\"; Flags: ignoreversion
 
 ; Wexflow's configuration
-Source: "..\samples\dotnet\Wexflow\*"; DestDir: "C:\Wexflow\"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
+Source: "..\samples\dotnet\Wexflow\Database\*"; DestDir: "C:\Wexflow\Database"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
+Source: "..\samples\dotnet\Wexflow\Workflows\*"; DestDir: "C:\Wexflow\Workflows"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
+Source: "..\samples\dotnet\Wexflow\Xslt\*"; DestDir: "C:\Wexflow\Xslt"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
+
+Source: "..\samples\dotnet\Wexflow\Approval\*"; DestDir: "C:\Wexflow\Approval"; Flags: ignoreversion recursesubdirs uninsneveruninstall
 Source: "..\samples\dotnet\Wexflow\TasksNames.json"; DestDir: "C:\Wexflow\"; Flags: ignoreversion recursesubdirs uninsneveruninstall
 Source: "..\samples\dotnet\Wexflow\TasksSettings.json"; DestDir: "C:\Wexflow\"; Flags: ignoreversion recursesubdirs uninsneveruninstall
 Source: "..\src\dotnet\Wexflow.Core\Wexflow.xml"; DestDir: "C:\Wexflow\"; Flags: ignoreversion recursesubdirs uninsneveruninstall
 Source: "..\src\dotnet\Wexflow.Core\Workflow.xsd"; DestDir: "C:\Wexflow\"; Flags: ignoreversion recursesubdirs uninsneveruninstall
 Source: "..\src\dotnet\Wexflow.Core\GlobalVariables.xml"; DestDir: "C:\Wexflow\"; Flags: ignoreversion recursesubdirs uninsneveruninstall
+
 Source: "..\samples\WexflowTesting\*"; DestDir: "C:\WexflowTesting\"; Components: samples; Flags: ignoreversion recursesubdirs uninsneveruninstall
 
 ; Wexflow.Scripts.MongoDB
@@ -332,6 +337,11 @@ Source: "..\src\dotnet\Wexflow.Scripts.Oracle\bin\x64\Release\*.dll"; DestDir: "
 Source: "..\src\dotnet\Wexflow.Scripts.MariaDB\bin\x64\Release\Wexflow.Scripts.MariaDB.exe"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
 Source: ".\dotnet\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.exe.config"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
 Source: "..\src\dotnet\Wexflow.Scripts.MariaDB\bin\x64\Release\*.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Core.Db.MariaDB\bin\x64\Release\System.Buffers.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Core.Db.MariaDB\bin\x64\Release\System.Memory.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Core.Db.MariaDB\bin\x64\Release\System.Numerics.Vectors.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Core.Db.MariaDB\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
+Source: "..\src\dotnet\Wexflow.Core.Db.MariaDB\bin\x64\Release\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}\Wexflow.Scripts.MariaDB"; Flags: ignoreversion recursesubdirs
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -382,12 +392,9 @@ Type: files; Name: "C:\Wexflow\Database\Wexflow.db"
 procedure InitializeWizard();
 begin
   CreateDir('C:\Wexflow');
-  //CreateDir('C:\Wexflow\Database');
-  //CreateDir('C:\Wexflow\Workflows');
+  CreateDir('C:\Wexflow\Database');
+  CreateDir('C:\Wexflow\Workflows');
   CreateDir('C:\Wexflow\Tasks');
   CreateDir('C:\Wexflow\Temp');
-  //CreateDir('C:\Wexflow\Temp\Workflows');
-  CreateDir('C:\Wexflow\Approval');  
-  //CreateDir('C:\Wexflow\Trash');  
-  //CreateDir('C:\WexflowTesting');
+  CreateDir('C:\Wexflow\Approval');
 end;

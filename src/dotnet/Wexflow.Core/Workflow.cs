@@ -213,6 +213,7 @@ namespace Wexflow.Core
         private readonly Queue<Job> _jobsQueue;
         private Thread _thread;
         private HistoryEntry _historyEntry;
+        private bool _stopCalled;
 
         /// <summary>
         /// Creates a new workflow.
@@ -905,6 +906,8 @@ namespace Wexflow.Core
 
             var thread = new Thread(() =>
                 {
+                    _stopCalled = false;
+                    Logs.Clear();
                     var msg = string.Format("{0} Workflow started - Instance Id: {1}", LogTag, InstanceId);
                     Logger.Info(msg);
                     Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  INFO - " + msg);
@@ -1079,6 +1082,7 @@ namespace Wexflow.Core
                     }
                     catch (ThreadAbortException)
                     {
+                        _stopCalled = true;
                     }
                     catch (Exception e)
                     {
@@ -1099,7 +1103,10 @@ namespace Wexflow.Core
                     finally
                     {
                         // Cleanup
-                        Logs.Clear();
+                        if (!_stopCalled)
+                        {
+                            Logs.Clear();
+                        }
                         foreach (List<FileInf> files in FilesPerTask.Values) files.Clear();
                         foreach (List<Entity> entities in EntitiesPerTask.Values) entities.Clear();
                         _thread = null;
@@ -1542,6 +1549,7 @@ namespace Wexflow.Core
             {
                 try
                 {
+                    _stopCalled = true;
                     foreach (var task in Tasks)
                     {
                         Logs.AddRange(task.Logs);
@@ -1574,6 +1582,7 @@ namespace Wexflow.Core
                 }
                 catch (Exception e)
                 {
+                    _stopCalled = false;
                     var msg = string.Format("An error occured while stopping the workflow : {0}", this);
                     Logger.Error(msg, e);
                     Logs.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) + "  ERROR - " + msg + "\r\n" + e);

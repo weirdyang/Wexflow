@@ -110,6 +110,7 @@ namespace Wexflow.Server
             Logger.Info("FileSystemWatcher.OnChanged");
             try
             {
+                Thread.Sleep(500);
                 var admin = WexflowEngine.GetUser(superAdminUsername);
                 WexflowEngine.SaveWorkflowFromFile(admin.GetId(), Core.Db.UserProfile.SuperAdministrator, e.FullPath, true);
             }

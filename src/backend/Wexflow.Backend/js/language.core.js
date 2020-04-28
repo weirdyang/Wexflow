@@ -27,7 +27,7 @@ function Language(domId, updateLanguage) {
             let spaces = "";
             if (spacesToAdd > 0) {
                 for (let j = 0; j < spacesToAdd; j++) {
-                    spaces += "&nbsp;";
+                    spaces += "&nbsp;&nbsp;";
                 }
             }
             return spaces;
