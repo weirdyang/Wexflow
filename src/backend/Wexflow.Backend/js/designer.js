@@ -377,9 +377,10 @@
             drag.innerHTML += "<div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>" + taskname + "</p></div><div class='blockyright'><img src='assets/close.svg' class='removediagblock'></div><div class='blockydiv'></div><div class='blockyinfo'>" + taskdesc + "</div>";
 
             let index = parseInt(drag.querySelector(".blockid").value);
+            let taskId = getNewTaskId();
             if (!tasks[index]) {
                 tasks[index] = {
-                    "Id": 0,
+                    "Id": taskId,
                     "Name": taskname,
                     "Description": "",
                     "IsEnabled": true,
@@ -456,7 +457,7 @@
                 taskstemp[i] = tasks[i];
             }
             taskstemp[blockId + 1] = {
-                "Id": 0,
+                "Id": getNewTaskId(),
                 "Name": drag.querySelector(".blockelemtype").value,
                 "Description": "",
                 "IsEnabled": true,
@@ -631,6 +632,18 @@
             aclick = false;
         }
 
+        let getNewTaskId = function () {
+            let index = 0;
+            let id = 0;
+            while (tasks[index]) {
+                if (id < tasks[index].Id) {
+                    id = tasks[index].Id;
+                }
+                index++;
+            }
+            return id + 1;
+        }
+
         let doneTouch = function (event) {
             if (event.type === "mouseup") {
                 updateTasks();
@@ -672,7 +685,7 @@
                     let index = parseInt(event.target.closest(".block").querySelector(".blockid").value);
                     if (!tasks[index] && isNaN(index) === false) {
                         tasks[index] = {
-                            "Id": 0,
+                            "Id": getNewTaskId(),
                             "Name": taskname,
                             "Description": "",
                             "IsEnabled": true,
@@ -856,7 +869,7 @@
                                                 let res = confirm(language.get("confirm-delete-setting"));
                                                 if (res === true) {
                                                     let innerIndex = parseInt(this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-index").value);
-                                                    console.log(innerIndex);
+
                                                     tasks[index].Settings = deleteRow(tasks[index].Settings, innerIndex);
                                                     // update indexes
                                                     let indexes = this.parentNode.parentNode.parentNode.querySelectorAll(".wf-setting-index");
@@ -1218,7 +1231,7 @@
                 for (let i = 0; i < blocks.length; i++) {
                     if (!tasks[i]) {
                         tasks[i] = {
-                            "Id": 0,
+                            "Id": getNewTaskId(),
                             "Name": blocks[i].data[0].value,
                             "Description": "",
                             "IsEnabled": true,
