@@ -70,6 +70,7 @@ Moreover, you can create custom integration with any other SaaS product on the c
 - [Cron scheduling](https://github.com/aelassas/Wexflow/wiki/Cron-scheduling)
 - [LiteDB, MongoDB, RavenDB and CosmosDB support](https://github.com/aelassas/Wexflow/wiki/Databases)
 - [PostgreSQL, SQL Server, MySQL and SQLite support](https://github.com/aelassas/Wexflow/wiki/Databases)
+- [Firebird, Oracle and MariaDB support](https://github.com/aelassas/Wexflow/wiki/Databases)
 - [Extensive logging and incident reporting](https://github.com/aelassas/Wexflow/wiki/Logging)
 - [Real-time stats](https://github.com/aelassas/Wexflow/wiki/Usage#dashboard)
 - [RESTful API](https://github.com/aelassas/Wexflow/wiki/RESTful-API)
