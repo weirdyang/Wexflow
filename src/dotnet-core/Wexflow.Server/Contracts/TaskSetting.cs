@@ -4,5 +4,7 @@
     {
         public string Name { get; set; }
         public bool Required { get; set; }
+        public string Type { get; set; }
+        public string[] List { get; set; }
     }
 }

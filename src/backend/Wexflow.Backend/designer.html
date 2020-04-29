@@ -51,7 +51,7 @@
         </div>
         <div id="search">
             <img src="assets/search.svg">
-            <input id="searchtasks" type="text" placeholder="Search tasks">
+            <input id="searchtasks" type="text" autocomplete="off" placeholder="Search tasks">
         </div>
         <div id="blocklist"></div>
     </div>
@@ -63,9 +63,9 @@
             <div id="header2"></div>
             <div id="proplist">
                 <p id="task-id-label" class="inputlabel">Id</p>
-                <input id="taskid" class="form-control inputtext" type="text" />
+                <input id="taskid" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="task-desc-label" class="inputlabel">Description</p>
-                <input id="taskdescription" class="form-control inputtext" type="text" />
+                <input id="taskdescription" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="task-enabled-label" class="inputlabel">Enabled</p>
                 <input id="taskenabled" class="inputtext" type="checkbox" checked />
                 <button id="btn-new-setting" type="button" class="wf-new-setting btn btn-secondary">New Setting</button>
@@ -83,17 +83,17 @@
             <p id="wfheader2"><span id="wf-settings-label">Workflow Settings</span>&nbsp;<small id="savehelp">Ctrl+S to save.</small></p>
             <div id="wfproplist">
                 <p id="wfid-label" class="inputlabel">Id</p>
-                <input id="wfid" class="form-control inputtext" type="text" />
+                <input id="wfid" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="wfname-label" class="inputlabel">Name</p>
-                <input id="wfname" class="form-control form-control inputtext" type="text" />
+                <input id="wfname" class="form-control form-control inputtext" type="text" autocomplete="off" />
                 <p id="wfdesc-label" class="inputlabel">Description</p>
-                <input id="wfdesc" class="form-control inputtext" type="text" />
+                <input id="wfdesc" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="wflaunchtype-label" class="inputlabel">LaunchType</p>
                 <select id='wflaunchtype' class="form-control inputtext"><option value=''></option><option value='startup'>Startup</option><option value='trigger'>Trigger</option><option value='periodic'>Periodic</option>><option value='cron'>Cron</option></select>
                 <p id="wfperiod-label" class="inputlabel">Period</p>
-                <input id="wfperiod" class="form-control inputtext" type="text" />
+                <input id="wfperiod" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="wfcronexp-label" class="inputlabel">Cron Expression</p>
-                <input id="wfcronexp" class="form-control inputtext" type="text" />
+                <input id="wfcronexp" class="form-control inputtext" type="text" autocomplete="off" />
                 <p id="wfenabled-label" class="inputlabel">Enabled</p>
                 <input id='wfenabled' class="inputtext" type='checkbox' checked />
                 <p id='wfapproval-label' class="inputlabel">Approval</p>
