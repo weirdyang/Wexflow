@@ -791,6 +791,8 @@
                                             }
 
                                             settingValueHtml += '</select>';
+                                        } else {
+                                            settingValueHtml += '<input class="form-control wf-setting-value" type="text" value="" />';
                                         }
                                         this.parentNode.parentNode.nextSibling.firstChild.innerHTML += settingValueHtml;
                                         this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-type").value = settingType;
