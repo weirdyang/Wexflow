@@ -124,18 +124,46 @@ namespace Wexflow.Tasks.FileSystemWatcher
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            Info("FileSystemWatcher.OnCreated started.");
             try
             {
-                ClearFiles();
-                Files.Add(new FileInf(e.FullPath, Id));
-                var tasks = GetTasks(OnFileCreated);
-                foreach (var task in tasks)
+                if (!IsDirectory(e.FullPath))
                 {
-                    task.Run();
-                    CurrentLogs.AddRange(task.Logs);
+                    Info("FileSystemWatcher.OnCreated started.");
+                    try
+                    {
+                        ClearFiles();
+                        Files.Add(new FileInf(e.FullPath, Id));
+                        var tasks = GetTasks(OnFileCreated);
+                        foreach (var task in tasks)
+                        {
+                            task.Run();
+                            CurrentLogs.AddRange(task.Logs);
+                        }
+                        Files.RemoveAll(f => f.Path == e.FullPath);
+                    }
+                    catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32)
+                    {
+                        Logger.InfoFormat("There is a sharing violation for the file {0}.", e.FullPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while triggering FileSystemWatcher.OnCreated on the file {0}. Message: {1}", e.FullPath, ex.Message);
+                    }
+                    Info("FileSystemWatcher.OnCreated finished.");
+
+                    try
+                    {
+                        Info("FileSystemWatcher.OnCreated updating database entry ...");
+                        var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
+                        entry.Logs = string.Join("\r\n", CurrentLogs);
+                        Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
+                        Info("FileSystemWatcher.OnCreated database entry updated.");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while updating FileSystemWatcher.OnCreated database entry.", ex);
+                    }
                 }
-                Files.RemoveAll(f => f.Path == e.FullPath);
             }
             catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32)
             {
@@ -145,36 +173,52 @@ namespace Wexflow.Tasks.FileSystemWatcher
             {
                 ErrorFormat("An error while triggering FileSystemWatcher.OnCreated on the file {0}. Message: {1}", e.FullPath, ex.Message);
             }
-            Info("FileSystemWatcher.OnCreated finished.");
-
-            try
-            {
-                Info("FileSystemWatcher.OnCreated updating database entry ...");
-                var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                entry.Logs = string.Join("\r\n", CurrentLogs);
-                Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
-                Info("FileSystemWatcher.OnCreated database entry updated.");
-            }
-            catch (Exception ex)
-            {
-                ErrorFormat("An error while updating FileSystemWatcher.OnCreated database entry.", ex);
-            }
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            Info("FileSystemWatcher.OnChanged started.");
             try
             {
-                ClearFiles();
-                Files.Add(new FileInf(e.FullPath, Id));
-                var tasks = GetTasks(OnFileChanged);
-                foreach (var task in tasks)
+                Thread.Sleep(500);
+
+                if (!IsDirectory(e.FullPath))
                 {
-                    task.Run();
-                    CurrentLogs.AddRange(task.Logs);
+                    Info("FileSystemWatcher.OnChanged started.");
+                    try
+                    {
+                        ClearFiles();
+                        Files.Add(new FileInf(e.FullPath, Id));
+                        var tasks = GetTasks(OnFileChanged);
+                        foreach (var task in tasks)
+                        {
+                            task.Run();
+                            CurrentLogs.AddRange(task.Logs);
+                        }
+                        Files.RemoveAll(f => f.Path == e.FullPath);
+                    }
+                    catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32)
+                    {
+                        Logger.InfoFormat("There is a sharing violation for the file {0}.", e.FullPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while triggering FileSystemWatcher.OnChanged on the file {0}. Message: {1}", e.FullPath, ex.Message);
+                    }
+                    Info("FileSystemWatcher.OnChanged finished.");
+
+                    try
+                    {
+                        Info("FileSystemWatcher.OnChanged updating database entry ...");
+                        var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
+                        entry.Logs = string.Join("\r\n", CurrentLogs);
+                        Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
+                        Info("FileSystemWatcher.OnChanged database entry updated.");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while updating FileSystemWatcher.OnChanged database entry.", ex);
+                    }
                 }
-                Files.RemoveAll(f => f.Path == e.FullPath);
             }
             catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32)
             {
@@ -183,20 +227,6 @@ namespace Wexflow.Tasks.FileSystemWatcher
             catch (Exception ex)
             {
                 ErrorFormat("An error while triggering FileSystemWatcher.OnChanged on the file {0}. Message: {1}", e.FullPath, ex.Message);
-            }
-            Info("FileSystemWatcher.OnChanged finished.");
-
-            try
-            {
-                Info("FileSystemWatcher.OnChanged updating database entry ...");
-                var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
-                entry.Logs = string.Join("\r\n", CurrentLogs);
-                Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
-                Info("FileSystemWatcher.OnChanged database entry updated.");
-            }
-            catch (Exception ex)
-            {
-                ErrorFormat("An error while updating FileSystemWatcher.OnChanged database entry.", ex);
             }
         }
 
@@ -263,6 +293,15 @@ namespace Wexflow.Tasks.FileSystemWatcher
             {
                 task.Files.Clear();
             }
+        }
+
+        private bool IsDirectory(string path)
+        {
+            FileAttributes attr = File.GetAttributes(path);
+
+            var isDir = attr.HasFlag(FileAttributes.Directory);
+
+            return isDir;
         }
 
     }
