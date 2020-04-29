@@ -17,7 +17,7 @@ You can find the documentation [here](https://github.com/aelassas/Wexflow/wiki).
 
 ## What's New?
 
-Check out the new [version 5.4](https://github.com/aelassas/Wexflow/releases/tag/v5.4). This version includes new features in the [designer](https://github.com/aelassas/Wexflow/wiki/Usage#designer) such as auto-saving, multi settings, multi delete, shortcuts, local variables and much more, support for parallel jobs in the manager, support for parallel jobs for approval workflows, support for parallel jobs in the dashboard, bug fixes, performance enhancements, and under the hood updates.
+Check out the new [version 5.5](https://github.com/aelassas/Wexflow/releases/tag/v5.5). This version is a major release with new features, performance enhancements, security fixes and bug fixes. This version includes a [hot folder](https://github.com/aelassas/Wexflow/wiki/Hot-folder) for workflows, [multi-language](https://github.com/aelassas/Wexflow/wiki/Multi-language) support, support for French and Danish languages, support for [Firebird](https://github.com/aelassas/Wexflow/wiki/Firebird), support for [Oracle](https://github.com/aelassas/Wexflow/wiki/Oracle), support for [MariaDB](https://github.com/aelassas/Wexflow/wiki/MariaDB), safe task creation in the designer, [FileSystemWatcher](https://github.com/aelassas/Wexflow/wiki/FileSystemWatcher) task for files monitoring, [SshCmd](https://github.com/aelassas/Wexflow/wiki/SshCmd) task for running SSH commands, [SMB/CIFS](https://github.com/aelassas/Wexflow/wiki/SMB) support, the ability to stop workflows in .net core, security fixes, bug fixes, performance enhancements, and under the hood updates.
 
 ## Wexflow
 
