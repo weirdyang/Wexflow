@@ -813,6 +813,17 @@
                                                 tasks[index].Settings[innerIndex].Value = this.checked.toString();
                                                 return false;
                                             };
+                                        } else if (settingType === "int") {
+                                            settingValueInput.onkeyup = function () {
+                                                if (isInt(this.value) === false) {
+                                                    this.style.borderColor = "#FF0000";
+                                                } else {
+                                                    this.style.borderColor = "#CCCCCC";
+                                                    let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
+                                                    tasks[index].Settings[innerIndex].Value = this.value;
+                                                }
+                                                return false;
+                                            };
                                         } else {
                                             settingValueInput.onkeyup = function () {
                                                 let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
@@ -823,17 +834,6 @@
 
                                         return false;
                                     }
-
-                                    // Bind onkeyup events
-                                    //let settingValueInput = settingsTable.getElementsByClassName("wf-setting-value")[sIndex];
-                                    //settingValueInput.onkeyup = function () {
-                                    //    if (tasks[index].Settings[sIndex]) {
-                                    //        // Calculate index from DOM
-                                    //        let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
-                                    //        tasks[index].Settings[innerIndex].Value = this.value;
-                                    //    }
-                                    //    return false;
-                                    //}
 
 
                                     // Bind remove event
@@ -933,11 +933,9 @@
                                                     taskSettings += '<input class="form-control wf-setting-value" value="" type="text" />';
                                                 } else if (settingType === "password") {
                                                     taskSettings += '<input class="form-control wf-setting-value" value="" type="password" />';
-                                                }
-                                                else if (settingType === "bool") {
+                                                } else if (settingType === "bool") {
                                                     taskSettings += '<input class="wf-setting-value" value="" type="checkbox" />';
-                                                }
-                                                else if (settingType === "list") {
+                                                } else if (settingType === "list") {
                                                     taskSettings += '<select class="form-control wf-setting-value">';
                                                     taskSettings += '<option value=""></option>';
 
@@ -1040,6 +1038,17 @@
                                                     let sindex = this.previousElementSibling.previousElementSibling.value;
                                                     tasks[index].Settings[sindex].Value = this.checked.toString();
                                                     updateTasks();
+                                                };
+                                            } else if (settingType === "int") {
+                                                settingValue.onkeyup = function () {
+                                                    if (isInt(this.value) === false) {
+                                                        this.style.borderColor = "#FF0000";
+                                                    } else {
+                                                        this.style.borderColor = "#CCCCCC";
+                                                        let sindex = this.previousElementSibling.previousElementSibling.value;
+                                                        tasks[index].Settings[sindex].Value = this.value;
+                                                        updateTasks();
+                                                    }
                                                 };
                                             } else {
                                                 settingValue.onkeyup = function () {
@@ -1222,6 +1231,17 @@
                                                     let sindex = this.previousElementSibling.previousElementSibling.value;
                                                     tasks[index].Settings[sindex].Value = this.checked.toString();
                                                     updateTasks();
+                                                };
+                                            } else if (settingType === "int") {
+                                                settingValue.onkeyup = function () {
+                                                    if (isInt(this.value) === false) {
+                                                        this.style.borderColor = "#FF0000";
+                                                    } else {
+                                                        this.style.borderColor = "#CCCCCC";
+                                                        let sindex = this.previousElementSibling.previousElementSibling.value;
+                                                        tasks[index].Settings[sindex].Value = this.value;
+                                                        updateTasks();
+                                                    }
                                                 };
                                             } else {
                                                 settingValue.onkeyup = function () {
