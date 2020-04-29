@@ -768,8 +768,9 @@
                                         }
 
                                         let settingValueElt = this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-value");
-                                        //console.log(this.parentNode.parentNode.nextSibling);
-                                        settingValueElt.remove();
+                                        if (settingValueElt) {
+                                            settingValueElt.remove();
+                                        }
 
                                         let settingValueHtml = "";
                                         if (settingType === "string" || settingType === "int") {
@@ -796,40 +797,41 @@
 
                                         // bind events
                                         let settingValueInput = this.parentNode.parentNode.nextSibling.querySelector(".wf-setting-value");
-
-                                        if (settingType === "list") {
-                                            settingValueInput.onchange = function () {
-                                                let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
-                                                tasks[index].Settings[innerIndex].Value = this.value;
-                                                return false;
-                                            };
-                                        }
-                                        else if (settingType === "bool") {
-                                            let innerIndex = parseInt(settingValueInput.parentNode.querySelector(".wf-setting-index").value);
-                                            tasks[index].Settings[innerIndex].Value = "false";
-
-                                            settingValueInput.onchange = function () {
-                                                let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
-                                                tasks[index].Settings[innerIndex].Value = this.checked.toString();
-                                                return false;
-                                            };
-                                        } else if (settingType === "int") {
-                                            settingValueInput.onkeyup = function () {
-                                                if (isInt(this.value) === false) {
-                                                    this.style.borderColor = "#FF0000";
-                                                } else {
-                                                    this.style.borderColor = "#CCCCCC";
+                                        if (settingValueInput) {
+                                            if (settingType === "list") {
+                                                settingValueInput.onchange = function () {
                                                     let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
                                                     tasks[index].Settings[innerIndex].Value = this.value;
-                                                }
-                                                return false;
-                                            };
-                                        } else {
-                                            settingValueInput.onkeyup = function () {
-                                                let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
-                                                tasks[index].Settings[innerIndex].Value = this.value;
-                                                return false;
-                                            };
+                                                    return false;
+                                                };
+                                            }
+                                            else if (settingType === "bool") {
+                                                let innerIndex = parseInt(settingValueInput.parentNode.querySelector(".wf-setting-index").value);
+                                                tasks[index].Settings[innerIndex].Value = "false";
+
+                                                settingValueInput.onchange = function () {
+                                                    let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
+                                                    tasks[index].Settings[innerIndex].Value = this.checked.toString();
+                                                    return false;
+                                                };
+                                            } else if (settingType === "int") {
+                                                settingValueInput.onkeyup = function () {
+                                                    if (isInt(this.value) === false) {
+                                                        this.style.borderColor = "#FF0000";
+                                                    } else {
+                                                        this.style.borderColor = "#CCCCCC";
+                                                        let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
+                                                        tasks[index].Settings[innerIndex].Value = this.value;
+                                                    }
+                                                    return false;
+                                                };
+                                            } else {
+                                                settingValueInput.onkeyup = function () {
+                                                    let innerIndex = parseInt(this.parentNode.querySelector(".wf-setting-index").value);
+                                                    tasks[index].Settings[innerIndex].Value = this.value;
+                                                    return false;
+                                                };
+                                            }
                                         }
 
                                         return false;
