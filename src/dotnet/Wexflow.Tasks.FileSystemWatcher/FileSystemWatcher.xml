@@ -10,6 +10,8 @@
     <Setting name="filter" value="$string" />
     <!-- Optional. Indicates whether sub folders should be included in the wtach process or not. Defaults to false. -->
     <Setting name="includeSubFolders" value="true|false" />
+    <!-- onFileFound event. List of tasks to trigger on file found before starting watch process. Example: 2, 3 -->
+    <Setting name="onFileFound" value="$string" />
     <!-- onFileCreated event. List of tasks to trigger on file created. Example: 2, 3 -->
     <Setting name="onFileCreated" value="$string" />
     <!-- onFileChanged event. List of tasks to trigger on file changed. Example: 4, 5, 6 -->

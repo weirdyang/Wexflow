@@ -14,6 +14,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
         public static string FolderToWatch { get; private set; }
         public static string Filter { get; private set; }
         public static bool IncludeSubFolders { get; private set; }
+        public static string OnFileFound { get; private set; }
         public static string OnFileCreated { get; private set; }
         public static string OnFileChanged { get; private set; }
         public static string OnFileDeleted { get; private set; }
@@ -24,6 +25,7 @@ namespace Wexflow.Tasks.FileSystemWatcher
             FolderToWatch = GetSetting("folderToWatch");
             Filter = GetSetting("filter", "*.*");
             IncludeSubFolders = bool.Parse(GetSetting("includeSubFolders", "false"));
+            OnFileFound = GetSetting("onFileFound");
             OnFileCreated = GetSetting("onFileCreated");
             OnFileChanged = GetSetting("onFileChanged");
             OnFileDeleted = GetSetting("onFileDeleted");
@@ -41,6 +43,50 @@ namespace Wexflow.Tasks.FileSystemWatcher
                     ErrorFormat("The folder {0} does not exist.", FolderToWatch);
                     return new TaskStatus(Status.Error);
                 }
+
+                Info("Checking existing files...");
+                var files = GetFiles();
+
+                foreach (var file in files)
+                {
+                    InfoFormat("FileSystemWatcher.OnFound started for {0}", file);
+                    try
+                    {
+                        ClearFiles();
+                        Files.Add(new FileInf(file, Id));
+                        var tasks = GetTasks(OnFileFound);
+                        foreach (var task in tasks)
+                        {
+                            task.Run();
+                            CurrentLogs.AddRange(task.Logs);
+                        }
+                        Files.RemoveAll(f => f.Path == file);
+                    }
+                    catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32)
+                    {
+                        Logger.InfoFormat("There is a sharing violation for the file {0}.", file);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while triggering FileSystemWatcher.OnFound on the file {0}. Message: {1}", file, ex.Message);
+                    }
+                    Info("FileSystemWatcher.OnFound finished.");
+
+                    try
+                    {
+                        Info("FileSystemWatcher.OnFound updating database entry ...");
+                        var entry = Workflow.Database.GetEntry(Workflow.Id, Workflow.InstanceId);
+                        entry.Logs = string.Join("\r\n", CurrentLogs);
+                        Workflow.Database.UpdateEntry(entry.GetDbId(), entry);
+                        Info("FileSystemWatcher.OnFound database entry updated.");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorFormat("An error while updating FileSystemWatcher.OnCreated database entry.", ex);
+                    }
+                }
+                Info("Checking existing files finished.");
+
 
                 Info("Initializing PollingFileSystemWatcher...");
                 Watcher = new PollingFileSystemWatcher(FolderToWatch, Filter, new EnumerationOptions { RecurseSubdirectories = IncludeSubFolders });
@@ -82,6 +128,18 @@ namespace Wexflow.Tasks.FileSystemWatcher
 
             Info("Task finished");
             return new TaskStatus(Status.Success);
+        }
+
+        private string[] GetFiles()
+        {
+            if (IncludeSubFolders)
+            {
+                return Directory.GetFiles(FolderToWatch, Filter, SearchOption.AllDirectories);
+            }
+            else
+            {
+                return Directory.GetFiles(FolderToWatch, Filter, SearchOption.TopDirectoryOnly);
+            }
         }
 
         private void OnChanged(object source, PollingFileSystemEventArgs e)
