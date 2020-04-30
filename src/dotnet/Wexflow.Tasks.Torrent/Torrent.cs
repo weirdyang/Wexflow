@@ -9,36 +9,76 @@ namespace Wexflow.Tasks.Torrent
     public class Torrent : Task
     {
         public string SaveFolder { get; set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public Torrent(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public Torrent(XElement xe, Workflow wf) : base(xe, wf)
         {
             SaveFolder = GetSetting("saveFolder");
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Downloading torrents...");
 
-            Status status = Status.Success;
-            bool succeeded = true;
-            bool atLeastOneSuccess = false;
+            var success = true;
+            var atLeastOneSuccess = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = Download(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = Download(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while creating tgz.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status);
+        }
+
+        private bool Download(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             try
             {
                 var torrents = SelectFiles();
                 foreach (var torrent in torrents)
                 {
-                    succeeded &= DownloadTorrent(torrent.Path);
-                    if (!atLeastOneSuccess && succeeded) atLeastOneSuccess = true;
-                }
-
-                if (!succeeded && atLeastOneSuccess)
-                {
-                    status = Status.Warning;
-                }
-                else if (!succeeded)
-                {
-                    status = Status.Error;
+                    success &= DownloadTorrent(torrent.Path);
+                    if (!atLeastOneSuccess && success) atLeastOneSuccess = true;
                 }
 
             }
@@ -49,11 +89,9 @@ namespace Wexflow.Tasks.Torrent
             catch (Exception e)
             {
                 ErrorFormat("An error occured while downloading torrents: {0}", e.Message);
-                status = Status.Error;
+                success = false;
             }
-
-            Info("Task finished.");
-            return new TaskStatus(status);
+            return success;
         }
 
         private bool DownloadTorrent(string path)
@@ -62,8 +100,8 @@ namespace Wexflow.Tasks.Torrent
             {
                 ClientEngine engine = new ClientEngine(new EngineSettings());
 
-                MonoTorrent.Torrent torrent = MonoTorrent.Torrent.Load(@"C:\WexflowTesting\Torrent\sample.torrent");
-                TorrentManager torrentManager = new TorrentManager(torrent, @"C:\WexflowTesting\Torrent\", new TorrentSettings());
+                MonoTorrent.Torrent torrent = MonoTorrent.Torrent.Load(path);
+                TorrentManager torrentManager = new TorrentManager(torrent, SaveFolder, new TorrentSettings());
                 engine.Register(torrentManager);
                 System.Threading.Tasks.Task task = engine.StartAllAsync();
                 task.Wait();

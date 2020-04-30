@@ -63,7 +63,7 @@ namespace Wexflow.Tasks.Tgz
             }
 
             Info("Task finished.");
-            return new TaskStatus(status, false);
+            return new TaskStatus(status);
         }
 
         private bool CreateTgz()

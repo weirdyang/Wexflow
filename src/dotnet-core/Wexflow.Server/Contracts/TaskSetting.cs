@@ -6,5 +6,6 @@
         public bool Required { get; set; }
         public string Type { get; set; }
         public string[] List { get; set; }
+        public string DefaultValue { get; set; }
     }
 }
