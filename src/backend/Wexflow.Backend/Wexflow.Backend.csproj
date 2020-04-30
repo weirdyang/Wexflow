@@ -80,6 +80,7 @@
     <Content Include="assets\eye.svg" />
     <Content Include="assets\eyeblue.svg" />
     <Content Include="assets\grabme.svg" />
+    <Content Include="assets\grid.gif" />
     <Content Include="assets\heart.svg" />
     <Content Include="assets\doc.png" />
     <Content Include="assets\log.svg" />
