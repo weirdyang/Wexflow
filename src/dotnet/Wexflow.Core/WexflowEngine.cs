@@ -302,7 +302,8 @@ namespace Wexflow.Core
             try
             {
                 var wf = new Workflow(
-                      1
+                       this
+                    , 1
                     , new Dictionary<Guid, Workflow>()
                     , workflow.GetDbId()
                     , workflow.Xml
@@ -355,7 +356,8 @@ namespace Wexflow.Core
                         try
                         {
                             new Workflow(
-                              1
+                              this
+                            , 1
                             , new Dictionary<Guid, Workflow>()
                             , "-1"
                             , xml
@@ -397,7 +399,8 @@ namespace Wexflow.Core
                         try
                         {
                             new Workflow(
-                              1
+                              this
+                            , 1
                             , new Dictionary<Guid, Workflow>()
                             , "-1"
                             , xml
@@ -689,7 +692,7 @@ namespace Wexflow.Core
                 {
                     if (wf.LaunchType == LaunchType.Startup)
                     {
-                        wf.Start();
+                        wf.StartAsync();
                     }
                     else if (wf.LaunchType == LaunchType.Periodic)
                     {
@@ -811,7 +814,7 @@ namespace Wexflow.Core
             {
                 if (wf.IsEnabled)
                 {
-                    var instanceId = wf.Start();
+                    var instanceId = wf.StartAsync();
                     return instanceId;
                 }
             }

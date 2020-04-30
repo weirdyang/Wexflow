@@ -535,6 +535,10 @@
       <Project>{d2247c6a-d04e-4df0-bc2a-01d99c173e69}</Project>
       <Name>Wexflow.Tasks.SshCmd</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Wexflow.Tasks.SubWorkflow\Wexflow.Tasks.SubWorkflow.csproj">
+      <Project>{4630cd57-eb1e-48ef-99c3-5513c63f7b8d}</Project>
+      <Name>Wexflow.Tasks.SubWorkflow</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Tasks.Sync\Wexflow.Tasks.Sync.csproj">
       <Project>{5784b8a2-51c4-4b1a-8ec2-322a4ab168c1}</Project>
       <Name>Wexflow.Tasks.Sync</Name>

@@ -65,7 +65,7 @@ namespace Wexflow.Tasks.Sync
             }
 
             Info("Task finished.");
-            return new TaskStatus(status, false);
+            return new TaskStatus(status);
         }
 
         private bool SyncFolders()

@@ -1388,12 +1388,11 @@ namespace Wexflow.Server
                         var json = RequestStream.FromStream(Request.Body).AsString();
                         JObject o = JObject.Parse(json);
                         var xml = o.Value<string>("xml");
-                        //xml = CleanupXml(xml);
-
                         var xdoc = XDocument.Parse(xml);
 
                         new Core.Workflow(
-                                1
+                                 WexflowServer.WexflowEngine
+                              , 1
                               , new Dictionary<Guid, Core.Workflow>()
                               , "-1"
                               , xdoc.ToString()

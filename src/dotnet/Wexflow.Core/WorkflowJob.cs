@@ -18,7 +18,7 @@ namespace Wexflow.Core
 
             System.Threading.Tasks.Task task = new System.Threading.Tasks.Task(() =>
             {
-                workflow.Start();
+                workflow.StartAsync();
             });
             task.Start();
 
