@@ -58,6 +58,7 @@
 	{ "Name": "Sha512", "Description": "Generates SHA-512 hashes of a collection of files."},
 	{ "Name": "Slack", "Description": "Sends slack messages."},
 	{ "Name": "SshCmd", "Description": "Executes an SSH command."},
+	{ "Name": "SubWorkflow", "Description": "Kicks off a sub workflow."},
 	{ "Name": "TextsDecryptor", "Description": "Decrypts a collection of files encrypted by the task TextsEncryptor."},
 	{ "Name": "TextsEncryptor", "Description": "Encrypts a collection of text based files."},
 	{ "Name": "Touch", "Description": "Creates a collection of empty files."},

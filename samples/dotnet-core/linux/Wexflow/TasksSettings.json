@@ -58,6 +58,7 @@
 	"Sha512": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Slack": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "token", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
 	"SshCmd": [ {"Name": "host", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name":"port", "Required": false, "Type": "int", "List": [], "DefaultValue": "22"}, {"Name": "username", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "password", "Required": true, "Type": "password", "List": [], "DefaultValue": ""}, {"Name": "cmd", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "timeout", "Required": false, "Type": "int", "List": [], "DefaultValue": "60"} ],
+	"SubWorkflow": [ {"Name": "id", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "mode", "Required": false, "Type": "list", "List": ["sync", "async"], "DefaultValue": "sync"} ],
 	"TextsDecryptor": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"TextsEncryptor": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Touch": [ {"Name": "file", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
