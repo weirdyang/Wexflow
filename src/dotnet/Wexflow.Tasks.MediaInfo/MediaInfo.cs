@@ -3,6 +3,8 @@ using Wexflow.Core;
 using System.Xml.Linq;
 using System.IO;
 using System.Threading;
+using MediaInfoDotNet.Models;
+using MediaInfoDotNet;
 
 namespace Wexflow.Tasks.MediaInfo
 {
@@ -92,15 +94,13 @@ namespace Wexflow.Tasks.MediaInfo
                 {
                     if (xdoc.Root != null)
                     {
-                        XElement xfile = new XElement("File",
+                        var xfile = new XElement("File",
                             new XAttribute("path", file.Path),
                             new XAttribute("name", file.FileName));
 
-                        MediaInfoLib mediaInfo = new MediaInfoLib();
-                        mediaInfo.Open(file.Path);
-                        mediaInfo.Option("Complete", "1");
-                        string info = mediaInfo.Inform();
-                        string[] infos = info.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        var mediaFile = new MediaFile(file.Path);
+                        var info = mediaFile.Inform;
+                        var infos = info.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
                         XElement xgeneral = null;
                         XElement xaudio = null;
