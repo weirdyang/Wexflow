@@ -38,14 +38,15 @@ namespace Wexflow.Tasks.Ftp
             var password = GetSetting("password");
             var path = GetSetting("path");
             var protocol = (Protocol)Enum.Parse(typeof(Protocol), GetSetting("protocol"), true);
+            var debugLogs = bool.Parse(GetSetting("debugLogs", "false"));
             switch (protocol)
             {
                 case Protocol.Ftp:
-                    _plugin = new PluginFtp(this, server, port, user, password, path);
+                    _plugin = new PluginFtp(this, server, port, user, password, path, debugLogs);
                     break;
                 case Protocol.Ftps:
                     var encryptionMode = (EncryptionMode)Enum.Parse(typeof(EncryptionMode), GetSetting("encryption"), true);
-                    _plugin = new PluginFtps(this, server, port, user, password, path, encryptionMode);
+                    _plugin = new PluginFtps(this, server, port, user, password, path, encryptionMode, debugLogs);
                     break;
                 case Protocol.Sftp:
                     var privateKeyPath = GetSetting("privateKeyPath", string.Empty);

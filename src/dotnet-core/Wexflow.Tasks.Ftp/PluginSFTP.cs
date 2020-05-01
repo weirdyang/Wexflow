@@ -6,13 +6,13 @@ using Renci.SshNet.Sftp;
 
 namespace Wexflow.Tasks.Ftp
 {
-    public class PluginSftp:PluginBase
+    public class PluginSftp : PluginBase
     {
         public string PrivateKeyPath { get; set; }
         public string Passphrase { get; set; }
 
         public PluginSftp(Task task, string server, int port, string user, string password, string path, string privateKeyPath, string passphrase)
-            :base(task, server, port, user, password, path)
+            : base(task, server, port, user, password, path, false)
         {
             PrivateKeyPath = privateKeyPath;
             Passphrase = passphrase;

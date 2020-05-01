@@ -3,7 +3,7 @@
 namespace Wexflow.Tasks.Ftp
 {
     public enum Protocol
-    { 
+    {
         Ftp,
         Ftps,
         Sftp
@@ -17,8 +17,9 @@ namespace Wexflow.Tasks.Ftp
         public string Password { get; private set; }
         public string Path { get; private set; }
         public Task Task { get; private set; }
+        public bool DebugLogs { get; private set; }
 
-		protected PluginBase(Task task, string server, int port, string user, string password, string path)
+        protected PluginBase(Task task, string server, int port, string user, string password, string path, bool debugLogs)
         {
             Task = task;
             Server = server;
@@ -26,6 +27,7 @@ namespace Wexflow.Tasks.Ftp
             User = user;
             Password = password;
             Path = path;
+            DebugLogs = debugLogs;
         }
 
         public abstract FileInf[] List();

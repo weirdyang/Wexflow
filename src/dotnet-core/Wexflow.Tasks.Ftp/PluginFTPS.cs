@@ -5,15 +5,15 @@ using System.Net;
 
 namespace Wexflow.Tasks.Ftp
 {
-    public class PluginFtps: PluginBase
+    public class PluginFtps : PluginBase
     {
         private readonly FtpEncryptionMode _encryptionMode;
 
-        public PluginFtps(Task task, string server, int port, string user, string password, string path, EncryptionMode encryptionMode)
-            :base(task, server, port, user, password, path)
+        public PluginFtps(Task task, string server, int port, string user, string password, string path, EncryptionMode encryptionMode, bool debugLogs)
+            : base(task, server, port, user, password, path, debugLogs)
         {
             switch (encryptionMode)
-            { 
+            {
                 case EncryptionMode.Explicit:
                     _encryptionMode = FtpEncryptionMode.Explicit;
                     break;
@@ -23,18 +23,46 @@ namespace Wexflow.Tasks.Ftp
             }
         }
 
+        private void OnLogEvent(FtpTraceLevel ftpTraceLevel, string logMessage)
+        {
+            if (DebugLogs)
+            {
+                switch (ftpTraceLevel)
+                {
+                    case FtpTraceLevel.Error:
+                        Task.Error(logMessage);
+                        break;
+                    case FtpTraceLevel.Verbose:
+                        Task.Info(logMessage);
+                        break;
+                    case FtpTraceLevel.Warn:
+                        Task.Info(logMessage);
+                        break;
+                    case FtpTraceLevel.Info:
+                    default:
+                        Task.Info(logMessage);
+                        break;
+                }
+            }
+        }
+
         public override FileInf[] List()
         {
             var files = new List<FileInf>();
 
             var client = new FtpClient
-                {
-                    Host = Server,
-                    Port = Port,
-                    Credentials = new NetworkCredential(User, Password),
-                    DataConnectionType = FtpDataConnectionType.PASV,
-                    EncryptionMode = _encryptionMode
-                };
+            {
+                Host = Server,
+                Port = Port,
+                Credentials = new NetworkCredential(User, Password),
+                DataConnectionType = FtpDataConnectionType.PASV,
+                EncryptionMode = _encryptionMode
+            };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.ValidateCertificate += OnValidateCertificate;
             client.Connect();
@@ -53,7 +81,13 @@ namespace Wexflow.Tasks.Ftp
 
         public override void Upload(FileInf file)
         {
-            var client = new FtpClient {Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password)};
+            var client = new FtpClient { Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password) };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
+
             client.ValidateCertificate += OnValidateCertificate;
             client.DataConnectionType = FtpDataConnectionType.PASV;
             client.EncryptionMode = _encryptionMode;
@@ -75,12 +109,17 @@ namespace Wexflow.Tasks.Ftp
         public override void Download(FileInf file)
         {
             var client = new FtpClient
-                {
-                    Host = Server,
-                    Port = Port,
-                    Credentials = new NetworkCredential(User, Password),
-                    EncryptionMode = _encryptionMode
-                };
+            {
+                Host = Server,
+                Port = Port,
+                Credentials = new NetworkCredential(User, Password),
+                EncryptionMode = _encryptionMode
+            };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.ValidateCertificate += OnValidateCertificate;
             client.Connect();
@@ -95,12 +134,17 @@ namespace Wexflow.Tasks.Ftp
         public override void Delete(FileInf file)
         {
             var client = new FtpClient
-                {
-                    Host = Server,
-                    Port = Port,
-                    Credentials = new NetworkCredential(User, Password),
-                    EncryptionMode = _encryptionMode
-                };
+            {
+                Host = Server,
+                Port = Port,
+                Credentials = new NetworkCredential(User, Password),
+                EncryptionMode = _encryptionMode
+            };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.ValidateCertificate += OnValidateCertificate;
             client.Connect();

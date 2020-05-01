@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Ftp.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Ftp.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentFTP" Version="32.4.0" />
     <PackageReference Include="SSH.NET" Version="2016.1.0" />
   </ItemGroup>

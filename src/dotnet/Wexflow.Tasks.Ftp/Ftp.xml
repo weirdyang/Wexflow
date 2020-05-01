@@ -38,6 +38,8 @@
     <Setting name="retryCount" value="$int" />
     <!-- Optional and defaults to 1500 (milliseconds). The retry timeout between two tries. -->
     <Setting name="retryTimeout" value="$int" />
+    <!-- Optional and defaults to false. Indicates whether to enable debug logs or not. Works for FTP and FTPS only. -->
+    <Setting name="debugLogs" value="$bool" />
 
     <!-- Optional. Samba computer name. -->
     <Setting name="smbComputerName" value="$string" />

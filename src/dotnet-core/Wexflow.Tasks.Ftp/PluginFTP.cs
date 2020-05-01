@@ -10,16 +10,44 @@ namespace Wexflow.Tasks.Ftp
     {
         private const int BufferSize = 1 * 1024 * 1024; // 1 MB
 
-        public PluginFtp(Task task, string server, int port, string user, string password, string path)
-            :base(task, server, port, user, password, path)
+        public PluginFtp(Task task, string server, int port, string user, string password, string path, bool debugLogs)
+            : base(task, server, port, user, password, path, debugLogs)
         {
+        }
+
+        private void OnLogEvent(FtpTraceLevel ftpTraceLevel, string logMessage)
+        {
+            if (DebugLogs)
+            {
+                switch (ftpTraceLevel)
+                {
+                    case FtpTraceLevel.Error:
+                        Task.Error(logMessage);
+                        break;
+                    case FtpTraceLevel.Verbose:
+                        Task.Info(logMessage);
+                        break;
+                    case FtpTraceLevel.Warn:
+                        Task.Info(logMessage);
+                        break;
+                    case FtpTraceLevel.Info:
+                    default:
+                        Task.Info(logMessage);
+                        break;
+                }
+            }
         }
 
         public override FileInf[] List()
         {
             var files = new List<FileInf>();
 
-            var client = new FtpClient {Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password)};
+            var client = new FtpClient { Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password) };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.Connect();
             client.SetWorkingDirectory(Path);
@@ -27,7 +55,7 @@ namespace Wexflow.Tasks.Ftp
             var ftpFiles = ListFiles(client, Task.Id);
             files.AddRange(ftpFiles);
 
-            foreach(var file in files)
+            foreach (var file in files)
                 Task.InfoFormat("[PluginFTP] file {0} found on {1}.", file.Path, Server);
 
             client.Disconnect();
@@ -54,7 +82,12 @@ namespace Wexflow.Tasks.Ftp
 
         public override void Upload(FileInf file)
         {
-            var client = new FtpClient {Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password)};
+            var client = new FtpClient { Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password) };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.Connect();
             client.SetWorkingDirectory(Path);
@@ -82,7 +115,12 @@ namespace Wexflow.Tasks.Ftp
 
         public override void Download(FileInf file)
         {
-            var client = new FtpClient {Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password)};
+            var client = new FtpClient { Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password) };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.Connect();
             client.SetWorkingDirectory(Path);
@@ -119,7 +157,12 @@ namespace Wexflow.Tasks.Ftp
 
         public override void Delete(FileInf file)
         {
-            var client = new FtpClient {Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password)};
+            var client = new FtpClient { Host = Server, Port = Port, Credentials = new NetworkCredential(User, Password) };
+
+            if (DebugLogs)
+            {
+                client.OnLogEvent = OnLogEvent;
+            }
 
             client.Connect();
             client.SetWorkingDirectory(Path);
