@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Xml.Linq;
 using Wexflow.Core;
@@ -76,6 +77,17 @@ namespace Wexflow.Tasks.SevenZip
 
                 try
                 {
+                    var assembly = Assembly.GetEntryAssembly();
+                    var libraryPath = Path.GetDirectoryName(assembly.Location);
+#if DEBUG
+                    var processorArch = assembly.GetName().ProcessorArchitecture;
+                    var x86 = processorArch == ProcessorArchitecture.X86;
+                    libraryPath = Path.Combine(libraryPath, x86 ? "x86" : "x64", "7z.dll");
+#else
+                    libraryPath = Path.Combine(libraryPath, "7z.dll");
+#endif
+
+                    SevenZipBase.SetLibraryPath(libraryPath);
                     SevenZipCompressor sevenZipCompressor = new SevenZipCompressor();
                     sevenZipCompressor.CompressionLevel = CompressionLevel.Ultra;
                     sevenZipCompressor.CompressionMethod = CompressionMethod.Lzma;

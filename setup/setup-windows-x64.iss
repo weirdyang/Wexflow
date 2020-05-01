@@ -52,8 +52,8 @@ Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\Wexflow.Server.exe.config"
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\swagger-ui\*"; DestDir: "{app}\swagger-ui"; Flags: ignoreversion recursesubdirs
 Source: "..\src\dotnet\Wexflow.Core.Db.SQLite\bin\x64\Release\x64\SQLite.Interop.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\x64\7z.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\chromedriver.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\libs\7z.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\x64\MediaInfo.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\libs\x64\libsass.dll"; DestDir: "{app}"; Flags: ignoreversion
 
