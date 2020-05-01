@@ -14,7 +14,7 @@
 		</Task>
 		<Task id="3" name="Xslt" description="Renaming files and adding tags" enabled="true">
 			<Setting name="selectFiles" value="2" />
-			<Setting name="xsltPath" value="C:\Wexflow-dotnet-core\Xslt\ListFiles.xslt" />
+			<Setting name="xsltPath" value="C:\Wexflow-netcore\Xslt\ListFiles.xslt" />
 			<Setting name="removeWexflowProcessingNodes" value="false" />
 		</Task>
 		<Task id="4" name="FilesRenamer" description="Renaming files" enabled="true">

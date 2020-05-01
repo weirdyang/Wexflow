@@ -18,10 +18,6 @@ namespace Wexflow.Core
     public enum DbType
     {
         /// <summary>
-        /// CosmosDB
-        /// </summary>
-        CosmosDB,
-        /// <summary>
         /// LiteDB
         /// </summary>
         LiteDB,
@@ -168,14 +164,11 @@ namespace Wexflow.Core
 
             switch (DbType)
             {
-                case DbType.CosmosDB:
-                    Database = new Db.CosmosDB.Db(ConnectionString);
+                case DbType.LiteDB:
+                    Database = new Db.LiteDB.Db(ConnectionString);
                     break;
                 case DbType.MongoDB:
                     Database = new Db.MongoDB.Db(ConnectionString);
-                    break;
-                case DbType.LiteDB:
-                    Database = new Db.LiteDB.Db(ConnectionString);
                     break;
                 case DbType.RavenDB:
                     Database = new Db.RavenDB.Db(ConnectionString);

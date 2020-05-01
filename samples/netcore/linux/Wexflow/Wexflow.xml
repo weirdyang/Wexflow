@@ -16,9 +16,7 @@
   <!-- <Setting name="connectionString" value="DatabaseName=wexflow-dotnet-core;MongoUrl=mongodb://localhost:27017;EnabledSslProtocols=false;SslProtocols=None" /> -->
   <!-- RavenDB -->
   <!-- <Setting name="connectionString" value="DatabaseName=wexflow-dotnet-core;RavenUrl=http://localhost:8080" /> -->
-  <!-- CosmosDB -->
-  <!--<Setting name="connectionString" value="DatabaseName=wexflow-dotnet-core;EndpointUrl=URL;AuthorizationKey=KEY" />-->
-  <!-- PostgreSQL -->
+ <!-- PostgreSQL -->
   <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=postgres;Password=pwd;Database=wexflow_dotnet_core;" />-->
   <!-- SQLServer -->
   <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=wexflow;Password=pwd;Database=wexflow_dotnet_core;" />-->

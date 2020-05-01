@@ -149,10 +149,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Wexflow.Core.CosmosDB\Wexflow.Core.Db.CosmosDB.csproj">
-      <Project>{2311d99b-0524-40c5-a647-6b2200f15a47}</Project>
-      <Name>Wexflow.Core.Db.CosmosDB</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Core.Db.Firebird\Wexflow.Core.Db.Firebird.csproj">
       <Project>{dde24357-edd6-4718-93b3-21af7fcb78e2}</Project>
       <Name>Wexflow.Core.Db.Firebird</Name>

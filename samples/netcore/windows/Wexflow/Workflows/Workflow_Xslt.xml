@@ -9,7 +9,7 @@
 		</Task>
 		<Task id="2" name="Xslt" description="Transforming XMLs" enabled="true">
 			<Setting name="selectFiles" value="1" />
-			<Setting name="xsltPath" value="C:\Wexflow-dotnet-core\Xslt\Products.xslt" />
+			<Setting name="xsltPath" value="C:\Wexflow-netcore\Xslt\Products.xslt" />
 		</Task>
 		<Task id="3" name="FilesMover" description="Moving transformed XMLs" enabled="true">
 			<Setting name="selectFiles" value="2" />

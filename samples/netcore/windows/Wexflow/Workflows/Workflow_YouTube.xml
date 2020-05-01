@@ -11,7 +11,7 @@
 			<Setting name="selectFiles" value="1" />
 			<Setting name="user" value="username" />
 			<Setting name="applicationName" value="Wexflow" />
-			<Setting name="clientSecrets" value="C:\Wexflow-dotnet-core\client_secrets.json" />
+			<Setting name="clientSecrets" value="C:\Wexflow-netcore\client_secrets.json" />
 		</Task>
 	</Tasks>
 </Workflow>
