@@ -251,14 +251,6 @@
       <Project>{09607358-cfc4-4365-9bdb-57c9ce6ce741}</Project>
       <Name>Wexflow.Tasks.CsvToYaml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Tasks.DatabaseBackup\Wexflow.Tasks.DatabaseBackup.csproj">
-      <Project>{d32e09a0-6738-4ffa-878c-f9290ab3a9f4}</Project>
-      <Name>Wexflow.Tasks.DatabaseBackup</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Tasks.DatabaseRestore\Wexflow.Tasks.DatabaseRestore.csproj">
-      <Project>{f42fbcd6-6d25-4a28-be88-57025f181c1c}</Project>
-      <Name>Wexflow.Tasks.DatabaseRestore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Tasks.EnvironmentVariable\Wexflow.Tasks.EnvironmentVariable.csproj">
       <Project>{4d6b8683-6296-4703-9dc8-ab911875a703}</Project>
       <Name>Wexflow.Tasks.EnvironmentVariable</Name>
