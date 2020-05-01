@@ -69,9 +69,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LibSass.NET, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\libsassnet.3.3.7\lib\net40\LibSass.NET.dll</HintPath>
-    </Reference>
     <Reference Include="SharpScss, Version=1.4.0.0, Culture=neutral, PublicKeyToken=b9d29176e3cc094c, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\SharpScss.1.4.0\lib\net40\SharpScss.dll</HintPath>
     </Reference>
@@ -109,7 +106,5 @@
       <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\SharpScss.1.4.0\build\net40\SharpScss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SharpScss.1.4.0\build\net40\SharpScss.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\libsassnet.3.3.7\build\libsassnet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\libsassnet.3.3.7\build\libsassnet.targets'))" />
   </Target>
-  <Import Project="..\..\..\packages\libsassnet.3.3.7\build\libsassnet.targets" Condition="Exists('..\..\..\packages\libsassnet.3.3.7\build\libsassnet.targets')" />
 </Project>
