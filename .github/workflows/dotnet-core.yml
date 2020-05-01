@@ -40,4 +40,4 @@ jobs:
     - name: Build Wexflow.Scripts.MariaDB.csproj
       run: dotnet build src/netcore/Wexflow.Scripts.MariaDB/Wexflow.Scripts.MariaDB.csproj --configuration Release            
     - name: Build Wexflow.NetCore.Tests.csproj
-      run: dotnet build src/tests/Wexflow.NetCore.Tests/Wexflow.NetCore.Tests.csproj --configuration Release
+      run: dotnet build src/tests/netcore/Wexflow.NetCore.Tests/Wexflow.NetCore.Tests.csproj --configuration Release
