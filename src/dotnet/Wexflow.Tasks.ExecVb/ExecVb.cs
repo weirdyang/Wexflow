@@ -28,7 +28,7 @@ namespace Wexflow.Tasks.ExecVb
                 try
                 {
                     var exePath = Path.Combine(Workflow.WorkflowTempFolder, Path.GetFileNameWithoutExtension(csFile.FileName) + ".exe");
-                    exec(csFile.Path, exePath);
+                    Exec(csFile.Path, exePath);
                     Files.Add(new FileInf(exePath, Id));
                     InfoFormat("The script {0} has been executed -> {1}", csFile.Path, exePath);
                     if (!atLeastOneSuccess) atLeastOneSuccess = true;
@@ -57,7 +57,7 @@ namespace Wexflow.Tasks.ExecVb
             return new TaskStatus(status);
         }
 
-        private void exec(string csPath, string exePath)
+        private void Exec(string csPath, string exePath)
         {
             var exeGenerated = CompileExecutable(csPath, exePath);
             StartProcess(exePath, string.Empty, false);
