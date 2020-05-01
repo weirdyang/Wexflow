@@ -154,42 +154,23 @@ namespace Wexflow.Core.Db.SQLite
 
         public override void DecrementPendingCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_PendingCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count--;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_PendingCount + " = " + count + ";", conn))
-                    {
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            DecrementStatusCountColumn(StatusCount.ColumnName_PendingCount);
         }
 
         public override void DecrementRunningCount()
+        {
+            DecrementStatusCountColumn(StatusCount.ColumnName_RunningCount);
+        }
+
+        private void DecrementStatusCountColumn(string statusCountColumnName)
         {
             using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
 
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_RunningCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
+                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " - 1;", conn))
                 {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count--;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_RunningCount + " = " + count + ";", conn))
-                    {
-                        command2.ExecuteNonQuery();
-                    }
+                    command.ExecuteNonQuery();
                 }
             }
         }
@@ -1353,176 +1334,55 @@ namespace Wexflow.Core.Db.SQLite
 
         public override void IncrementDisabledCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_DisabledCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_DisabledCount + " = " + count + ";", conn))
-                    {
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_DisabledCount);
         }
 
         public override void IncrementRejectedCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_RejectedCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_RejectedCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_RejectedCount);
         }
 
         public override void IncrementDoneCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_DoneCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_DoneCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_DoneCount);
         }
 
         public override void IncrementFailedCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_FailedCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_FailedCount + " = " + count + ";", conn))
-                    {
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_FailedCount);
         }
 
         public override void IncrementPendingCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_PendingCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_PendingCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_PendingCount);
         }
 
         public override void IncrementRunningCount()
+        {
+            IncrementStatusCountColumn(StatusCount.ColumnName_RunningCount);
+        }
+
+        private void IncrementStatusCountColumn(string statusCountColumnName)
         {
             using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
 
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_RunningCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
+                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " + 1;", conn))
                 {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_RunningCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
+                    command.ExecuteNonQuery();
                 }
             }
         }
 
         public override void IncrementStoppedCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_StoppedCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_StoppedCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_StoppedCount);
         }
 
         public override void IncrementWarningCount()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command1 = new SQLiteCommand("SELECT " + StatusCount.ColumnName_WarningCount + " FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
-                {
-
-                    var count = (long)command1.ExecuteScalar();
-
-                    count++;
-
-                    using (var command2 = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + StatusCount.ColumnName_WarningCount + " = " + count + ";", conn))
-                    {
-
-                        command2.ExecuteNonQuery();
-                    }
-                }
-            }
+            IncrementStatusCountColumn(StatusCount.ColumnName_WarningCount);
         }
 
         public override void InsertEntry(Core.Db.Entry entry)
