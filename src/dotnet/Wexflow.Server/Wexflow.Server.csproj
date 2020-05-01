@@ -534,10 +534,6 @@
       <Project>{4630cd57-eb1e-48ef-99c3-5513c63f7b8d}</Project>
       <Name>Wexflow.Tasks.SubWorkflow</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wexflow.Tasks.Sync\Wexflow.Tasks.Sync.csproj">
-      <Project>{5784b8a2-51c4-4b1a-8ec2-322a4ab168c1}</Project>
-      <Name>Wexflow.Tasks.Sync</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Wexflow.Tasks.Tar\Wexflow.Tasks.Tar.csproj">
       <Project>{d737b1bb-8a6d-4015-9b2c-3d6760eee6af}</Project>
       <Name>Wexflow.Tasks.Tar</Name>

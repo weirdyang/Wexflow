@@ -3,18 +3,20 @@ using System.IO;
 using System.Security;
 using System.Threading;
 using System.Xml.Linq;
-using Vimeo;
+using VimeoDotNet;
 using Wexflow.Core;
 
 namespace Wexflow.Tasks.VimeoListUploads
 {
-    public class VimeoListUploads:Task
+    public class VimeoListUploads : Task
     {
-        public string Token { get; }
+        public string Token { get; private set; }
+        public long UserId { get; private set; }
 
         public VimeoListUploads(XElement xe, Workflow wf) : base(xe, wf)
         {
             Token = GetSetting("token");
+            UserId = long.Parse(GetSetting("userId"));
         }
 
         public override TaskStatus Run()
@@ -31,16 +33,18 @@ namespace Wexflow.Tasks.VimeoListUploads
                 var xdoc = new XDocument(new XElement("VimeoListUploads"));
                 var xvideos = new XElement("Videos");
 
-                VimeoApi vimeoApi = new VimeoApi(Token);
-                var videos = vimeoApi.GetVideos();
+                var vimeoApi = new VimeoClient(Token);
+                var videosTask = vimeoApi.GetVideosAsync(UserId, null, null);
+                videosTask.Wait();
+                var videos = videosTask.Result.Data;
 
-                foreach (var d in videos.data)
+                foreach (var d in videos)
                 {
                     xvideos.Add(new XElement("Video"
-                        , new XAttribute("title", SecurityElement.Escape(d.name))
-                        , new XAttribute("uri", SecurityElement.Escape(d.uri))
-                        , new XAttribute("created_time", SecurityElement.Escape(d.created_time))
-                        , new XAttribute("status", SecurityElement.Escape(d.status))
+                        , new XAttribute("title", SecurityElement.Escape(d.Name))
+                        , new XAttribute("uri", SecurityElement.Escape(d.Uri))
+                        , new XAttribute("created_time", SecurityElement.Escape(d.CreatedTime.ToString()))
+                        , new XAttribute("status", SecurityElement.Escape(d.Status))
                         ));
                 }
 

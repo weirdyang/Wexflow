@@ -13,7 +13,9 @@
     </VimeoListUploads>
   -->
   <Task id="$int" name="VimeoListUploads" description="$string" enabled="true|false">
-    <!-- Vimeo token. You can obtain it from https://developer.vimeo.com/ -->
+    <!-- Required. Vimeo token. You can obtain it from https://developer.vimeo.com/ -->
     <Setting name="token" value="$string" />
+    <!-- Required. User id. -->
+    <Setting name="userId" value="$int" />
   </Task>
 </Tasks>

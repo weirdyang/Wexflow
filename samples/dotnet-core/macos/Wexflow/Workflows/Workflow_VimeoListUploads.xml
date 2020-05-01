@@ -6,6 +6,7 @@
 	<Tasks>
 		<Task id="1" name="VimeoListUploads" description="Listing videos" enabled="true">
 			<Setting name="token" value="TOKEN" />
+			<Setting name="userId" value="0" />
 		</Task>
 		<Task id="2" name="FilesMover" description="Moving results from temp folder" enabled="true">
 			<Setting name="selectFiles" value="1" />

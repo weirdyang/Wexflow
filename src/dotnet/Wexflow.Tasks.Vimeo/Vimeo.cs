@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Vimeo;
+using VimeoDotNet.Net;
 using Wexflow.Core;
 
 namespace Wexflow.Tasks.Vimeo
@@ -76,7 +76,7 @@ namespace Wexflow.Tasks.Vimeo
             try
             {
                 var files = SelectFiles();
-                VimeoApi vimeoApi = new VimeoApi(Token);
+                var vimeoApi = new VimeoDotNet.VimeoClient(Token);
 
                 foreach (var file in files)
                 {
@@ -92,8 +92,13 @@ namespace Wexflow.Tasks.Vimeo
 
                             try
                             {
-                                var videoId = vimeoApi.UploadVideo(filePath, title, desc, (l1, l2) => { });
-                                InfoFormat("Video {0} uploaded to Vimeo. VideoId: {1}", filePath, videoId);
+                                using (var vfile = new BinaryContent(file.Path))
+                                {
+                                    var uploadTask = vimeoApi.UploadEntireFileAsync(vfile);
+                                    uploadTask.Wait();
+                                    var videoId = uploadTask.Result.ClipId;
+                                    InfoFormat("Video {0} uploaded to Vimeo. VideoId: {1}", filePath, videoId);
+                                }
 
                                 if (success && !atLeastOneSuccess) atLeastOneSuccess = true;
                             }
