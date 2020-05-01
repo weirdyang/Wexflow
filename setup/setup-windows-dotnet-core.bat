@@ -1,14 +1,14 @@
 ::@echo off
 
 set version=5.6
-set dst=wexflow-%version%-windows-dotnet-core
+set dst=wexflow-%version%-windows-netcore
 set dstDir=.\%dst%
 set backend=Backend
 
 if exist %dstDir% rmdir /s /q %dstDir%
 mkdir %dstDir%
-mkdir %dstDir%\Wexflow-dotnet-core\
-mkdir %dstDir%\Wexflow-dotnet-core\Database\
+mkdir %dstDir%\Wexflow-netcore\
+mkdir %dstDir%\Wexflow-netcore\Database\
 mkdir %dstDir%\WexflowTesting\
 mkdir %dstDir%\%backend%\
 mkdir %dstDir%\%backend%\images\
@@ -21,13 +21,13 @@ mkdir %dstDir%\Documentation\
 
 :: WexflowTesting
 xcopy ..\samples\WexflowTesting\* %dstDir%\WexflowTesting\ /s /e
-xcopy ..\samples\dotnet-core\windows\WexflowTesting\* %dstDir%\WexflowTesting\ /s /e
+xcopy ..\samples\netcore\windows\WexflowTesting\* %dstDir%\WexflowTesting\ /s /e
 
-:: Wexflow-dotnet-core
-xcopy ..\samples\dotnet-core\windows\Wexflow\* %dstDir%\Wexflow-dotnet-core\ /s /e
-copy ..\src\dotnet-core\Wexflow.Core\GlobalVariables.xml %dstDir%\Wexflow-dotnet-core\
-copy ..\src\dotnet-core\Wexflow.Core\Wexflow.xml %dstDir%\Wexflow-dotnet-core\
-copy ..\src\dotnet-core\Wexflow.Core\Workflow.xsd %dstDir%\Wexflow-dotnet-core\
+:: Wexflow-netcore
+xcopy ..\samples\netcore\windows\Wexflow\* %dstDir%\Wexflow-netcore\ /s /e
+copy ..\src\netcore\Wexflow.Core\GlobalVariables.xml %dstDir%\Wexflow-netcore\
+copy ..\src\netcore\Wexflow.Core\Wexflow.xml %dstDir%\Wexflow-netcore\
+copy ..\src\netcore\Wexflow.Core\Workflow.xsd %dstDir%\Wexflow-netcore\
 
 :: Wexflow backend
 copy "..\src\backend\Wexflow.Backend\index.html" %dstDir%\%backend%\
@@ -85,177 +85,177 @@ copy "..\src\backend\Wexflow.Backend\js\users.min.js" %dstDir%\%backend%\js
 copy "..\src\backend\Wexflow.Backend\js\profiles.min.js" %dstDir%\%backend%\js
 
 :: Wexflow server
-dotnet publish ..\src\dotnet-core\Wexflow.Server\Wexflow.Server.csproj --force --output %~dp0\%dstDir%\Wexflow.Server
-copy dotnet-core\windows\install.bat %dstDir%
-copy dotnet-core\windows\run.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Server\Wexflow.Server.csproj --force --output %~dp0\%dstDir%\Wexflow.Server
+copy netcore\windows\install.bat %dstDir%
+copy netcore\windows\run.bat %dstDir%
 
 :: MongoDB script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MongoDB
-copy dotnet-core\windows\MongoDB\appsettings.json %dstDir%\Wexflow.Scripts.MongoDB
-xcopy "..\samples\dotnet-core\windows\Wexflow\Workflows\*" %dstDir%\Wexflow.Scripts.MongoDB\Workflows /s /e
-copy dotnet-core\windows\install-MongoDB.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MongoDB
+copy netcore\windows\MongoDB\appsettings.json %dstDir%\Wexflow.Scripts.MongoDB
+xcopy "..\samples\netcore\windows\Wexflow\Workflows\*" %dstDir%\Wexflow.Scripts.MongoDB\Workflows /s /e
+copy netcore\windows\install-MongoDB.bat %dstDir%
 
 :: RavenDB script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.RavenDB\Wexflow.Scripts.RavenDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.RavenDB
-copy dotnet-core\windows\RavenDB\appsettings.json %dstDir%\Wexflow.Scripts.RavenDB
-copy dotnet-core\windows\install-RavenDB.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.RavenDB\Wexflow.Scripts.RavenDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.RavenDB
+copy netcore\windows\RavenDB\appsettings.json %dstDir%\Wexflow.Scripts.RavenDB
+copy netcore\windows\install-RavenDB.bat %dstDir%
 
 :: CosmosDB script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.CosmosDB\Wexflow.Scripts.CosmosDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.CosmosDB
-copy dotnet-core\windows\CosmosDB\appsettings.json %dstDir%\Wexflow.Scripts.CosmosDB
-copy dotnet-core\windows\install-CosmosDB.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.CosmosDB\Wexflow.Scripts.CosmosDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.CosmosDB
+copy netcore\windows\CosmosDB\appsettings.json %dstDir%\Wexflow.Scripts.CosmosDB
+copy netcore\windows\install-CosmosDB.bat %dstDir%
 
 :: PostgreSQL script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.PostgreSQL\Wexflow.Scripts.PostgreSQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.PostgreSQL
-copy dotnet-core\windows\PostgreSQL\appsettings.json %dstDir%\Wexflow.Scripts.PostgreSQL
-copy dotnet-core\windows\install-PostgreSQL.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.PostgreSQL\Wexflow.Scripts.PostgreSQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.PostgreSQL
+copy netcore\windows\PostgreSQL\appsettings.json %dstDir%\Wexflow.Scripts.PostgreSQL
+copy netcore\windows\install-PostgreSQL.bat %dstDir%
 
 :: SQLServer script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.SQLServer\Wexflow.Scripts.SQLServer.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLServer
-copy dotnet-core\windows\SQLServer\appsettings.json %dstDir%\Wexflow.Scripts.SQLServer
-copy dotnet-core\windows\install-SQLServer.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.SQLServer\Wexflow.Scripts.SQLServer.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLServer
+copy netcore\windows\SQLServer\appsettings.json %dstDir%\Wexflow.Scripts.SQLServer
+copy netcore\windows\install-SQLServer.bat %dstDir%
 
 :: MySQL script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.MySQL\Wexflow.Scripts.MySQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MySQL
-copy dotnet-core\windows\MySQL\appsettings.json %dstDir%\Wexflow.Scripts.MySQL
-copy dotnet-core\windows\install-MySQL.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.MySQL\Wexflow.Scripts.MySQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MySQL
+copy netcore\windows\MySQL\appsettings.json %dstDir%\Wexflow.Scripts.MySQL
+copy netcore\windows\install-MySQL.bat %dstDir%
 
 :: SQLite script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLite
-copy dotnet-core\windows\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
-copy dotnet-core\windows\install-SQLite.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLite
+copy netcore\windows\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
+copy netcore\windows\install-SQLite.bat %dstDir%
 
 :: Firebird script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
-copy dotnet-core\windows\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
-copy dotnet-core\windows\install-Firebird.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
+copy netcore\windows\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
+copy netcore\windows\install-Firebird.bat %dstDir%
 
 :: Oracle script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
-copy dotnet-core\windows\Oracle\appsettings.json %dstDir%\Wexflow.Scripts.Oracle
-copy dotnet-core\windows\install-Oracle.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
+copy netcore\windows\Oracle\appsettings.json %dstDir%\Wexflow.Scripts.Oracle
+copy netcore\windows\install-Oracle.bat %dstDir%
 
 :: MariaDB script
-dotnet publish ..\src\dotnet-core\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MariaDB
-copy dotnet-core\windows\MariaDB\appsettings.json %dstDir%\Wexflow.Scripts.MariaDB
-copy dotnet-core\windows\install-MariaDB.bat %dstDir%
+net publish ..\src\netcore\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MariaDB
+copy netcore\windows\MariaDB\appsettings.json %dstDir%\Wexflow.Scripts.MariaDB
+copy netcore\windows\install-MariaDB.bat %dstDir%
 
 :: Wexflow.Clients.CommandLine
-dotnet publish ..\src\dotnet-core\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
+net publish ..\src\netcore\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
 :: License
 copy ..\LICENSE.txt %dstDir%
 
 :: Documentation
-copy "dotnet-core\doc\_README.txt" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Core\Workflow.xml" %dstDir%\Documentation\_Workflow.xml
-copy "..\src\dotnet\Wexflow.Tasks.CsvToXml\CsvToXml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FileExists\FileExists.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesConcat\FilesConcat.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesCopier\FilesCopier.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesExist\FilesExist.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesInfo\FilesInfo.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesLoader\FilesLoader.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesMover\FilesMover.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesRemover\FilesRemover.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesRenamer\FilesRenamer.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Ftp\Ftp.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Http\Http.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ImagesTransformer\ImagesTransformer.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ListEntities\ListEntities.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ListFiles\ListFiles.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.MailsReceiver\MailsReceiver.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.MailsSender\MailsSender.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Md5\Md5.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.MediaInfo\MediaInfo.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Mkdir\Mkdir.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Movedir\Movedir.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ProcessLauncher\ProcessLauncher.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Rmdir\Rmdir.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Sha1\Sha1.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Sha256\Sha256.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Sha512\Sha512.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Sql\Sql.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Sync\Sync.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Tar\Tar.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Template\Template.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Tgz\Tgz.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Touch\Touch.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Twitter\Twitter.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Wait\Wait.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Wmi\Wmi.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.XmlToCsv\XmlToCsv.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Xslt\Xslt.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Zip\Zip.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Now\Now.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Workflow\Workflow.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesSplitter\FilesSplitter.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ProcessKiller\ProcessKiller.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Unzip\Unzip.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Untar\Untar.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Untgz\Untgz.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ProcessInfo\ProcessInfo.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.TextToPdf\TextToPdf.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HtmlToPdf\HtmlToPdf.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.SqlToXml\SqlToXml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.SqlToCsv\SqlToCsv.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Guid\Guid.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesEqual\FilesEqual.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesDiff\FilesDiff.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Torrent\Torrent.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ImagesResizer\ImagesResizer.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ImagesCropper\ImagesCropper.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.CsvToSql\CsvToSql.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ImagesConcat\ImagesConcat.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ImagesOverlay\ImagesOverlay.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Unrar\Unrar.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.UnSevenZip\UnSevenZip.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesEncryptor\FilesEncryptor.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesDecryptor\FilesDecryptor.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.TextsEncryptor\TextsEncryptor.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.TextsDecryptor\TextsDecryptor.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.DatabaseBackup\DatabaseBackup.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.DatabaseRestore\DatabaseRestore.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.IsoCreator\IsoCreator.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.IsoExtractor\IsoExtractor.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.SevenZip\SevenZip.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.TextToSpeech\TextToSpeech.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.SpeechToText\SpeechToText.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FileMatch\FileMatch.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Ping\Ping.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.WebToScreenshot\WebToScreenshot.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.WebToHtml\WebToHtml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ExecCs\ExecCs.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ExecVb\ExecVb.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HttpPost\HttpPost.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HttpPut\HttpPut.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HttpPatch\HttpPatch.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HttpDelete\HttpDelete.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.UglifyJs\UglifyJs.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.UglifyCss\UglifyCss.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.UglifyHtml\UglifyHtml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HtmlToText\HtmlToText.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.HttpGet\HttpGet.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.ScssToCss\ScssToCss.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.YamlToJson\YamlToJson.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.JsonToYaml\JsonToYaml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.CsvToJson\CsvToJson.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.CsvToYaml\CsvToYaml.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.EnvironmentVariable\EnvironmentVariable.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.MessageCorrect\MessageCorrect.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.InstagramUploadImage\InstagramUploadImage.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.InstagramUploadVideo\InstagramUploadVideo.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FolderExists\FolderExists.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FileContentMatch\FileContentMatch.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Approval\Approval.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.VimeoListUploads\VimeoListUploads.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Vimeo\Vimeo.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Slack\Slack.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesLoaderEx\FilesLoaderEx.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FilesJoiner\FilesJoiner.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.Twilio\Twilio.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.SshCmd\SshCmd.xml" %dstDir%\Documentation\
-copy "..\src\dotnet\Wexflow.Tasks.FileSystemWatcher\FileSystemWatcher.xml" %dstDir%\Documentation\
+copy "netcore\doc\_README.txt" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Core\Workflow.xml" %dstDir%\Documentation\_Workflow.xml
+copy "..\src\net\Wexflow.Tasks.CsvToXml\CsvToXml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FileExists\FileExists.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesConcat\FilesConcat.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesCopier\FilesCopier.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesExist\FilesExist.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesInfo\FilesInfo.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesLoader\FilesLoader.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesMover\FilesMover.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesRemover\FilesRemover.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesRenamer\FilesRenamer.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Ftp\Ftp.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Http\Http.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ImagesTransformer\ImagesTransformer.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ListEntities\ListEntities.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ListFiles\ListFiles.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.MailsReceiver\MailsReceiver.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.MailsSender\MailsSender.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Md5\Md5.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.MediaInfo\MediaInfo.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Mkdir\Mkdir.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Movedir\Movedir.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ProcessLauncher\ProcessLauncher.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Rmdir\Rmdir.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Sha1\Sha1.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Sha256\Sha256.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Sha512\Sha512.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Sql\Sql.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Sync\Sync.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Tar\Tar.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Template\Template.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Tgz\Tgz.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Touch\Touch.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Twitter\Twitter.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Wait\Wait.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Wmi\Wmi.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.XmlToCsv\XmlToCsv.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Xslt\Xslt.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Zip\Zip.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Now\Now.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Workflow\Workflow.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesSplitter\FilesSplitter.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ProcessKiller\ProcessKiller.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Unzip\Unzip.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Untar\Untar.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Untgz\Untgz.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ProcessInfo\ProcessInfo.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.TextToPdf\TextToPdf.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HtmlToPdf\HtmlToPdf.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.SqlToXml\SqlToXml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.SqlToCsv\SqlToCsv.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Guid\Guid.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesEqual\FilesEqual.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesDiff\FilesDiff.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Torrent\Torrent.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ImagesResizer\ImagesResizer.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ImagesCropper\ImagesCropper.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.CsvToSql\CsvToSql.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ImagesConcat\ImagesConcat.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ImagesOverlay\ImagesOverlay.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Unrar\Unrar.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.UnSevenZip\UnSevenZip.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesEncryptor\FilesEncryptor.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesDecryptor\FilesDecryptor.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.TextsEncryptor\TextsEncryptor.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.TextsDecryptor\TextsDecryptor.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.DatabaseBackup\DatabaseBackup.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.DatabaseRestore\DatabaseRestore.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.IsoCreator\IsoCreator.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.IsoExtractor\IsoExtractor.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.SevenZip\SevenZip.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.TextToSpeech\TextToSpeech.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.SpeechToText\SpeechToText.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FileMatch\FileMatch.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Ping\Ping.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.WebToScreenshot\WebToScreenshot.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.WebToHtml\WebToHtml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ExecCs\ExecCs.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ExecVb\ExecVb.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HttpPost\HttpPost.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HttpPut\HttpPut.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HttpPatch\HttpPatch.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HttpDelete\HttpDelete.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.UglifyJs\UglifyJs.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.UglifyCss\UglifyCss.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.UglifyHtml\UglifyHtml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HtmlToText\HtmlToText.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.HttpGet\HttpGet.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.ScssToCss\ScssToCss.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.YamlToJson\YamlToJson.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.JsonToYaml\JsonToYaml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.CsvToJson\CsvToJson.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.CsvToYaml\CsvToYaml.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.EnvironmentVariable\EnvironmentVariable.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.MessageCorrect\MessageCorrect.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.InstagramUploadImage\InstagramUploadImage.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.InstagramUploadVideo\InstagramUploadVideo.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FolderExists\FolderExists.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FileContentMatch\FileContentMatch.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Approval\Approval.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.VimeoListUploads\VimeoListUploads.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Vimeo\Vimeo.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Slack\Slack.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesLoaderEx\FilesLoaderEx.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FilesJoiner\FilesJoiner.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.Twilio\Twilio.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.SshCmd\SshCmd.xml" %dstDir%\Documentation\
+copy "..\src\net\Wexflow.Tasks.FileSystemWatcher\FileSystemWatcher.xml" %dstDir%\Documentation\
 
 :: compress
 7z.exe a -tzip %dst%.zip %dstDir%
