@@ -22,9 +22,7 @@ jobs:
     - name: Build Wexflow.Scripts.MongoDB.csproj
       run: dotnet build src/netcore/Wexflow.Scripts.MongoDB/Wexflow.Scripts.MongoDB.csproj --configuration Release
     - name: Build Wexflow.Scripts.RavenDB.csproj
-      run: dotnet build src/netcore/Wexflow.Scripts.RavenDB/Wexflow.Scripts.RavenDB.csproj --configuration Release
-    - name: Build Wexflow.Scripts.CosmosDB.csproj
-      run: dotnet build src/netcore/Wexflow.Scripts.CosmosDB/Wexflow.Scripts.CosmosDB.csproj --configuration Release       
+      run: dotnet build src/netcore/Wexflow.Scripts.RavenDB/Wexflow.Scripts.RavenDB.csproj --configuration Release       
     - name: Build Wexflow.Scripts.PostgreSQL.csproj
       run: dotnet build src/netcore/Wexflow.Scripts.PostgreSQL/Wexflow.Scripts.PostgreSQL.csproj --configuration Release
     - name: Build Wexflow.Scripts.SQLServer.csproj
