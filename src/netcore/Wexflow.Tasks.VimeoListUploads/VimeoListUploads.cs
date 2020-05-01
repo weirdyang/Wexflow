@@ -16,7 +16,7 @@ namespace Wexflow.Tasks.VimeoListUploads
         public VimeoListUploads(XElement xe, Workflow wf) : base(xe, wf)
         {
             Token = GetSetting("token");
-            UserId = long.Parse(GetSetting("userId"));
+            UserId = long.Parse(GetSetting("userId", "0"));
         }
 
         public override TaskStatus Run()

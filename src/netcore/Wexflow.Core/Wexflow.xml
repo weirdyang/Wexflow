@@ -17,13 +17,13 @@
   <!-- RavenDB -->
   <!--<Setting name="connectionString" value="DatabaseName=wexflow-netcore;RavenUrl=http://localhost:8080" />-->
   <!-- PostgreSQL -->
-  <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=postgres;Password=pwd;Database=wexflow_dotnet_core;" />-->
+  <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=postgres;Password=pwd;Database=wexflow_netcore;" />-->
   <!-- SQLServer -->
-  <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=wexflow;Password=pwd;Database=wexflow_dotnet_core;" />-->
-  <!--<Setting name="connectionString" value="Server=127.0.0.1;Trusted_Connection=True;Database=wexflow_dotnet_core;" />-->
-  <!--<Setting name="connectionString" value="Server=.\SQLEXPRESS01;Trusted_Connection=True;Database=wexflow_dotnet_core;" />-->
+  <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=wexflow;Password=pwd;Database=wexflow_netcore;" />-->
+  <!--<Setting name="connectionString" value="Server=127.0.0.1;Trusted_Connection=True;Database=wexflow_netcore;" />-->
+  <!--<Setting name="connectionString" value="Server=.\SQLEXPRESS01;Trusted_Connection=True;Database=wexflow_netcore;" />-->
   <!-- MySQL -->
-  <!--<Setting name="connectionString" value="Server=localhost;Database=wexflow_dotnet_core;Uid=root;Pwd=password;" />-->
+  <!--<Setting name="connectionString" value="Server=localhost;Database=wexflow_netcore;Uid=root;Pwd=password;" />-->
   <!-- SQLite -->
   <!--<Setting name="connectionString" value="Data Source=C:\Wexflow-netcore\Database\Wexflow.sqlite;Version=3;" />-->
   <!-- Firebird -->
@@ -31,5 +31,5 @@
   <!-- Oracle -->
   <!--<Setting name="connectionString" value="Data Source=localhost:1521/wexflowdc;User Id=SYSTEM;Password=password;" />-->
   <!-- MariaDB -->
-  <!--<Setting name="connectionString" value="SERVER=localhost;PORT=3306;DATABASE=wexflow_dotnet_core;USER=root;PASSWORD=password;" />-->
+  <!--<Setting name="connectionString" value="SERVER=localhost;PORT=3306;DATABASE=wexflow_netcore;USER=root;PASSWORD=password;" />-->
 </Wexflow>
