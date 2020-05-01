@@ -112,9 +112,7 @@ Check out the available [built-in tasks](https://github.com/aelassas/Wexflow/wik
 |AppVeyor (.NET and .NET Core)| Windows |[![Build Status](https://ci.appveyor.com/api/projects/status/github/aelassas/Wexflow?svg=true)](https://ci.appveyor.com/project/aelassas/wexflow)|
 |GitHub Actions (.NET Core)| Linux |[![Actions Status](https://github.com/aelassas/Wexflow/workflows/.NET%20Core/badge.svg)](https://github.com/aelassas/Wexflow/actions)|
 |Bitrise (Android)|Linux| [![Build Status](https://app.bitrise.io/app/0fb832132f6afa6d/status.svg?token=j49g0Gx7rNWkl4s41xM_kA)](https://app.bitrise.io/app/0fb832132f6afa6d)|
-|CircleCI (Android)|Linux | [![CircleCI](https://circleci.com/gh/aelassas/Wexflow.svg?style=shield)](https://circleci.com/gh/aelassas/Wexflow)|
 |Bitrise (iOS)|macOS | [![Build Status](https://app.bitrise.io/app/f8006552bdd4ee80/status.svg?token=Yd_71TrG-cqFvEC1oV5teQ)](https://app.bitrise.io/app/f8006552bdd4ee80)|
-|CircleCI (iOS)|macOS | [![CircleCI](https://circleci.com/gh/aelassas/Wexflow.svg?style=shield)](https://circleci.com/gh/aelassas/Wexflow)|
 |FOSSA| Linux | [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Faelassas%2FWexflow.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Faelassas%2FWexflow?ref=badge_shield)|
 
 ## Supporters
