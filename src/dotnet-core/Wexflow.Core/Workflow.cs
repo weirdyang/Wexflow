@@ -927,7 +927,7 @@ namespace Wexflow.Core
 
         public bool StartSync(Guid instanceId, ref bool resultWarning)
         {
-            var resultSuccess = false;
+            var resultSuccess = true;
             InstanceId = instanceId;
             Jobs.Add(InstanceId, this);
 
@@ -1122,7 +1122,6 @@ namespace Wexflow.Core
                     _historyEntry.StatusDate = DateTime.Now;
                     _historyEntry.Logs = string.Join("\r\n", Logs);
                     Database.InsertHistoryEntry(_historyEntry);
-
                     Database.DecrementRunningCount();
                 }
             }
@@ -1292,7 +1291,7 @@ namespace Wexflow.Core
             foreach (var task in tasks)
             {
                 if (!task.IsEnabled) continue;
-                if (task.IsStopped) break;
+                if (task.IsStopped) continue;
                 if (IsApproval && IsRejected) break;
                 var status = task.Run();
                 Logs.AddRange(task.Logs);

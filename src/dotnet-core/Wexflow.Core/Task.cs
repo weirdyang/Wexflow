@@ -147,6 +147,14 @@ namespace Wexflow.Core
         public abstract TaskStatus Run();
 
         /// <summary>
+        /// Stops the task.
+        /// </summary>
+        public virtual void Stop()
+        {
+            IsStopped = true;
+        }
+
+        /// <summary>
         /// Returns a setting value from its name.
         /// </summary>
         /// <param name="name">Setting name.</param>
@@ -358,14 +366,6 @@ namespace Wexflow.Core
                 return Hashtable[key];
             }
             return null;
-        }
-
-        /// <summary>
-        /// Stops the task.
-        /// </summary>
-        public virtual void Stop()
-        {
-            IsStopped = true;
         }
 
         private string BuildLogMsg(string msg)

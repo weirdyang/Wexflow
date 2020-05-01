@@ -46,6 +46,10 @@ namespace Wexflow.Core
         /// </summary>
         public List<string> Logs { get; private set; }
         /// <summary>
+        /// Indicates whether this task has been stopped or not.
+        /// </summary>
+        public bool IsStopped { get; private set; }
+        /// <summary>
         /// Task files.
         /// </summary>
         public List<FileInf> Files
@@ -85,6 +89,7 @@ namespace Wexflow.Core
         /// <param name="wf">Workflow.</param>
 		protected Task(XElement xe, Workflow wf)
         {
+            IsStopped = false;
             Logs = new List<string>();
             _xElement = xe;
             var xId = xe.Attribute("id");
@@ -140,6 +145,14 @@ namespace Wexflow.Core
         /// </summary>
         /// <returns>Task status.</returns>
         public abstract TaskStatus Run();
+
+        /// <summary>
+        /// Stops the current task.
+        /// </summary>
+        public virtual void Stop()
+        {
+            IsStopped = true;
+        }
 
         /// <summary>
         /// Returns a setting value from its name.
