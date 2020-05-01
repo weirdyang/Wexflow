@@ -91,7 +91,7 @@ copy dotnet-core\linux\appsettings.json %dstDir%\Wexflow.Server
 :: MongoDB script
 dotnet publish ..\src\dotnet-core\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MongoDB
 copy dotnet-core\linux\MongoDB\appsettings.json %dstDir%\Wexflow.Scripts.MongoDB
-xcopy "..\samples\workflows\dotnet-core\linux\*" %dstDir%\Wexflow.Scripts.MongoDB\Workflows /s /e
+xcopy "..\samples\dotnet-core\linux\Wexflow\Workflows\*" %dstDir%\Wexflow.Scripts.MongoDB\Workflows /s /e
 
 :: RavenDB script
 dotnet publish ..\src\dotnet-core\Wexflow.Scripts.RavenDB\Wexflow.Scripts.RavenDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.RavenDB

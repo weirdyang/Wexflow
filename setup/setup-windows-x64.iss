@@ -253,7 +253,7 @@ Source: "..\samples\WexflowTesting\*"; DestDir: "C:\WexflowTesting\"; Components
 Source: "..\src\dotnet\Wexflow.Scripts.MongoDB\bin\x64\Release\Wexflow.Scripts.MongoDB.exe"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion recursesubdirs
 Source: ".\dotnet\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.exe.config"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion recursesubdirs
 Source: "..\src\dotnet\Wexflow.Scripts.MongoDB\bin\x64\Release\*.dll"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion recursesubdirs
-Source: "..\samples\workflows\dotnet\*.xml"; DestDir: "{app}\Wexflow.Scripts.MongoDB\Workflows"; Flags: ignoreversion recursesubdirs
+Source: "..\samples\dotnet\Wexflow\Workflows\*.xml"; DestDir: "{app}\Wexflow.Scripts.MongoDB\Workflows"; Flags: ignoreversion recursesubdirs
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\System.Net.Http.dll"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\System.Buffers.dll"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion
 Source: "..\src\dotnet\Wexflow.Server\bin\x64\Release\System.Runtime.InteropServices.RuntimeInformation.dll"; DestDir: "{app}\Wexflow.Scripts.MongoDB"; Flags: ignoreversion
