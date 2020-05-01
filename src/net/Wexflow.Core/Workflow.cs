@@ -903,8 +903,8 @@ namespace Wexflow.Core
                 return workflow.StartAsync();
             }
 
+            StartedOn = DateTime.Now;
             var instanceId = Guid.NewGuid();
-
             var warning = false;
             var thread = new Thread(() => StartSync(instanceId, ref warning));
             _thread = thread;
@@ -922,6 +922,7 @@ namespace Wexflow.Core
         {
             var resultSuccess = true;
 
+            StartedOn = DateTime.Now;
             InstanceId = instanceId;
             Jobs.Add(InstanceId, this);
 
@@ -974,7 +975,6 @@ namespace Wexflow.Core
 
             try
             {
-                StartedOn = DateTime.Now;
                 IsRunning = true;
                 IsRejected = false;
 

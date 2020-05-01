@@ -152,29 +152,6 @@ namespace Wexflow.Core.Db.SQLite
             }
         }
 
-        public override void DecrementPendingCount()
-        {
-            DecrementStatusCountColumn(StatusCount.ColumnName_PendingCount);
-        }
-
-        public override void DecrementRunningCount()
-        {
-            DecrementStatusCountColumn(StatusCount.ColumnName_RunningCount);
-        }
-
-        private void DecrementStatusCountColumn(string statusCountColumnName)
-        {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " - 1;", conn))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
         public override void DeleteUser(string username, string password)
         {
             using (var conn = new SQLiteConnection(_connectionString))
@@ -1332,6 +1309,19 @@ namespace Wexflow.Core.Db.SQLite
             return workflows;
         }
 
+        private void IncrementStatusCountColumn(string statusCountColumnName)
+        {
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " + 1;", conn))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public override void IncrementDisabledCount()
         {
             IncrementStatusCountColumn(StatusCount.ColumnName_DisabledCount);
@@ -1362,19 +1352,6 @@ namespace Wexflow.Core.Db.SQLite
             IncrementStatusCountColumn(StatusCount.ColumnName_RunningCount);
         }
 
-        private void IncrementStatusCountColumn(string statusCountColumnName)
-        {
-            using (var conn = new SQLiteConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " + 1;", conn))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
         public override void IncrementStoppedCount()
         {
             IncrementStatusCountColumn(StatusCount.ColumnName_StoppedCount);
@@ -1383,6 +1360,29 @@ namespace Wexflow.Core.Db.SQLite
         public override void IncrementWarningCount()
         {
             IncrementStatusCountColumn(StatusCount.ColumnName_WarningCount);
+        }
+
+        private void DecrementStatusCountColumn(string statusCountColumnName)
+        {
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var command = new SQLiteCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " - 1;", conn))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public override void DecrementPendingCount()
+        {
+            DecrementStatusCountColumn(StatusCount.ColumnName_PendingCount);
+        }
+
+        public override void DecrementRunningCount()
+        {
+            DecrementStatusCountColumn(StatusCount.ColumnName_RunningCount);
         }
 
         public override void InsertEntry(Core.Db.Entry entry)
