@@ -13,9 +13,9 @@
   <!-- LiteDB -->
   <Setting name="connectionString" value="Filename=C:\Wexflow\Database\Wexflow.db; Connection=direct" />
   <!-- MongoDB. SslProtocols: None|Ssl2|Ssl3|Tls|Default|Tls11|Tls12 -->
-  <!--<Setting name="connectionString" value="DatabaseName=wexflow;MongoUrl=mongodb://localhost:27017;EnabledSslProtocols=false;SslProtocols=None" />-->
+  <!--<Setting name="connectionString" value="Database=wexflow;MongoUrl=mongodb://localhost:27017;EnabledSslProtocols=false;SslProtocols=None" />-->
   <!-- RavenDB -->
-  <!--<Setting name="connectionString" value="DatabaseName=wexflow;RavenUrl=http://localhost:8080" />-->
+  <!--<Setting name="connectionString" value="Database=wexflow;RavenUrl=http://localhost:8080" />-->
   <!-- PostgreSQL -->
   <!--<Setting name="connectionString" value="Server=127.0.0.1;User Id=postgres;Password=pwd;Database=wexflow;" />-->
   <!-- SQLServer -->
