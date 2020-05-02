@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Wexflow.Core.Db.PostgreSQL
 {
-    public class Db : Core.Db.Db
+    public sealed class Db : Core.Db.Db
     {
         private static readonly object padlock = new object();
         private static readonly string dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
@@ -18,7 +18,7 @@ namespace Wexflow.Core.Db.PostgreSQL
             var server = string.Empty;
             var userId = string.Empty;
             var password = string.Empty;
-            var databaseName = string.Empty;
+            var database = string.Empty;
 
             var connectionStringParts = ConnectionString.Split(';');
 
@@ -41,13 +41,13 @@ namespace Wexflow.Core.Db.PostgreSQL
                     }
                     else if (connPart.StartsWith("Database="))
                     {
-                        databaseName = connPart.Replace("Database=", string.Empty);
+                        database = connPart.Replace("Database=", string.Empty);
                     }
                 }
             }
 
             var helper = new Helper(connectionString);
-            helper.CreateDatabaseIfNotExists(server, userId, password, databaseName);
+            helper.CreateDatabaseIfNotExists(server, userId, password, database);
             helper.CreateTableIfNotExists(Core.Db.Entry.DocumentName, Entry.TableStruct);
             helper.CreateTableIfNotExists(Core.Db.HistoryEntry.DocumentName, HistoryEntry.TableStruct);
             helper.CreateTableIfNotExists(Core.Db.StatusCount.DocumentName, StatusCount.TableStruct);

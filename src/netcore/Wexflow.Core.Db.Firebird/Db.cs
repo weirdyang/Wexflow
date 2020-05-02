@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Wexflow.Core.Db.Firebird
 {
-    public class Db : Core.Db.Db
+    public sealed class Db : Core.Db.Db
     {
         private static readonly object padlock = new object();
         private static readonly string dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
