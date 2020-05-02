@@ -1,5 +1,6 @@
 {
 	"Approval": [ ],
+	"CsvToJson": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "separator", "Required": false, "Type": "string", "List": [], "DefaultValue": ";"} ],
 	"CsvToSql": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""},  {"Name": "tableName", "Required": true, "Type": "string", "List": [], "DefaultValue": ""},  {"Name": "separator", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
 	"CsvToXml": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"EnvironmentVariable": [  {"Name": "name", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],

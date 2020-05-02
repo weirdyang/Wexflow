@@ -1,5 +1,6 @@
 [
 	{ "Name": "Approval", "Description": "Marks the current workflow as needing approval."},
+	{ "Name": "CsvToJson", "Description": "Converts CSV files to JSON files."},
 	{ "Name": "CsvToSql", "Description": "Converts CSV files to SQL scripts."},
 	{ "Name": "CsvToXml", "Description": "Converts CSV files to XML files."},
 	{ "Name": "EnvironmentVariable", "Description": "A flowchart task that retrieves the value of an environment variable."},

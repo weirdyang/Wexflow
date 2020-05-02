@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\netcore\Wexflow.Core\Wexflow.Core.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Approval\Wexflow.Tasks.Approval.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.CsvToJson\Wexflow.Tasks.CsvToJson.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.CsvToSql\Wexflow.Tasks.CsvToSql.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.CsvToXml\Wexflow.Tasks.CsvToXml.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.EnvironmentVariable\Wexflow.Tasks.EnvironmentVariable.csproj" />
