@@ -72,42 +72,36 @@ namespace Wexflow.Core.Db.RavenDB
                 // StatusCount
                 ClearStatusCount();
 
-                lock (padlock)
+                var statusCount = new StatusCount
                 {
-                    var statusCount = new StatusCount
-                    {
-                        PendingCount = 0,
-                        RunningCount = 0,
-                        DoneCount = 0,
-                        FailedCount = 0,
-                        WarningCount = 0,
-                        DisabledCount = 0,
-                        StoppedCount = 0
-                    };
-                    session.Store(statusCount);
-                    session.SaveChanges();
-                }
+                    PendingCount = 0,
+                    RunningCount = 0,
+                    DoneCount = 0,
+                    FailedCount = 0,
+                    WarningCount = 0,
+                    DisabledCount = 0,
+                    StoppedCount = 0
+                };
+                session.Store(statusCount);
+                session.SaveChanges();
+
 
                 // Entries
                 ClearEntries();
 
                 // Insert default user if necessary
-                lock (padlock)
+                var usersCol = session.Query<User>();
+                try
                 {
-                    var usersCol = session.Query<User>();
-                    try
-                    {
-                        if (usersCol.Count() == 0)
-                        {
-                            InsertDefaultUser();
-                        }
-                    }
-                    catch (Exception) // Create document if it does not exist
+                    if (usersCol.Count() == 0)
                     {
                         InsertDefaultUser();
                     }
                 }
-
+                catch (Exception) // Create document if it does not exist
+                {
+                    InsertDefaultUser();
+                }
             }
 
         }

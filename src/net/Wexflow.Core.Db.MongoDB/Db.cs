@@ -59,36 +59,31 @@ namespace Wexflow.Core.Db.MongoDB
             // StatusCount
             ClearStatusCount();
 
-            lock (padlock)
+            var statusCountCol = db.GetCollection<StatusCount>(Core.Db.StatusCount.DocumentName);
+
+            var statusCount = new StatusCount
             {
-                var statusCountCol = db.GetCollection<StatusCount>(Core.Db.StatusCount.DocumentName);
+                PendingCount = 0,
+                RunningCount = 0,
+                DoneCount = 0,
+                FailedCount = 0,
+                WarningCount = 0,
+                DisabledCount = 0,
+                StoppedCount = 0
+            };
 
-                var statusCount = new StatusCount
-                {
-                    PendingCount = 0,
-                    RunningCount = 0,
-                    DoneCount = 0,
-                    FailedCount = 0,
-                    WarningCount = 0,
-                    DisabledCount = 0,
-                    StoppedCount = 0
-                };
-
-                statusCountCol.InsertOne(statusCount);
-            }
+            statusCountCol.InsertOne(statusCount);
 
             // Entries
             ClearEntries();
 
             // Insert default user if necessary
-            lock (padlock)
+            var usersCol = db.GetCollection<User>(Core.Db.User.DocumentName);
+            if (usersCol.CountDocuments(FilterDefinition<User>.Empty) == 0)
             {
-                var usersCol = db.GetCollection<User>(Core.Db.User.DocumentName);
-                if (usersCol.CountDocuments(FilterDefinition<User>.Empty) == 0)
-                {
-                    InsertDefaultUser();
-                }
+                InsertDefaultUser();
             }
+
         }
 
         public override IEnumerable<Core.Db.Workflow> GetWorkflows()

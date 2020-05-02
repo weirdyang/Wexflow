@@ -50,44 +50,41 @@ namespace Wexflow.Core.Db.SQLite
             // StatusCount
             ClearStatusCount();
 
-            lock (padlock)
+            var statusCount = new StatusCount
             {
-                var statusCount = new StatusCount
-                {
-                    PendingCount = 0,
-                    RunningCount = 0,
-                    DoneCount = 0,
-                    FailedCount = 0,
-                    WarningCount = 0,
-                    DisabledCount = 0,
-                    StoppedCount = 0
-                };
+                PendingCount = 0,
+                RunningCount = 0,
+                DoneCount = 0,
+                FailedCount = 0,
+                WarningCount = 0,
+                DisabledCount = 0,
+                StoppedCount = 0
+            };
 
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
 
-                    using (var command = new SQLiteCommand("INSERT INTO " + Core.Db.StatusCount.DocumentName + "("
-                        + StatusCount.ColumnName_PendingCount + ", "
-                        + StatusCount.ColumnName_RunningCount + ", "
-                        + StatusCount.ColumnName_DoneCount + ", "
-                        + StatusCount.ColumnName_FailedCount + ", "
-                        + StatusCount.ColumnName_WarningCount + ", "
-                        + StatusCount.ColumnName_DisabledCount + ", "
-                        + StatusCount.ColumnName_StoppedCount + ", "
-                        + StatusCount.ColumnName_RejectedCount + ") VALUES("
-                        + statusCount.PendingCount + ", "
-                        + statusCount.RunningCount + ", "
-                        + statusCount.DoneCount + ", "
-                        + statusCount.FailedCount + ", "
-                        + statusCount.WarningCount + ", "
-                        + statusCount.DisabledCount + ", "
-                        + statusCount.StoppedCount + ", "
-                        + statusCount.RejectedCount + ");"
-                        , conn))
-                    {
-                        command.ExecuteNonQuery();
-                    }
+                using (var command = new SQLiteCommand("INSERT INTO " + Core.Db.StatusCount.DocumentName + "("
+                    + StatusCount.ColumnName_PendingCount + ", "
+                    + StatusCount.ColumnName_RunningCount + ", "
+                    + StatusCount.ColumnName_DoneCount + ", "
+                    + StatusCount.ColumnName_FailedCount + ", "
+                    + StatusCount.ColumnName_WarningCount + ", "
+                    + StatusCount.ColumnName_DisabledCount + ", "
+                    + StatusCount.ColumnName_StoppedCount + ", "
+                    + StatusCount.ColumnName_RejectedCount + ") VALUES("
+                    + statusCount.PendingCount + ", "
+                    + statusCount.RunningCount + ", "
+                    + statusCount.DoneCount + ", "
+                    + statusCount.FailedCount + ", "
+                    + statusCount.WarningCount + ", "
+                    + statusCount.DisabledCount + ", "
+                    + statusCount.StoppedCount + ", "
+                    + statusCount.RejectedCount + ");"
+                    , conn))
+                {
+                    command.ExecuteNonQuery();
                 }
             }
 
@@ -95,24 +92,20 @@ namespace Wexflow.Core.Db.SQLite
             ClearEntries();
 
             // Insert default user if necessary
-            lock (padlock)
+            using (var conn = new SQLiteConnection(_connectionString))
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                conn.Open();
+
+                using (var command = new SQLiteCommand("SELECT COUNT(*) FROM " + Core.Db.User.DocumentName + ";", conn))
                 {
-                    conn.Open();
+                    var usersCount = (long)command.ExecuteScalar();
 
-                    using (var command = new SQLiteCommand("SELECT COUNT(*) FROM " + Core.Db.User.DocumentName + ";", conn))
+                    if (usersCount == 0)
                     {
-                        var usersCount = (long)command.ExecuteScalar();
-
-                        if (usersCount == 0)
-                        {
-                            InsertDefaultUser();
-                        }
+                        InsertDefaultUser();
                     }
                 }
             }
-
         }
 
         public override bool CheckUserWorkflow(string userId, string workflowId)
