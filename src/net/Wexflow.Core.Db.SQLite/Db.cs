@@ -7,8 +7,8 @@ namespace Wexflow.Core.Db.SQLite
 {
     public sealed class Db : Core.Db.Db
     {
-        private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
         private static readonly object padlock = new object();
+        private static readonly string dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
         private string _connectionString;
         private string _dataSource;
@@ -393,7 +393,7 @@ namespace Wexflow.Core.Db.SQLite
                         + " FROM " + Core.Db.Entry.DocumentName
                         + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                         + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "')"
+                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "')"
                         + " ORDER BY ");
 
                     switch (eo)
@@ -504,7 +504,7 @@ namespace Wexflow.Core.Db.SQLite
                         + " FROM " + Core.Db.Entry.DocumentName
                         + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                         + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "');", conn))
+                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "');", conn))
                     {
 
                         var count = (long)command.ExecuteScalar();
@@ -842,7 +842,7 @@ namespace Wexflow.Core.Db.SQLite
                         + " FROM " + Core.Db.HistoryEntry.DocumentName
                         + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                         + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "')"
+                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "')"
                         + " ORDER BY ");
 
                     switch (heo)
@@ -973,7 +973,7 @@ namespace Wexflow.Core.Db.SQLite
                         + " FROM " + Core.Db.HistoryEntry.DocumentName
                         + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
                         + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "');", conn))
+                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "');", conn))
                     {
 
                         var count = (long)command.ExecuteScalar();
@@ -1519,7 +1519,7 @@ namespace Wexflow.Core.Db.SQLite
                         + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
                         + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
                         + (int)entry.LaunchType + ", "
-                        + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
+                        + "'" + entry.StatusDate.ToString(dateTimeFormat) + "'" + ", "
                         + (int)entry.Status + ", "
                         + entry.WorkflowId + ", "
                         + "'" + (entry.JobId ?? "") + "', "
@@ -1552,7 +1552,7 @@ namespace Wexflow.Core.Db.SQLite
                         + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
                         + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
                         + (int)entry.LaunchType + ", "
-                        + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
+                        + "'" + entry.StatusDate.ToString(dateTimeFormat) + "'" + ", "
                         + (int)entry.Status + ", "
                         + entry.WorkflowId + ", "
                         + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
@@ -1584,8 +1584,8 @@ namespace Wexflow.Core.Db.SQLite
                         + "'" + (user.Password ?? "").Replace("'", "''") + "'" + ", "
                         + (int)user.UserProfile + ", "
                         + "'" + (user.Email ?? "").Replace("'", "''") + "'" + ", "
-                        + "'" + DateTime.Now.ToString(DateTimeFormat) + "'" + ", "
-                        + (user.ModifiedOn == DateTime.MinValue ? "NULL" : "'" + user.ModifiedOn.ToString(DateTimeFormat) + "'") + ");"
+                        + "'" + DateTime.Now.ToString(dateTimeFormat) + "'" + ", "
+                        + (user.ModifiedOn == DateTime.MinValue ? "NULL" : "'" + user.ModifiedOn.ToString(dateTimeFormat) + "'") + ");"
                         , conn))
                     {
 
@@ -1651,7 +1651,7 @@ namespace Wexflow.Core.Db.SQLite
                         + Entry.ColumnName_Name + " = '" + (entry.Name ?? "").Replace("'", "''") + "', "
                         + Entry.ColumnName_Description + " = '" + (entry.Description ?? "").Replace("'", "''") + "', "
                         + Entry.ColumnName_LaunchType + " = " + (int)entry.LaunchType + ", "
-                        + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(DateTimeFormat) + "', "
+                        + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(dateTimeFormat) + "', "
                         + Entry.ColumnName_Status + " = " + (int)entry.Status + ", "
                         + Entry.ColumnName_WorkflowId + " = " + entry.WorkflowId + ", "
                         + Entry.ColumnName_JobId + " = '" + (entry.JobId ?? "") + "', "
@@ -1701,8 +1701,8 @@ namespace Wexflow.Core.Db.SQLite
                         + User.ColumnName_Password + " = '" + (user.Password ?? "").Replace("'", "''") + "', "
                         + User.ColumnName_UserProfile + " = " + (int)user.UserProfile + ", "
                         + User.ColumnName_Email + " = '" + (user.Email ?? "").Replace("'", "''") + "', "
-                        + User.ColumnName_CreatedOn + " = '" + user.CreatedOn.ToString(DateTimeFormat) + "', "
-                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
+                        + User.ColumnName_CreatedOn + " = '" + user.CreatedOn.ToString(dateTimeFormat) + "', "
+                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(dateTimeFormat) + "'"
                         + " WHERE "
                         + User.ColumnName_Id + " = " + int.Parse(id) + ";"
                         , conn))
@@ -1726,7 +1726,7 @@ namespace Wexflow.Core.Db.SQLite
                         + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "', "
                         + User.ColumnName_UserProfile + " = " + (int)up + ", "
                         + User.ColumnName_Email + " = '" + (email ?? "").Replace("'", "''") + "', "
-                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
+                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(dateTimeFormat) + "'"
                         + " WHERE "
                         + User.ColumnName_Id + " = " + int.Parse(userId) + ";"
                         , conn))
