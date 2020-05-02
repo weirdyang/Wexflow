@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ScssToCss.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ScssToCss.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpScss" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
+  </ItemGroup>
+
+</Project>

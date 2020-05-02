@@ -9,40 +9,20 @@ namespace Wexflow.Tasks.ScssToCss
 {
     public class ScssToCss : Task
     {
-        public string SmbComputerName { get; private set; }
-        public string SmbDomain { get; private set; }
-        public string SmbUsername { get; private set; }
-        public string SmbPassword { get; private set; }
-
         public ScssToCss(XElement xe, Workflow wf) : base(xe, wf)
         {
-            SmbComputerName = GetSetting("smbComputerName");
-            SmbDomain = GetSetting("smbDomain");
-            SmbUsername = GetSetting("smbUsername");
-            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
         {
             Info("Converting SCSS files to CSS files...");
 
+            bool success;
             var status = Status.Success;
-            var success = true;
             var atLeastOneSuccess = false;
-
             try
             {
-                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
-                {
-                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
-                    {
-                        success = ConvertFiles(ref atLeastOneSuccess);
-                    }
-                }
-                else
-                {
-                    success = ConvertFiles(ref atLeastOneSuccess);
-                }
+                success = ConvertFiles(ref atLeastOneSuccess);
             }
             catch (ThreadAbortException)
             {

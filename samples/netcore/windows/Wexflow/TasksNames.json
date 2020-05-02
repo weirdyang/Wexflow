@@ -57,6 +57,7 @@
 	{ "Name": "RedditListComments", "Description": "Retrieves Reddit comment history."},
 	{ "Name": "RedditListPosts", "Description": "Retrieves Reddit post history."},
 	{ "Name": "Rmdir", "Description": "Deletes a collection of folders."},
+	{ "Name": "ScssToCss", "Description": "Converts SCSS files to CSS files."},
 	{ "Name": "Sha1", "Description": "Generates SHA-1 hashes of a collection of files."},
 	{ "Name": "Sha256", "Description": "Generates SHA-256 hashes of a collection of files."},
 	{ "Name": "Sha512", "Description": "Generates SHA-512 hashes of a collection of files."},

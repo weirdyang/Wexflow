@@ -57,6 +57,7 @@
 	"RedditListComments": [ {"Name": "appId", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "refreshToken", "Required": true, "Type": "string", "List": [], "DefaultValue": ""},  {"Name": "maxResults", "Required": false, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"RedditListPosts": [ {"Name": "appId", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "refreshToken", "Required": true, "Type": "string", "List": [], "DefaultValue": ""},  {"Name": "maxResults", "Required": false, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Rmdir": [ {"Name": "folder", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
+	"ScssToCss": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Sha1": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Sha256": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Sha512": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
