@@ -7,21 +7,21 @@ namespace Wexflow.Core.Db.Firebird
 {
     public class Db : Core.Db.Db
     {
-        private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+        private static readonly object padlock = new object();
+        private static readonly string dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
-        private string _connectionString;
-        private Helper _helper;
+        private static string connectionString;
 
         public Db(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
-            _helper = new Helper(connectionString);
-            _helper.CreateTableIfNotExists(Core.Db.Entry.DocumentName, Entry.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.HistoryEntry.DocumentName, HistoryEntry.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.StatusCount.DocumentName, StatusCount.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.User.DocumentName, User.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.UserWorkflow.DocumentName, UserWorkflow.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.Workflow.DocumentName, Workflow.TableStruct);
+            Db.connectionString = connectionString;
+            var helper = new Helper(connectionString);
+            helper.CreateTableIfNotExists(Core.Db.Entry.DocumentName, Entry.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.HistoryEntry.DocumentName, HistoryEntry.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.StatusCount.DocumentName, StatusCount.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.User.DocumentName, User.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.UserWorkflow.DocumentName, UserWorkflow.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.Workflow.DocumentName, Workflow.TableStruct);
         }
 
         public override void Init()
@@ -40,7 +40,7 @@ namespace Wexflow.Core.Db.Firebird
                 StoppedCount = 0
             };
 
-            using (var conn = new FbConnection(_connectionString))
+            using (var conn = new FbConnection(connectionString))
             {
                 conn.Open();
 
@@ -71,7 +71,7 @@ namespace Wexflow.Core.Db.Firebird
             ClearEntries();
 
             // Insert default user if necessary
-            using (var conn = new FbConnection(_connectionString))
+            using (var conn = new FbConnection(connectionString))
             {
                 conn.Open();
 
@@ -89,1210 +89,1312 @@ namespace Wexflow.Core.Db.Firebird
 
         public override bool CheckUserWorkflow(string userId, string workflowId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT COUNT(*) FROM " + Core.Db.UserWorkflow.DocumentName
-                    + " WHERE " + UserWorkflow.ColumnName_UserId + "=" + int.Parse(userId)
-                    + " AND " + UserWorkflow.ColumnName_WorkflowId + "=" + int.Parse(workflowId)
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    var count = (long)command.ExecuteScalar();
+                    using (var command = new FbCommand("SELECT COUNT(*) FROM " + Core.Db.UserWorkflow.DocumentName
+                        + " WHERE " + UserWorkflow.ColumnName_UserId + "=" + int.Parse(userId)
+                        + " AND " + UserWorkflow.ColumnName_WorkflowId + "=" + int.Parse(workflowId)
+                        + ";", conn))
+                    {
 
-                    return count > 0;
+                        var count = (long)command.ExecuteScalar();
+
+                        return count > 0;
+                    }
+
                 }
-
             }
         }
 
         public override void ClearEntries()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.Entry.DocumentName + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.Entry.DocumentName + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void ClearStatusCount()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.StatusCount.DocumentName + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void DeleteUser(string username, string password)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + User.ColumnName_Username + " = '" + username + "'"
-                    + " AND " + User.ColumnName_Password + " = '" + password + "'"
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + User.ColumnName_Username + " = '" + username + "'"
+                        + " AND " + User.ColumnName_Password + " = '" + password + "'"
+                        + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void DeleteUserWorkflowRelationsByUserId(string userId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.UserWorkflow.DocumentName
-                    + " WHERE " + UserWorkflow.ColumnName_UserId + " = " + int.Parse(userId) + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.UserWorkflow.DocumentName
+                        + " WHERE " + UserWorkflow.ColumnName_UserId + " = " + int.Parse(userId) + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void DeleteUserWorkflowRelationsByWorkflowId(string workflowDbId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.UserWorkflow.DocumentName
-                    + " WHERE " + UserWorkflow.ColumnName_WorkflowId + " = " + int.Parse(workflowDbId) + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.UserWorkflow.DocumentName
+                        + " WHERE " + UserWorkflow.ColumnName_WorkflowId + " = " + int.Parse(workflowDbId) + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void DeleteWorkflow(string id)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.Workflow.DocumentName
-                    + " WHERE " + Workflow.ColumnName_Id + " = " + int.Parse(id) + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.Workflow.DocumentName
+                        + " WHERE " + Workflow.ColumnName_Id + " = " + int.Parse(id) + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void DeleteWorkflows(string[] ids)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                var builder = new StringBuilder("(");
-
-                for (int i = 0; i < ids.Length; i++)
+                using (var conn = new FbConnection(connectionString))
                 {
-                    var id = ids[i];
-                    builder.Append(id);
-                    if (i < ids.Length - 1)
-                    {
-                        builder.Append(", ");
-                    }
-                    else
-                    {
-                        builder.Append(")");
-                    }
-                }
+                    conn.Open();
 
-                using (var command = new FbCommand("DELETE FROM " + Core.Db.Workflow.DocumentName
-                    + " WHERE " + Workflow.ColumnName_Id + " IN " + builder.ToString() + ";", conn))
-                {
-                    command.ExecuteNonQuery();
+                    var builder = new StringBuilder("(");
+
+                    for (int i = 0; i < ids.Length; i++)
+                    {
+                        var id = ids[i];
+                        builder.Append(id);
+                        if (i < ids.Length - 1)
+                        {
+                            builder.Append(", ");
+                        }
+                        else
+                        {
+                            builder.Append(")");
+                        }
+                    }
+
+                    using (var command = new FbCommand("DELETE FROM " + Core.Db.Workflow.DocumentName
+                        + " WHERE " + Workflow.ColumnName_Id + " IN " + builder.ToString() + ";", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override IEnumerable<Core.Db.User> GetAdministrators(string keyword, UserOrderBy uo)
         {
-            List<User> admins = new List<User>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<User> admins = new List<User>();
 
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn
-                    + " FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + "(LOWER(" + User.ColumnName_Username + ")" + " LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " AND " + User.ColumnName_UserProfile + " = " + (int)UserProfile.Administrator + ")"
-                    + " ORDER BY " + User.ColumnName_Username + (uo == UserOrderBy.UsernameAscending ? " ASC" : " DESC")
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn
+                        + " FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + "(LOWER(" + User.ColumnName_Username + ")" + " LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " AND " + User.ColumnName_UserProfile + " = " + (int)UserProfile.Administrator + ")"
+                        + " ORDER BY " + User.ColumnName_Username + (uo == UserOrderBy.UsernameAscending ? " ASC" : " DESC")
+                        + ";", conn))
                     {
-                        while (reader.Read())
-                        {
-                            var admin = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            admins.Add(admin);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var admin = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                admins.Add(admin);
+                            }
                         }
                     }
                 }
-            }
 
-            return admins;
+                return admins;
+            }
         }
 
         public override IEnumerable<Core.Db.Entry> GetEntries()
         {
-            List<Entry> entries = new List<Entry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<Entry> entries = new List<Entry>();
 
-                using (var command = new FbCommand("SELECT "
-                    + Entry.ColumnName_Id + ", "
-                    + Entry.ColumnName_Name + ", "
-                    + Entry.ColumnName_Description + ", "
-                    + Entry.ColumnName_LaunchType + ", "
-                    + Entry.ColumnName_Status + ", "
-                    + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId + ", "
-                    + Entry.ColumnName_JobId
-                    + " FROM " + Core.Db.Entry.DocumentName + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT "
+                        + Entry.ColumnName_Id + ", "
+                        + Entry.ColumnName_Name + ", "
+                        + Entry.ColumnName_Description + ", "
+                        + Entry.ColumnName_LaunchType + ", "
+                        + Entry.ColumnName_Status + ", "
+                        + Entry.ColumnName_StatusDate + ", "
+                        + Entry.ColumnName_WorkflowId + ", "
+                        + Entry.ColumnName_JobId
+                        + " FROM " + Core.Db.Entry.DocumentName + ";", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new Entry
-                            {
-                                Id = (int)reader[Entry.ColumnName_Id],
-                                Name = (string)reader[Entry.ColumnName_Name],
-                                Description = (string)reader[Entry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[Entry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
-                                JobId = (string)reader[Entry.ColumnName_JobId]
-                            };
 
-                            entries.Add(entry);
+                            while (reader.Read())
+                            {
+                                var entry = new Entry
+                                {
+                                    Id = (int)reader[Entry.ColumnName_Id],
+                                    Name = (string)reader[Entry.ColumnName_Name],
+                                    Description = (string)reader[Entry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[Entry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
+                                    JobId = (string)reader[Entry.ColumnName_JobId]
+                                };
+
+                                entries.Add(entry);
+                            }
                         }
                     }
                 }
-            }
 
-            return entries;
+                return entries;
+            }
         }
 
         public override IEnumerable<Core.Db.Entry> GetEntries(string keyword, DateTime from, DateTime to, int page, int entriesCount, EntryOrderBy eo)
         {
-            List<Entry> entries = new List<Entry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<Entry> entries = new List<Entry>();
 
-                var sqlBuilder = new StringBuilder("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
-                    + Entry.ColumnName_Id + ", "
-                    + Entry.ColumnName_Name + ", "
-                    + Entry.ColumnName_Description + ", "
-                    + Entry.ColumnName_LaunchType + ", "
-                    + Entry.ColumnName_Status + ", "
-                    + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId + ", "
-                    + Entry.ColumnName_JobId
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "')"
-                    + " ORDER BY ");
-
-                switch (eo)
+                using (var conn = new FbConnection(connectionString))
                 {
-                    case EntryOrderBy.StatusDateAscending:
+                    conn.Open();
 
-                        sqlBuilder.Append(Entry.ColumnName_StatusDate).Append(" ASC");
-                        break;
+                    var sqlBuilder = new StringBuilder("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
+                        + Entry.ColumnName_Id + ", "
+                        + Entry.ColumnName_Name + ", "
+                        + Entry.ColumnName_Description + ", "
+                        + Entry.ColumnName_LaunchType + ", "
+                        + Entry.ColumnName_Status + ", "
+                        + Entry.ColumnName_StatusDate + ", "
+                        + Entry.ColumnName_WorkflowId + ", "
+                        + Entry.ColumnName_JobId
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
+                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "')"
+                        + " ORDER BY ");
 
-                    case EntryOrderBy.StatusDateDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_StatusDate).Append(" DESC");
-                        break;
-
-                    case EntryOrderBy.WorkflowIdAscending:
-
-                        sqlBuilder.Append(Entry.ColumnName_WorkflowId).Append(" ASC");
-                        break;
-
-                    case EntryOrderBy.WorkflowIdDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_WorkflowId).Append(" DESC");
-                        break;
-
-                    case EntryOrderBy.NameAscending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Name).Append(" ASC");
-                        break;
-
-                    case EntryOrderBy.NameDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Name).Append(" DESC");
-                        break;
-
-                    case EntryOrderBy.LaunchTypeAscending:
-
-                        sqlBuilder.Append(Entry.ColumnName_LaunchType).Append(" ASC");
-                        break;
-
-                    case EntryOrderBy.LaunchTypeDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_LaunchType).Append(" DESC");
-                        break;
-
-                    case EntryOrderBy.DescriptionAscending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Description).Append(" ASC");
-                        break;
-
-                    case EntryOrderBy.DescriptionDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Description).Append(" DESC");
-                        break;
-
-                    case EntryOrderBy.StatusAscending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Status).Append(" ASC");
-                        break;
-
-                    case EntryOrderBy.StatusDescending:
-
-                        sqlBuilder.Append(Entry.ColumnName_Status).Append(" DESC");
-                        break;
-                }
-
-                sqlBuilder.Append(";");
-
-                using (var command = new FbCommand(sqlBuilder.ToString(), conn))
-                {
-
-                    using (var reader = command.ExecuteReader())
+                    switch (eo)
                     {
+                        case EntryOrderBy.StatusDateAscending:
 
-                        while (reader.Read())
-                        {
-                            var entry = new Entry
-                            {
-                                Id = (int)reader[Entry.ColumnName_Id],
-                                Name = (string)reader[Entry.ColumnName_Name],
-                                Description = (string)reader[Entry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[Entry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
-                                JobId = (string)reader[Entry.ColumnName_JobId]
-                            };
+                            sqlBuilder.Append(Entry.ColumnName_StatusDate).Append(" ASC");
+                            break;
 
-                            entries.Add(entry);
-                        }
+                        case EntryOrderBy.StatusDateDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_StatusDate).Append(" DESC");
+                            break;
+
+                        case EntryOrderBy.WorkflowIdAscending:
+
+                            sqlBuilder.Append(Entry.ColumnName_WorkflowId).Append(" ASC");
+                            break;
+
+                        case EntryOrderBy.WorkflowIdDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_WorkflowId).Append(" DESC");
+                            break;
+
+                        case EntryOrderBy.NameAscending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Name).Append(" ASC");
+                            break;
+
+                        case EntryOrderBy.NameDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Name).Append(" DESC");
+                            break;
+
+                        case EntryOrderBy.LaunchTypeAscending:
+
+                            sqlBuilder.Append(Entry.ColumnName_LaunchType).Append(" ASC");
+                            break;
+
+                        case EntryOrderBy.LaunchTypeDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_LaunchType).Append(" DESC");
+                            break;
+
+                        case EntryOrderBy.DescriptionAscending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Description).Append(" ASC");
+                            break;
+
+                        case EntryOrderBy.DescriptionDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Description).Append(" DESC");
+                            break;
+
+                        case EntryOrderBy.StatusAscending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Status).Append(" ASC");
+                            break;
+
+                        case EntryOrderBy.StatusDescending:
+
+                            sqlBuilder.Append(Entry.ColumnName_Status).Append(" DESC");
+                            break;
                     }
 
-                }
-            }
+                    sqlBuilder.Append(";");
 
-            return entries;
+                    using (var command = new FbCommand(sqlBuilder.ToString(), conn))
+                    {
+
+                        using (var reader = command.ExecuteReader())
+                        {
+
+                            while (reader.Read())
+                            {
+                                var entry = new Entry
+                                {
+                                    Id = (int)reader[Entry.ColumnName_Id],
+                                    Name = (string)reader[Entry.ColumnName_Name],
+                                    Description = (string)reader[Entry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[Entry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
+                                    JobId = (string)reader[Entry.ColumnName_JobId]
+                                };
+
+                                entries.Add(entry);
+                            }
+                        }
+
+                    }
+                }
+
+                return entries;
+            }
         }
 
         public override long GetEntriesCount(string keyword, DateTime from, DateTime to)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT COUNT(*)"
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "');", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    var count = (long)command.ExecuteScalar();
+                    conn.Open();
 
-                    return count;
+                    using (var command = new FbCommand("SELECT COUNT(*)"
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " WHERE " + "(LOWER(" + Entry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + Entry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
+                        + " AND (" + Entry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "');", conn))
+                    {
+                        var count = (long)command.ExecuteScalar();
+
+                        return count;
+                    }
                 }
             }
         }
 
         public override Core.Db.Entry GetEntry(int workflowId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT "
-                    + Entry.ColumnName_Id + ", "
-                    + Entry.ColumnName_Name + ", "
-                    + Entry.ColumnName_Description + ", "
-                    + Entry.ColumnName_LaunchType + ", "
-                    + Entry.ColumnName_Status + ", "
-                    + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId + ", "
-                    + Entry.ColumnName_JobId
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " WHERE " + Entry.ColumnName_WorkflowId + " = " + workflowId + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT "
+                        + Entry.ColumnName_Id + ", "
+                        + Entry.ColumnName_Name + ", "
+                        + Entry.ColumnName_Description + ", "
+                        + Entry.ColumnName_LaunchType + ", "
+                        + Entry.ColumnName_Status + ", "
+                        + Entry.ColumnName_StatusDate + ", "
+                        + Entry.ColumnName_WorkflowId + ", "
+                        + Entry.ColumnName_JobId
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " WHERE " + Entry.ColumnName_WorkflowId + " = " + workflowId + ";", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new Entry
-                            {
-                                Id = (int)reader[Entry.ColumnName_Id],
-                                Name = (string)reader[Entry.ColumnName_Name],
-                                Description = (string)reader[Entry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[Entry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
-                                JobId = (string)reader[Entry.ColumnName_JobId]
-                            };
 
-                            return entry;
+                            if (reader.Read())
+                            {
+                                var entry = new Entry
+                                {
+                                    Id = (int)reader[Entry.ColumnName_Id],
+                                    Name = (string)reader[Entry.ColumnName_Name],
+                                    Description = (string)reader[Entry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[Entry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
+                                    JobId = (string)reader[Entry.ColumnName_JobId]
+                                };
+
+                                return entry;
+                            }
                         }
                     }
+
                 }
 
+                return null;
             }
-
-            return null;
         }
 
         public override Core.Db.Entry GetEntry(int workflowId, Guid jobId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT "
-                    + Entry.ColumnName_Id + ", "
-                    + Entry.ColumnName_Name + ", "
-                    + Entry.ColumnName_Description + ", "
-                    + Entry.ColumnName_LaunchType + ", "
-                    + Entry.ColumnName_Status + ", "
-                    + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_WorkflowId + ", "
-                    + Entry.ColumnName_JobId
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " WHERE (" + Entry.ColumnName_WorkflowId + " = " + workflowId
-                    + " AND " + Entry.ColumnName_JobId + " = '" + jobId.ToString() + "');", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT "
+                        + Entry.ColumnName_Id + ", "
+                        + Entry.ColumnName_Name + ", "
+                        + Entry.ColumnName_Description + ", "
+                        + Entry.ColumnName_LaunchType + ", "
+                        + Entry.ColumnName_Status + ", "
+                        + Entry.ColumnName_StatusDate + ", "
+                        + Entry.ColumnName_WorkflowId + ", "
+                        + Entry.ColumnName_JobId
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " WHERE (" + Entry.ColumnName_WorkflowId + " = " + workflowId
+                        + " AND " + Entry.ColumnName_JobId + " = '" + jobId.ToString() + "');", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new Entry
-                            {
-                                Id = (int)reader[Entry.ColumnName_Id],
-                                Name = (string)reader[Entry.ColumnName_Name],
-                                Description = (string)reader[Entry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[Entry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
-                                JobId = (string)reader[Entry.ColumnName_JobId]
-                            };
 
-                            return entry;
+                            if (reader.Read())
+                            {
+                                var entry = new Entry
+                                {
+                                    Id = (int)reader[Entry.ColumnName_Id],
+                                    Name = (string)reader[Entry.ColumnName_Name],
+                                    Description = (string)reader[Entry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[Entry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[Entry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[Entry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[Entry.ColumnName_WorkflowId]),
+                                    JobId = (string)reader[Entry.ColumnName_JobId]
+                                };
+
+                                return entry;
+                            }
                         }
                     }
+
                 }
 
+                return null;
             }
-
-            return null;
         }
 
         public override DateTime GetEntryStatusDateMax()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT FIRST 1 " + Entry.ColumnName_StatusDate
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " ORDER BY " + Entry.ColumnName_StatusDate + " DESC;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT FIRST 1 " + Entry.ColumnName_StatusDate
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " ORDER BY " + Entry.ColumnName_StatusDate + " DESC;", conn))
                     {
-                        if (reader.Read())
-                        {
-                            var statusDate = (DateTime)reader[Entry.ColumnName_StatusDate];
 
-                            return statusDate;
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var statusDate = (DateTime)reader[Entry.ColumnName_StatusDate];
+
+                                return statusDate;
+                            }
                         }
                     }
                 }
-            }
 
-            return DateTime.Now;
+                return DateTime.Now;
+            }
         }
 
         public override DateTime GetEntryStatusDateMin()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT FIRST 1 " + Entry.ColumnName_StatusDate
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " ORDER BY " + Entry.ColumnName_StatusDate + " ASC;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT FIRST 1 " + Entry.ColumnName_StatusDate
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " ORDER BY " + Entry.ColumnName_StatusDate + " ASC;", conn))
                     {
-                        if (reader.Read())
-                        {
-                            var statusDate = (DateTime)reader[Entry.ColumnName_StatusDate];
 
-                            return statusDate;
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var statusDate = (DateTime)reader[Entry.ColumnName_StatusDate];
+
+                                return statusDate;
+                            }
                         }
                     }
                 }
-            }
 
-            return DateTime.Now;
+                return DateTime.Now;
+            }
         }
 
         public override IEnumerable<Core.Db.HistoryEntry> GetHistoryEntries()
         {
-            List<HistoryEntry> entries = new List<HistoryEntry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var command = new FbCommand("SELECT "
-                    + HistoryEntry.ColumnName_Id + ", "
-                    + HistoryEntry.ColumnName_Name + ", "
-                    + HistoryEntry.ColumnName_Description + ", "
-                    + HistoryEntry.ColumnName_LaunchType + ", "
-                    + HistoryEntry.ColumnName_Status + ", "
-                    + HistoryEntry.ColumnName_StatusDate + ", "
-                    + HistoryEntry.ColumnName_WorkflowId
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT "
+                        + HistoryEntry.ColumnName_Id + ", "
+                        + HistoryEntry.ColumnName_Name + ", "
+                        + HistoryEntry.ColumnName_Description + ", "
+                        + HistoryEntry.ColumnName_LaunchType + ", "
+                        + HistoryEntry.ColumnName_Status + ", "
+                        + HistoryEntry.ColumnName_StatusDate + ", "
+                        + HistoryEntry.ColumnName_WorkflowId
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName + ";", conn))
                     {
-                        while (reader.Read())
+
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new HistoryEntry
+                            while (reader.Read())
                             {
-                                Id = (int)reader[HistoryEntry.ColumnName_Id],
-                                Name = (string)reader[HistoryEntry.ColumnName_Name],
-                                Description = (string)reader[HistoryEntry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
-                            };
+                                var entry = new HistoryEntry
+                                {
+                                    Id = (int)reader[HistoryEntry.ColumnName_Id],
+                                    Name = (string)reader[HistoryEntry.ColumnName_Name],
+                                    Description = (string)reader[HistoryEntry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
+                                };
 
-                            entries.Add(entry);
+                                entries.Add(entry);
+                            }
                         }
+
                     }
-
                 }
-            }
 
-            return entries;
+                return entries;
+            }
         }
 
         public override IEnumerable<Core.Db.HistoryEntry> GetHistoryEntries(string keyword)
         {
-            List<HistoryEntry> entries = new List<HistoryEntry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var command = new FbCommand("SELECT "
-                    + HistoryEntry.ColumnName_Id + ", "
-                    + HistoryEntry.ColumnName_Name + ", "
-                    + HistoryEntry.ColumnName_Description + ", "
-                    + HistoryEntry.ColumnName_LaunchType + ", "
-                    + HistoryEntry.ColumnName_Status + ", "
-                    + HistoryEntry.ColumnName_StatusDate + ", "
-                    + HistoryEntry.ColumnName_WorkflowId
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%';", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT "
+                        + HistoryEntry.ColumnName_Id + ", "
+                        + HistoryEntry.ColumnName_Name + ", "
+                        + HistoryEntry.ColumnName_Description + ", "
+                        + HistoryEntry.ColumnName_LaunchType + ", "
+                        + HistoryEntry.ColumnName_Status + ", "
+                        + HistoryEntry.ColumnName_StatusDate + ", "
+                        + HistoryEntry.ColumnName_WorkflowId
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%';", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new HistoryEntry
-                            {
-                                Id = (int)reader[HistoryEntry.ColumnName_Id],
-                                Name = (string)reader[HistoryEntry.ColumnName_Name],
-                                Description = (string)reader[HistoryEntry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
-                            };
 
-                            entries.Add(entry);
+                            while (reader.Read())
+                            {
+                                var entry = new HistoryEntry
+                                {
+                                    Id = (int)reader[HistoryEntry.ColumnName_Id],
+                                    Name = (string)reader[HistoryEntry.ColumnName_Name],
+                                    Description = (string)reader[HistoryEntry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
+                                };
+
+                                entries.Add(entry);
+                            }
                         }
+
                     }
 
                 }
 
+                return entries;
             }
-
-            return entries;
         }
 
         public override IEnumerable<Core.Db.HistoryEntry> GetHistoryEntries(string keyword, int page, int entriesCount)
         {
-            List<HistoryEntry> entries = new List<HistoryEntry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var command = new FbCommand("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
-                    + HistoryEntry.ColumnName_Id + ", "
-                    + HistoryEntry.ColumnName_Name + ", "
-                    + HistoryEntry.ColumnName_Description + ", "
-                    + HistoryEntry.ColumnName_LaunchType + ", "
-                    + HistoryEntry.ColumnName_Status + ", "
-                    + HistoryEntry.ColumnName_StatusDate + ", "
-                    + HistoryEntry.ColumnName_WorkflowId
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'" + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
+                        + HistoryEntry.ColumnName_Id + ", "
+                        + HistoryEntry.ColumnName_Name + ", "
+                        + HistoryEntry.ColumnName_Description + ", "
+                        + HistoryEntry.ColumnName_LaunchType + ", "
+                        + HistoryEntry.ColumnName_Status + ", "
+                        + HistoryEntry.ColumnName_StatusDate + ", "
+                        + HistoryEntry.ColumnName_WorkflowId
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'" + ";"
+                        , conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new HistoryEntry
+
+                            while (reader.Read())
                             {
-                                Id = (int)reader[HistoryEntry.ColumnName_Id],
-                                Name = (string)reader[HistoryEntry.ColumnName_Name],
-                                Description = (string)reader[HistoryEntry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
-                            };
+                                var entry = new HistoryEntry
+                                {
+                                    Id = (int)reader[HistoryEntry.ColumnName_Id],
+                                    Name = (string)reader[HistoryEntry.ColumnName_Name],
+                                    Description = (string)reader[HistoryEntry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
+                                };
 
-                            entries.Add(entry);
+                                entries.Add(entry);
+                            }
                         }
-                    }
 
+                    }
                 }
+                return entries;
             }
-            return entries;
         }
 
         public override IEnumerable<Core.Db.HistoryEntry> GetHistoryEntries(string keyword, DateTime from, DateTime to, int page, int entriesCount, EntryOrderBy heo)
         {
-            List<HistoryEntry> entries = new List<HistoryEntry>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                var sqlBuilder = new StringBuilder("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
-                    + HistoryEntry.ColumnName_Id + ", "
-                    + HistoryEntry.ColumnName_Name + ", "
-                    + HistoryEntry.ColumnName_Description + ", "
-                    + HistoryEntry.ColumnName_LaunchType + ", "
-                    + HistoryEntry.ColumnName_Status + ", "
-                    + HistoryEntry.ColumnName_StatusDate + ", "
-                    + HistoryEntry.ColumnName_WorkflowId
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "')"
-                    + " ORDER BY ");
-
-                switch (heo)
+                using (var conn = new FbConnection(connectionString))
                 {
-                    case EntryOrderBy.StatusDateAscending:
+                    conn.Open();
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_StatusDate).Append(" ASC");
-                        break;
+                    var sqlBuilder = new StringBuilder("SELECT FIRST " + entriesCount + " SKIP " + (page - 1) * entriesCount + " "
+                        + HistoryEntry.ColumnName_Id + ", "
+                        + HistoryEntry.ColumnName_Name + ", "
+                        + HistoryEntry.ColumnName_Description + ", "
+                        + HistoryEntry.ColumnName_LaunchType + ", "
+                        + HistoryEntry.ColumnName_Status + ", "
+                        + HistoryEntry.ColumnName_StatusDate + ", "
+                        + HistoryEntry.ColumnName_WorkflowId
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
+                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "')"
+                        + " ORDER BY ");
 
-                    case EntryOrderBy.StatusDateDescending:
+                    switch (heo)
+                    {
+                        case EntryOrderBy.StatusDateAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_StatusDate).Append(" DESC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_StatusDate).Append(" ASC");
+                            break;
 
-                    case EntryOrderBy.WorkflowIdAscending:
+                        case EntryOrderBy.StatusDateDescending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_WorkflowId).Append(" ASC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_StatusDate).Append(" DESC");
+                            break;
 
-                    case EntryOrderBy.WorkflowIdDescending:
+                        case EntryOrderBy.WorkflowIdAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_WorkflowId).Append(" DESC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_WorkflowId).Append(" ASC");
+                            break;
 
-                    case EntryOrderBy.NameAscending:
+                        case EntryOrderBy.WorkflowIdDescending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Name).Append(" ASC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_WorkflowId).Append(" DESC");
+                            break;
 
-                    case EntryOrderBy.NameDescending:
+                        case EntryOrderBy.NameAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Name).Append(" DESC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Name).Append(" ASC");
+                            break;
 
-                    case EntryOrderBy.LaunchTypeAscending:
+                        case EntryOrderBy.NameDescending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_LaunchType).Append(" ASC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Name).Append(" DESC");
+                            break;
 
-                    case EntryOrderBy.LaunchTypeDescending:
+                        case EntryOrderBy.LaunchTypeAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_LaunchType).Append(" DESC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_LaunchType).Append(" ASC");
+                            break;
 
-                    case EntryOrderBy.DescriptionAscending:
+                        case EntryOrderBy.LaunchTypeDescending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Description).Append(" ASC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_LaunchType).Append(" DESC");
+                            break;
 
-                    case EntryOrderBy.DescriptionDescending:
+                        case EntryOrderBy.DescriptionAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Description).Append(" DESC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Description).Append(" ASC");
+                            break;
 
-                    case EntryOrderBy.StatusAscending:
+                        case EntryOrderBy.DescriptionDescending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Status).Append(" ASC");
-                        break;
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Description).Append(" DESC");
+                            break;
 
-                    case EntryOrderBy.StatusDescending:
+                        case EntryOrderBy.StatusAscending:
 
-                        sqlBuilder.Append(HistoryEntry.ColumnName_Status).Append(" DESC");
-                        break;
-                }
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Status).Append(" ASC");
+                            break;
 
-                sqlBuilder.Append(";");
+                        case EntryOrderBy.StatusDescending:
 
-                using (var command = new FbCommand(sqlBuilder.ToString(), conn))
-                {
+                            sqlBuilder.Append(HistoryEntry.ColumnName_Status).Append(" DESC");
+                            break;
+                    }
 
-                    using (var reader = command.ExecuteReader())
+                    sqlBuilder.Append(";");
+
+                    using (var command = new FbCommand(sqlBuilder.ToString(), conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var entry = new HistoryEntry
-                            {
-                                Id = (int)reader[HistoryEntry.ColumnName_Id],
-                                Name = (string)reader[HistoryEntry.ColumnName_Name],
-                                Description = (string)reader[HistoryEntry.ColumnName_Description],
-                                LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
-                                Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
-                                StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
-                                WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
-                            };
 
-                            entries.Add(entry);
+                            while (reader.Read())
+                            {
+                                var entry = new HistoryEntry
+                                {
+                                    Id = (int)reader[HistoryEntry.ColumnName_Id],
+                                    Name = (string)reader[HistoryEntry.ColumnName_Name],
+                                    Description = (string)reader[HistoryEntry.ColumnName_Description],
+                                    LaunchType = (LaunchType)((int)reader[HistoryEntry.ColumnName_LaunchType]),
+                                    Status = (Status)((int)reader[HistoryEntry.ColumnName_Status]),
+                                    StatusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate],
+                                    WorkflowId = (int)((int)reader[HistoryEntry.ColumnName_WorkflowId])
+                                };
+
+                                entries.Add(entry);
+                            }
                         }
                     }
                 }
-            }
 
-            return entries;
+                return entries;
+            }
         }
 
         public override long GetHistoryEntriesCount(string keyword)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT COUNT(*)"
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%';", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    var count = (long)command.ExecuteScalar();
+                    using (var command = new FbCommand("SELECT COUNT(*)"
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE " + "LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%';", conn))
+                    {
 
-                    return count;
+                        var count = (long)command.ExecuteScalar();
+
+                        return count;
+                    }
                 }
             }
         }
 
         public override long GetHistoryEntriesCount(string keyword, DateTime from, DateTime to)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT COUNT(*)"
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
-                    + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(DateTimeFormat) + "' AND '" + to.ToString(DateTimeFormat) + "');", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    var count = (long)command.ExecuteScalar();
+                    conn.Open();
 
-                    return count;
+                    using (var command = new FbCommand("SELECT COUNT(*)"
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE " + "(LOWER(" + HistoryEntry.ColumnName_Name + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " OR " + "LOWER(" + HistoryEntry.ColumnName_Description + ") LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%')"
+                        + " AND (" + HistoryEntry.ColumnName_StatusDate + " BETWEEN '" + from.ToString(dateTimeFormat) + "' AND '" + to.ToString(dateTimeFormat) + "');", conn))
+                    {
+                        var count = (long)command.ExecuteScalar();
+
+                        return count;
+                    }
                 }
             }
         }
 
         public override DateTime GetHistoryEntryStatusDateMax()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT FIRST 1 " + HistoryEntry.ColumnName_StatusDate
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " ORDER BY " + HistoryEntry.ColumnName_StatusDate + " DESC;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT FIRST 1 " + HistoryEntry.ColumnName_StatusDate
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " ORDER BY " + HistoryEntry.ColumnName_StatusDate + " DESC;", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var statusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate];
 
-                            return statusDate;
+                            if (reader.Read())
+                            {
+                                var statusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate];
+
+                                return statusDate;
+                            }
                         }
                     }
                 }
-            }
 
-            return DateTime.Now;
+                return DateTime.Now;
+            }
         }
 
         public override DateTime GetHistoryEntryStatusDateMin()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT FIRST 1 " + HistoryEntry.ColumnName_StatusDate
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " ORDER BY " + HistoryEntry.ColumnName_StatusDate + " ASC;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT FIRST 1 " + HistoryEntry.ColumnName_StatusDate
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " ORDER BY " + HistoryEntry.ColumnName_StatusDate + " ASC;", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var statusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate];
 
-                            return statusDate;
+                            if (reader.Read())
+                            {
+                                var statusDate = (DateTime)reader[HistoryEntry.ColumnName_StatusDate];
+
+                                return statusDate;
+                            }
                         }
                     }
                 }
-            }
 
-            return DateTime.Now;
+                return DateTime.Now;
+            }
         }
 
         public override string GetPassword(string username)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Password
-                    + " FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "'"
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            var password = (string)reader[User.ColumnName_Password];
+                    conn.Open();
 
-                            return password;
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Password
+                        + " FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "'"
+                        + ";", conn))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var password = (string)reader[User.ColumnName_Password];
+
+                                return password;
+                            }
                         }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         public override Core.Db.StatusCount GetStatusCount()
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + StatusCount.ColumnName_Id + ", "
-                    + StatusCount.ColumnName_PendingCount + ", "
-                    + StatusCount.ColumnName_RunningCount + ", "
-                    + StatusCount.ColumnName_DoneCount + ", "
-                    + StatusCount.ColumnName_FailedCount + ", "
-                    + StatusCount.ColumnName_WarningCount + ", "
-                    + StatusCount.ColumnName_DisabledCount + ", "
-                    + StatusCount.ColumnName_StoppedCount + ", "
-                    + StatusCount.ColumnName_RejectedCount
-                    + " FROM " + Core.Db.StatusCount.DocumentName
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    using (var reader = command.ExecuteReader())
+                    conn.Open();
+
+                    using (var command = new FbCommand("SELECT " + StatusCount.ColumnName_Id + ", "
+                        + StatusCount.ColumnName_PendingCount + ", "
+                        + StatusCount.ColumnName_RunningCount + ", "
+                        + StatusCount.ColumnName_DoneCount + ", "
+                        + StatusCount.ColumnName_FailedCount + ", "
+                        + StatusCount.ColumnName_WarningCount + ", "
+                        + StatusCount.ColumnName_DisabledCount + ", "
+                        + StatusCount.ColumnName_StoppedCount + ", "
+                        + StatusCount.ColumnName_RejectedCount
+                        + " FROM " + Core.Db.StatusCount.DocumentName
+                        + ";", conn))
                     {
-
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var statusCount = new StatusCount
-                            {
-                                Id = (int)reader[StatusCount.ColumnName_Id],
-                                PendingCount = (int)reader[StatusCount.ColumnName_PendingCount],
-                                RunningCount = (int)reader[StatusCount.ColumnName_RunningCount],
-                                DoneCount = (int)reader[StatusCount.ColumnName_DoneCount],
-                                FailedCount = (int)reader[StatusCount.ColumnName_FailedCount],
-                                WarningCount = (int)reader[StatusCount.ColumnName_WarningCount],
-                                DisabledCount = (int)reader[StatusCount.ColumnName_DisabledCount],
-                                StoppedCount = (int)reader[StatusCount.ColumnName_StoppedCount],
-                                RejectedCount = (int)reader[StatusCount.ColumnName_RejectedCount]
-                            };
 
-                            return statusCount;
+                            if (reader.Read())
+                            {
+                                var statusCount = new StatusCount
+                                {
+                                    Id = (int)reader[StatusCount.ColumnName_Id],
+                                    PendingCount = (int)reader[StatusCount.ColumnName_PendingCount],
+                                    RunningCount = (int)reader[StatusCount.ColumnName_RunningCount],
+                                    DoneCount = (int)reader[StatusCount.ColumnName_DoneCount],
+                                    FailedCount = (int)reader[StatusCount.ColumnName_FailedCount],
+                                    WarningCount = (int)reader[StatusCount.ColumnName_WarningCount],
+                                    DisabledCount = (int)reader[StatusCount.ColumnName_DisabledCount],
+                                    StoppedCount = (int)reader[StatusCount.ColumnName_StoppedCount],
+                                    RejectedCount = (int)reader[StatusCount.ColumnName_RejectedCount]
+                                };
+
+                                return statusCount;
+                            }
                         }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         public override Core.Db.User GetUser(string username)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn
-                    + " FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "'"
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn
+                        + " FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "'"
+                        + ";", conn))
                     {
-                        if (reader.Read())
-                        {
-                            var user = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            return user;
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                return user;
+                            }
                         }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         public override Core.Db.User GetUserByUserId(string userId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn
-                    + " FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + User.ColumnName_Id + " = '" + int.Parse(userId) + "'"
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn
+                        + " FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + User.ColumnName_Id + " = '" + int.Parse(userId) + "'"
+                        + ";", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var user = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            return user;
+                            if (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                return user;
+                            }
                         }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         public override IEnumerable<Core.Db.User> GetUsers()
         {
-            List<User> users = new List<User>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<User> users = new List<User>();
 
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn
-                    + " FROM " + Core.Db.User.DocumentName
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn
+                        + " FROM " + Core.Db.User.DocumentName
+                        + ";", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var user = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            users.Add(user);
+                            while (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                users.Add(user);
+                            }
                         }
                     }
                 }
-            }
 
-            return users;
+                return users;
+            }
         }
 
         public override IEnumerable<Core.Db.User> GetUsers(string keyword, UserOrderBy uo)
         {
-            List<User> users = new List<User>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<User> users = new List<User>();
 
-                using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn
-                    + " FROM " + Core.Db.User.DocumentName
-                    + " WHERE " + "LOWER(" + User.ColumnName_Username + ")" + " LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
-                    + " ORDER BY " + User.ColumnName_Username + (uo == UserOrderBy.UsernameAscending ? " ASC" : " DESC")
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + User.ColumnName_Id + ", "
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn
+                        + " FROM " + Core.Db.User.DocumentName
+                        + " WHERE " + "LOWER(" + User.ColumnName_Username + ")" + " LIKE '%" + (keyword ?? "").Replace("'", "''").ToLower() + "%'"
+                        + " ORDER BY " + User.ColumnName_Username + (uo == UserOrderBy.UsernameAscending ? " ASC" : " DESC")
+                        + ";", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var user = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            users.Add(user);
+                            while (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                users.Add(user);
+                            }
                         }
                     }
                 }
-            }
 
-            return users;
+                return users;
+            }
         }
 
         public override IEnumerable<string> GetUserWorkflows(string userId)
         {
-            List<string> workflowIds = new List<string>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<string> workflowIds = new List<string>();
 
-                using (var command = new FbCommand("SELECT " + UserWorkflow.ColumnName_Id + ", "
-                    + UserWorkflow.ColumnName_UserId + ", "
-                    + UserWorkflow.ColumnName_WorkflowId
-                    + " FROM " + Core.Db.UserWorkflow.DocumentName
-                    + " WHERE " + UserWorkflow.ColumnName_UserId + " = " + int.Parse(userId)
-                    + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + UserWorkflow.ColumnName_Id + ", "
+                        + UserWorkflow.ColumnName_UserId + ", "
+                        + UserWorkflow.ColumnName_WorkflowId
+                        + " FROM " + Core.Db.UserWorkflow.DocumentName
+                        + " WHERE " + UserWorkflow.ColumnName_UserId + " = " + int.Parse(userId)
+                        + ";", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var workflowId = (int)reader[UserWorkflow.ColumnName_WorkflowId];
 
-                            workflowIds.Add(workflowId.ToString());
+                            while (reader.Read())
+                            {
+                                var workflowId = (int)reader[UserWorkflow.ColumnName_WorkflowId];
+
+                                workflowIds.Add(workflowId.ToString());
+                            }
                         }
                     }
                 }
-            }
 
-            return workflowIds;
+                return workflowIds;
+            }
         }
 
         public override Core.Db.Workflow GetWorkflow(string id)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + Workflow.ColumnName_Id + ", "
-                    + Workflow.ColumnName_Xml
-                    + " FROM " + Core.Db.Workflow.DocumentName
-                    + " WHERE " + Workflow.ColumnName_Id + " = " + int.Parse(id) + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + Workflow.ColumnName_Id + ", "
+                        + Workflow.ColumnName_Xml
+                        + " FROM " + Core.Db.Workflow.DocumentName
+                        + " WHERE " + Workflow.ColumnName_Id + " = " + int.Parse(id) + ";", conn))
                     {
 
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var workflow = new Workflow
-                            {
-                                Id = (int)reader[Workflow.ColumnName_Id],
-                                Xml = (string)reader[Workflow.ColumnName_Xml]
-                            };
 
-                            return workflow;
+                            if (reader.Read())
+                            {
+                                var workflow = new Workflow
+                                {
+                                    Id = (int)reader[Workflow.ColumnName_Id],
+                                    Xml = (string)reader[Workflow.ColumnName_Xml]
+                                };
+
+                                return workflow;
+                            }
                         }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         public override IEnumerable<Core.Db.Workflow> GetWorkflows()
         {
-            List<Core.Db.Workflow> workflows = new List<Core.Db.Workflow>();
-
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
+                List<Core.Db.Workflow> workflows = new List<Core.Db.Workflow>();
 
-                using (var command = new FbCommand("SELECT " + Workflow.ColumnName_Id + ", "
-                    + Workflow.ColumnName_Xml
-                    + " FROM " + Core.Db.Workflow.DocumentName + ";", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    using (var reader = command.ExecuteReader())
+                    using (var command = new FbCommand("SELECT " + Workflow.ColumnName_Id + ", "
+                        + Workflow.ColumnName_Xml
+                        + " FROM " + Core.Db.Workflow.DocumentName + ";", conn))
                     {
 
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var workflow = new Workflow
-                            {
-                                Id = (int)reader[Workflow.ColumnName_Id],
-                                Xml = (string)reader[Workflow.ColumnName_Xml]
-                            };
 
-                            workflows.Add(workflow);
+                            while (reader.Read())
+                            {
+                                var workflow = new Workflow
+                                {
+                                    Id = (int)reader[Workflow.ColumnName_Id],
+                                    Xml = (string)reader[Workflow.ColumnName_Xml]
+                                };
+
+                                workflows.Add(workflow);
+                            }
                         }
                     }
                 }
-            }
 
-            return workflows;
+                return workflows;
+            }
         }
 
         private void IncrementStatusCountColumn(string statusCountColumnName)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " + 1;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " + 1;", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -1339,13 +1441,16 @@ namespace Wexflow.Core.Db.Firebird
 
         private void DecrementStatusCountColumn(string statusCountColumnName)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " - 1;", conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    command.ExecuteNonQuery();
+                    conn.Open();
+
+                    using (var command = new FbCommand("UPDATE " + Core.Db.StatusCount.DocumentName + " SET " + statusCountColumnName + " = " + statusCountColumnName + " - 1;", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -1362,287 +1467,323 @@ namespace Wexflow.Core.Db.Firebird
 
         public override void InsertEntry(Core.Db.Entry entry)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("INSERT INTO " + Core.Db.Entry.DocumentName + "("
-                    + Entry.ColumnName_Name + ", "
-                    + Entry.ColumnName_Description + ", "
-                    + Entry.ColumnName_LaunchType + ", "
-                    + Entry.ColumnName_StatusDate + ", "
-                    + Entry.ColumnName_Status + ", "
-                    + Entry.ColumnName_WorkflowId + ", "
-                    + Entry.ColumnName_JobId + ", "
-                    + Entry.ColumnName_Logs + ") VALUES("
-                    + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
-                    + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
-                    + (int)entry.LaunchType + ", "
-                    + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
-                    + (int)entry.Status + ", "
-                    + entry.WorkflowId + ", "
-                    + "'" + (entry.JobId ?? "") + "', "
-                    + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("INSERT INTO " + Core.Db.Entry.DocumentName + "("
+                        + Entry.ColumnName_Name + ", "
+                        + Entry.ColumnName_Description + ", "
+                        + Entry.ColumnName_LaunchType + ", "
+                        + Entry.ColumnName_StatusDate + ", "
+                        + Entry.ColumnName_Status + ", "
+                        + Entry.ColumnName_WorkflowId + ", "
+                        + Entry.ColumnName_JobId + ", "
+                        + Entry.ColumnName_Logs + ") VALUES("
+                        + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
+                        + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
+                        + (int)entry.LaunchType + ", "
+                        + "'" + entry.StatusDate.ToString(dateTimeFormat) + "'" + ", "
+                        + (int)entry.Status + ", "
+                        + entry.WorkflowId + ", "
+                        + "'" + (entry.JobId ?? "") + "', "
+                        + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void InsertHistoryEntry(Core.Db.HistoryEntry entry)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("INSERT INTO " + Core.Db.HistoryEntry.DocumentName + "("
-                    + HistoryEntry.ColumnName_Name + ", "
-                    + HistoryEntry.ColumnName_Description + ", "
-                    + HistoryEntry.ColumnName_LaunchType + ", "
-                    + HistoryEntry.ColumnName_StatusDate + ", "
-                    + HistoryEntry.ColumnName_Status + ", "
-                    + HistoryEntry.ColumnName_WorkflowId + ", "
-                    + HistoryEntry.ColumnName_Logs + ") VALUES("
-                    + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
-                    + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
-                    + (int)entry.LaunchType + ", "
-                    + "'" + entry.StatusDate.ToString(DateTimeFormat) + "'" + ", "
-                    + (int)entry.Status + ", "
-                    + entry.WorkflowId + ", "
-                    + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("INSERT INTO " + Core.Db.HistoryEntry.DocumentName + "("
+                        + HistoryEntry.ColumnName_Name + ", "
+                        + HistoryEntry.ColumnName_Description + ", "
+                        + HistoryEntry.ColumnName_LaunchType + ", "
+                        + HistoryEntry.ColumnName_StatusDate + ", "
+                        + HistoryEntry.ColumnName_Status + ", "
+                        + HistoryEntry.ColumnName_WorkflowId + ", "
+                        + HistoryEntry.ColumnName_Logs + ") VALUES("
+                        + "'" + (entry.Name ?? "").Replace("'", "''") + "'" + ", "
+                        + "'" + (entry.Description ?? "").Replace("'", "''") + "'" + ", "
+                        + (int)entry.LaunchType + ", "
+                        + "'" + entry.StatusDate.ToString(dateTimeFormat) + "'" + ", "
+                        + (int)entry.Status + ", "
+                        + entry.WorkflowId + ", "
+                        + "'" + (entry.Logs ?? "").Replace("'", "''") + "'" + ");"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void InsertUser(Core.Db.User user)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("INSERT INTO " + Core.Db.User.DocumentName + "("
-                    + User.ColumnName_Username + ", "
-                    + User.ColumnName_Password + ", "
-                    + User.ColumnName_UserProfile + ", "
-                    + User.ColumnName_Email + ", "
-                    + User.ColumnName_CreatedOn + ", "
-                    + User.ColumnName_ModifiedOn + ") VALUES("
-                    + "'" + (user.Username ?? "").Replace("'", "''") + "'" + ", "
-                    + "'" + (user.Password ?? "").Replace("'", "''") + "'" + ", "
-                    + (int)user.UserProfile + ", "
-                    + "'" + (user.Email ?? "").Replace("'", "''") + "'" + ", "
-                    + "'" + DateTime.Now.ToString(DateTimeFormat) + "'" + ", "
-                    + (user.ModifiedOn == DateTime.MinValue ? "NULL" : "'" + user.ModifiedOn.ToString(DateTimeFormat) + "'") + ");"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("INSERT INTO " + Core.Db.User.DocumentName + "("
+                        + User.ColumnName_Username + ", "
+                        + User.ColumnName_Password + ", "
+                        + User.ColumnName_UserProfile + ", "
+                        + User.ColumnName_Email + ", "
+                        + User.ColumnName_CreatedOn + ", "
+                        + User.ColumnName_ModifiedOn + ") VALUES("
+                        + "'" + (user.Username ?? "").Replace("'", "''") + "'" + ", "
+                        + "'" + (user.Password ?? "").Replace("'", "''") + "'" + ", "
+                        + (int)user.UserProfile + ", "
+                        + "'" + (user.Email ?? "").Replace("'", "''") + "'" + ", "
+                        + "'" + DateTime.Now.ToString(dateTimeFormat) + "'" + ", "
+                        + (user.ModifiedOn == DateTime.MinValue ? "NULL" : "'" + user.ModifiedOn.ToString(dateTimeFormat) + "'") + ");"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void InsertUserWorkflowRelation(Core.Db.UserWorkflow userWorkflow)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("INSERT INTO " + Core.Db.UserWorkflow.DocumentName + "("
-                    + UserWorkflow.ColumnName_UserId + ", "
-                    + UserWorkflow.ColumnName_WorkflowId + ") VALUES("
-                    + int.Parse(userWorkflow.UserId) + ", "
-                    + int.Parse(userWorkflow.WorkflowId) + ");"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("INSERT INTO " + Core.Db.UserWorkflow.DocumentName + "("
+                        + UserWorkflow.ColumnName_UserId + ", "
+                        + UserWorkflow.ColumnName_WorkflowId + ") VALUES("
+                        + int.Parse(userWorkflow.UserId) + ", "
+                        + int.Parse(userWorkflow.WorkflowId) + ");"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override string InsertWorkflow(Core.Db.Workflow workflow)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("INSERT INTO " + Core.Db.Workflow.DocumentName + "("
-                    + Workflow.ColumnName_Xml + ") VALUES("
-                    + "'" + (workflow.Xml ?? "").Replace("'", "''") + "'" + ") RETURNING " + Workflow.ColumnName_Id + "; "
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    var id = (int)command.ExecuteScalar();
+                    using (var command = new FbCommand("INSERT INTO " + Core.Db.Workflow.DocumentName + "("
+                        + Workflow.ColumnName_Xml + ") VALUES("
+                        + "'" + (workflow.Xml ?? "").Replace("'", "''") + "'" + ") RETURNING " + Workflow.ColumnName_Id + "; "
+                        , conn))
+                    {
 
-                    return id.ToString();
+                        var id = (int)command.ExecuteScalar();
+
+                        return id.ToString();
+                    }
                 }
             }
         }
 
         public override void UpdateEntry(string id, Core.Db.Entry entry)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.Entry.DocumentName + " SET "
-                    + Entry.ColumnName_Name + " = '" + (entry.Name ?? "").Replace("'", "''") + "', "
-                    + Entry.ColumnName_Description + " = '" + (entry.Description ?? "").Replace("'", "''") + "', "
-                    + Entry.ColumnName_LaunchType + " = " + (int)entry.LaunchType + ", "
-                    + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(DateTimeFormat) + "', "
-                    + Entry.ColumnName_Status + " = " + (int)entry.Status + ", "
-                    + Entry.ColumnName_WorkflowId + " = " + entry.WorkflowId + ", "
-                    + Entry.ColumnName_JobId + " = '" + (entry.JobId ?? "") + "', "
-                    + Entry.ColumnName_Logs + " = '" + (entry.Logs ?? "").Replace("'", "''") + "'"
-                    + " WHERE "
-                    + Entry.ColumnName_Id + " = " + int.Parse(id) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("UPDATE " + Core.Db.Entry.DocumentName + " SET "
+                        + Entry.ColumnName_Name + " = '" + (entry.Name ?? "").Replace("'", "''") + "', "
+                        + Entry.ColumnName_Description + " = '" + (entry.Description ?? "").Replace("'", "''") + "', "
+                        + Entry.ColumnName_LaunchType + " = " + (int)entry.LaunchType + ", "
+                        + Entry.ColumnName_StatusDate + " = '" + entry.StatusDate.ToString(dateTimeFormat) + "', "
+                        + Entry.ColumnName_Status + " = " + (int)entry.Status + ", "
+                        + Entry.ColumnName_WorkflowId + " = " + entry.WorkflowId + ", "
+                        + Entry.ColumnName_JobId + " = '" + (entry.JobId ?? "") + "', "
+                        + Entry.ColumnName_Logs + " = '" + (entry.Logs ?? "").Replace("'", "''") + "'"
+                        + " WHERE "
+                        + Entry.ColumnName_Id + " = " + int.Parse(id) + ";"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void UpdatePassword(string username, string password)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
-                    + User.ColumnName_Password + " = '" + (password ?? "").Replace("'", "''") + "'"
-                    + " WHERE "
-                    + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "';"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
+                        + User.ColumnName_Password + " = '" + (password ?? "").Replace("'", "''") + "'"
+                        + " WHERE "
+                        + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "';"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void UpdateUser(string id, Core.Db.User user)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
-                    + User.ColumnName_Username + " = '" + (user.Username ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_Password + " = '" + (user.Password ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_UserProfile + " = " + (int)user.UserProfile + ", "
-                    + User.ColumnName_Email + " = '" + (user.Email ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_CreatedOn + " = '" + user.CreatedOn.ToString(DateTimeFormat) + "', "
-                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
-                    + " WHERE "
-                    + User.ColumnName_Id + " = " + int.Parse(id) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
+                        + User.ColumnName_Username + " = '" + (user.Username ?? "").Replace("'", "''") + "', "
+                        + User.ColumnName_Password + " = '" + (user.Password ?? "").Replace("'", "''") + "', "
+                        + User.ColumnName_UserProfile + " = " + (int)user.UserProfile + ", "
+                        + User.ColumnName_Email + " = '" + (user.Email ?? "").Replace("'", "''") + "', "
+                        + User.ColumnName_CreatedOn + " = '" + user.CreatedOn.ToString(dateTimeFormat) + "', "
+                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(dateTimeFormat) + "'"
+                        + " WHERE "
+                        + User.ColumnName_Id + " = " + int.Parse(id) + ";"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void UpdateUsernameAndEmailAndUserProfile(string userId, string username, string email, UserProfile up)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
-                    + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_UserProfile + " = " + (int)up + ", "
-                    + User.ColumnName_Email + " = '" + (email ?? "").Replace("'", "''") + "', "
-                    + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(DateTimeFormat) + "'"
-                    + " WHERE "
-                    + User.ColumnName_Id + " = " + int.Parse(userId) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("UPDATE " + Core.Db.User.DocumentName + " SET "
+                        + User.ColumnName_Username + " = '" + (username ?? "").Replace("'", "''") + "', "
+                        + User.ColumnName_UserProfile + " = " + (int)up + ", "
+                        + User.ColumnName_Email + " = '" + (email ?? "").Replace("'", "''") + "', "
+                        + User.ColumnName_ModifiedOn + " = '" + DateTime.Now.ToString(dateTimeFormat) + "'"
+                        + " WHERE "
+                        + User.ColumnName_Id + " = " + int.Parse(userId) + ";"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override void UpdateWorkflow(string dbId, Core.Db.Workflow workflow)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("UPDATE " + Core.Db.Workflow.DocumentName + " SET "
-                    + Workflow.ColumnName_Xml + " = '" + (workflow.Xml ?? "").Replace("'", "''") + "'"
-                    + " WHERE "
-                    + User.ColumnName_Id + " = " + int.Parse(dbId) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
+                    conn.Open();
 
-                    command.ExecuteNonQuery();
+                    using (var command = new FbCommand("UPDATE " + Core.Db.Workflow.DocumentName + " SET "
+                        + Workflow.ColumnName_Xml + " = '" + (workflow.Xml ?? "").Replace("'", "''") + "'"
+                        + " WHERE "
+                        + User.ColumnName_Id + " = " + int.Parse(dbId) + ";"
+                        , conn))
+                    {
+
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
 
         public override string GetEntryLogs(string entryId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + Entry.ColumnName_Logs
-                    + " FROM " + Core.Db.Entry.DocumentName
-                    + " WHERE "
-                    + Entry.ColumnName_Id + " = " + int.Parse(entryId) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    using (var reader = command.ExecuteReader())
+                    conn.Open();
+
+                    using (var command = new FbCommand("SELECT " + Entry.ColumnName_Logs
+                        + " FROM " + Core.Db.Entry.DocumentName
+                        + " WHERE "
+                        + Entry.ColumnName_Id + " = " + int.Parse(entryId) + ";"
+                        , conn))
                     {
-                        if (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var logs = (string)reader[Entry.ColumnName_Logs];
-                            return logs;
+                            if (reader.Read())
+                            {
+                                var logs = (string)reader[Entry.ColumnName_Logs];
+                                return logs;
+                            }
                         }
                     }
+
                 }
 
+                return null;
             }
-
-            return null;
         }
 
         public override string GetHistoryEntryLogs(string entryId)
         {
-            using (var conn = new FbConnection(_connectionString))
+            lock (padlock)
             {
-                conn.Open();
-
-                using (var command = new FbCommand("SELECT " + HistoryEntry.ColumnName_Logs
-                    + " FROM " + Core.Db.HistoryEntry.DocumentName
-                    + " WHERE "
-                    + HistoryEntry.ColumnName_Id + " = " + int.Parse(entryId) + ";"
-                    , conn))
+                using (var conn = new FbConnection(connectionString))
                 {
-                    using (var reader = command.ExecuteReader())
-                    {
+                    conn.Open();
 
-                        if (reader.Read())
+                    using (var command = new FbCommand("SELECT " + HistoryEntry.ColumnName_Logs
+                        + " FROM " + Core.Db.HistoryEntry.DocumentName
+                        + " WHERE "
+                        + HistoryEntry.ColumnName_Id + " = " + int.Parse(entryId) + ";"
+                        , conn))
+                    {
+                        using (var reader = command.ExecuteReader())
                         {
-                            var logs = (string)reader[HistoryEntry.ColumnName_Logs];
-                            return logs;
+
+                            if (reader.Read())
+                            {
+                                var logs = (string)reader[HistoryEntry.ColumnName_Logs];
+                                return logs;
+                            }
                         }
                     }
+
                 }
 
+                return null;
             }
-
-            return null;
         }
 
         public override void Dispose()
