@@ -160,7 +160,8 @@ namespace Wexflow.Core
             switch (DbType)
             {
                 case DbType.LiteDB:
-                    Database = new Db.LiteDB.Db(ConnectionString);
+                    Db.LiteDB.Db.Create(ConnectionString);
+                    Database = Db.LiteDB.Db.Instance;
                     break;
                 case DbType.MongoDB:
                     Database = new Db.MongoDB.Db(ConnectionString);

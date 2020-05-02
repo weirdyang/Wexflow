@@ -103,7 +103,7 @@
         + "</div>"
         + "<div id='wf-search'>"
         + "<div id='wf-search-text-container'>"
-        + "<input id='wf-search-text' type='text' name='fname'>"
+        + "<input id='wf-search-text' type='text' name='fname' autocomplete='off' >"
         + "</div>"
         + "<button id='wf-search-action' type='button' class='btn btn-primary btn-xs'>" + language.get("btn-search") + "</button>"
         + "</div>"
