@@ -181,6 +181,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.Sha256\Wexflow.Tasks.Sha256.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Sha512\Wexflow.Tasks.Sha512.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Slack\Wexflow.Tasks.Slack.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.SqlToCsv\Wexflow.Tasks.SqlToCsv.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Sql\Wexflow.Tasks.Sql.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.SshCmd\Wexflow.Tasks.SshCmd.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.SubWorkflow\Wexflow.Tasks.SubWorkflow.csproj" />
