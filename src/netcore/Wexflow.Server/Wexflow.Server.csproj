@@ -122,6 +122,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.CsvToJson\Wexflow.Tasks.CsvToJson.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.CsvToSql\Wexflow.Tasks.CsvToSql.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.CsvToXml\Wexflow.Tasks.CsvToXml.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.CsvToYaml\Wexflow.Tasks.CsvToYaml.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.EnvironmentVariable\Wexflow.Tasks.EnvironmentVariable.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.FileContentMatch\Wexflow.Tasks.FileContentMatch.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.FileExists\Wexflow.Tasks.FileExists.csproj" />

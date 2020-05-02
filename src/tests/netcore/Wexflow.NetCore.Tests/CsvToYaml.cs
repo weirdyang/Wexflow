@@ -4,11 +4,11 @@ using System.IO;
 namespace Wexflow.DotnetCore.Tests
 {
     [TestClass]
-    public class CsvToJson
+    public class CsvToYaml
     {
-        private static readonly string DestDir = @"C:\WexflowTesting\CsvToJson_dest\";
-        private static readonly string File1 = @"C:\WexflowTesting\CsvToJson_dest\file1.json";
-        private static readonly string File2 = @"C:\WexflowTesting\CsvToJson_dest\file2.json";
+        private static readonly string DestDir = @"C:\WexflowTesting\CsvToYaml_dest\";
+        private static readonly string File1 = @"C:\WexflowTesting\CsvToYaml_dest\file1.yml";
+        private static readonly string File2 = @"C:\WexflowTesting\CsvToYaml_dest\file2.yml";
 
         [TestInitialize]
         public void TestInitialize()
@@ -23,11 +23,11 @@ namespace Wexflow.DotnetCore.Tests
         }
 
         [TestMethod]
-        public void CsvToJsonTest()
+        public void CsvToYamlTest()
         {
             var files = GetFiles();
             Assert.AreEqual(0, files.Length);
-            Helper.StartWorkflow(153);
+            Helper.StartWorkflow(154);
             files = GetFiles();
             Assert.AreEqual(2, files.Length);
             Assert.IsTrue(File.Exists(File1));

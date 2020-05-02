@@ -3,6 +3,7 @@
 	{ "Name": "CsvToJson", "Description": "Converts CSV files to JSON files."},
 	{ "Name": "CsvToSql", "Description": "Converts CSV files to SQL scripts."},
 	{ "Name": "CsvToXml", "Description": "Converts CSV files to XML files."},
+	{ "Name": "CsvToYaml", "Description": "Converts CSV files to YAML files."},
 	{ "Name": "EnvironmentVariable", "Description": "A flowchart task that retrieves the value of an environment variable."},
 	{ "Name": "FileContentMatch", "Description": "A flowchart task that checks whether the content of a file matches a regex pattern."},
 	{ "Name": "FileExists", "Description": "A flowchart task that checks whether a file exists or not."},
