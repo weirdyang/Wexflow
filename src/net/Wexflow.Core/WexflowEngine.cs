@@ -312,7 +312,7 @@ namespace Wexflow.Core
             }
             catch (Exception e)
             {
-                Logger.ErrorFormat("An error occured while loading the workflow : {0} Please check the workflow configuration. Error: {1}", workflow.GetDbId(), e.Message);
+                Logger.ErrorFormat("An error occured while loading the workflow {0}. Please check the workflow configuration. Xml: {1}", e, workflow.GetDbId(), workflow.Xml);
                 return null;
             }
         }
