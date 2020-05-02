@@ -20,7 +20,7 @@ namespace Wexflow.Core.Db.RavenDB
         public Db(string connectionString) : base(connectionString)
         {
             var ravenUrl = string.Empty;
-            var databaseName = string.Empty;
+            var database = string.Empty;
 
             var connectionStringParts = ConnectionString.Split(';');
             foreach (var part in connectionStringParts)
@@ -30,7 +30,7 @@ namespace Wexflow.Core.Db.RavenDB
                     string connPart = part.TrimStart(' ').TrimEnd(' ');
                     if (connPart.StartsWith("Database="))
                     {
-                        databaseName = connPart.Replace("Database=", string.Empty);
+                        database = connPart.Replace("Database=", string.Empty);
                     }
                     else if (connPart.StartsWith("RavenUrl="))
                     {
@@ -42,7 +42,7 @@ namespace Wexflow.Core.Db.RavenDB
             store = new DocumentStore
             {
                 Urls = new string[] { ravenUrl },
-                Database = databaseName
+                Database = database
             };
 
             store.Initialize();
@@ -56,7 +56,7 @@ namespace Wexflow.Core.Db.RavenDB
             {
                 try
                 {
-                    store.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                    store.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(database)));
                 }
                 catch (ConcurrencyException)
                 {
