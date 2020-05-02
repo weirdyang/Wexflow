@@ -1237,22 +1237,24 @@ namespace Wexflow.Core.Db.MySQL
                         + ";", conn))
                     {
 
-                        var reader = command.ExecuteReader();
-
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var user = new User
-                            {
-                                Id = (int)reader[User.ColumnName_Id],
-                                Username = (string)reader[User.ColumnName_Username],
-                                Password = (string)reader[User.ColumnName_Password],
-                                Email = (string)reader[User.ColumnName_Email],
-                                UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
-                                CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
-                                ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
-                            };
 
-                            users.Add(user);
+                            while (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    Id = (int)reader[User.ColumnName_Id],
+                                    Username = (string)reader[User.ColumnName_Username],
+                                    Password = (string)reader[User.ColumnName_Password],
+                                    Email = (string)reader[User.ColumnName_Email],
+                                    UserProfile = (UserProfile)((int)reader[User.ColumnName_UserProfile]),
+                                    CreatedOn = (DateTime)reader[User.ColumnName_CreatedOn],
+                                    ModifiedOn = reader[User.ColumnName_ModifiedOn] == DBNull.Value ? DateTime.MinValue : (DateTime)reader[User.ColumnName_ModifiedOn]
+                                };
+
+                                users.Add(user);
+                            }
                         }
                     }
 

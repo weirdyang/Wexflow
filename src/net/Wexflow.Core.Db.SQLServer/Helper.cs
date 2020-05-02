@@ -17,15 +17,19 @@ namespace Wexflow.Core.Db.SQLServer
             {
                 conn.Open();
 
-                var command = new SqlCommand("SELECT COUNT(*) FROM master.dbo.sysdatabases WHERE name = N'" + databaseName + "'", conn);
-
-                var count = (int)command.ExecuteScalar();
-
-                if (count == 0)
+                using (var command1 = new SqlCommand("SELECT COUNT(*) FROM master.dbo.sysdatabases WHERE name = N'" + databaseName + "'", conn))
                 {
-                    command = new SqlCommand("CREATE DATABASE " + databaseName + ";", conn);
 
-                    command.ExecuteNonQuery();
+                    var count = (int)command1.ExecuteScalar();
+
+                    if (count == 0)
+                    {
+                        using (var command2 = new SqlCommand("CREATE DATABASE " + databaseName + ";", conn))
+                        {
+
+                            command2.ExecuteNonQuery();
+                        }
+                    }
                 }
 
             }
@@ -37,9 +41,11 @@ namespace Wexflow.Core.Db.SQLServer
             {
                 conn.Open();
 
-                var command = new SqlCommand("IF NOT EXISTS (SELECT [name] FROM sys.tables WHERE [name] = '" + tableName + "') CREATE TABLE " + tableName + tableStruct + ";", conn);
+                using (var command = new SqlCommand("IF NOT EXISTS (SELECT [name] FROM sys.tables WHERE [name] = '" + tableName + "') CREATE TABLE " + tableName + tableStruct + ";", conn))
+                {
 
-                command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
