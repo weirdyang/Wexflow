@@ -6,7 +6,7 @@ using System.Security.Authentication;
 
 namespace Wexflow.Core.Db.MongoDB
 {
-    public class Db : Core.Db.Db
+    public sealed class Db : Core.Db.Db
     {
         private static readonly object padlock = new object();
         private static IMongoDatabase db;
