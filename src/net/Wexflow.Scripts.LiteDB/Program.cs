@@ -11,7 +11,8 @@ namespace Wexflow.Scripts.LiteDB
         {
             try
             {
-                Db db = new Db(ConfigurationManager.AppSettings["connectionString"]);
+                Db.Create(ConfigurationManager.AppSettings["connectionString"]);
+                var db = Db.Instance;
                 Helper.InsertWorkflowsAndUser(db);
                 db.Dispose();
             }

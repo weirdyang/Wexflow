@@ -8,39 +8,12 @@ namespace Wexflow.Core.Db.LiteDB
 {
     public sealed class Db : Core.Db.Db
     {
-        private static Db instance = null;
-        private static readonly object padlock = new object();
-
         private static LiteDatabase _db;
 
-        public static Db Instance
-        {
-            get
-            {
-                lock (padlock)
-                {
-                    if (instance == null)
-                    {
-                        throw new Exception("Database not created.");
-                    }
-                    return instance;
-                }
-            }
-        }
-
-        private Db(string connectionString) : base(connectionString)
+        public Db(string connectionString) : base(connectionString)
         {
             _db = new LiteDatabase(ConnectionString);
             _db.Rebuild(new RebuildOptions { Collation = new Collation("/None") }); // /IgnoreCase, en-US/None, en-US/IgnoreCase, en-US/IgnoreCase,IgnoreSymbols
-        }
-
-        public static void Create(string connectionString)
-        {
-            if (instance != null)
-            {
-                throw new Exception("Database already created.");
-            }
-            instance = new Db(connectionString);
         }
 
         public override void Init()

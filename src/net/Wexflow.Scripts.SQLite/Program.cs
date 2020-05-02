@@ -10,7 +10,8 @@ namespace Wexflow.Scripts.SQLite
         {
             try
             {
-                Db db = new Db(ConfigurationManager.AppSettings["connectionString"]);
+                Db.Create(ConfigurationManager.AppSettings["connectionString"]);
+                var db = Db.Instance;
                 Core.Helper.InsertWorkflowsAndUser(db);
             }
             catch (Exception e)

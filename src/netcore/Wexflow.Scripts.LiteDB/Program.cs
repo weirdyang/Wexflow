@@ -18,7 +18,7 @@ namespace Wexflow.Scripts.LiteDB
                 .Build();
 
                 var workflowsFolder = config["workflowsFolder"];
-                Db db = new Db(config["connectionString"]);
+                var db = new Db(config["connectionString"]);
 
                 Helper.InsertWorkflowsAndUser(db, workflowsFolder);
                 db.Dispose();

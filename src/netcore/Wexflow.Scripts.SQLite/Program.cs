@@ -15,7 +15,7 @@ namespace Wexflow.Scripts.SQLite
                 .Build();
 
                 var workflowsFolder = config["workflowsFolder"];
-                Db db = new Db(config["connectionString"]);
+                var db = new Db(config["connectionString"]);
 
                 Core.Helper.InsertWorkflowsAndUser(db, workflowsFolder);
             }
