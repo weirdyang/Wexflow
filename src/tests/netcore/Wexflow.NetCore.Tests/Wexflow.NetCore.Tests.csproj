@@ -57,6 +57,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.ImagesTransformer\Wexflow.Tasks.ImagesTransformer.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.InstagramUploadImage\Wexflow.Tasks.InstagramUploadImage.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.InstagramUploadVideo\Wexflow.Tasks.InstagramUploadVideo.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.JsonToYaml\Wexflow.Tasks.JsonToYaml.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.ListEntities\Wexflow.Tasks.ListEntities.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.ListFiles\Wexflow.Tasks.ListFiles.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.MailsReceiver\Wexflow.Tasks.MailsReceiver.csproj" />

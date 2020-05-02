@@ -40,6 +40,7 @@
 	{ "Name": "ImagesTransformer", "Description": "Transforms a collection of image files to a specified format."},
 	{ "Name": "InstagramUploadImage", "Description": "Uploads images to Instagram."},
 	{ "Name": "InstagramUploadVideo", "Description": "Uploads videos to Instagram."},
+	{ "Name": "JsonToYaml", "Description": "Converts JSON files to YAML files."},
 	{ "Name": "ListEntities", "Description": "Lists all the entities loaded by the workflow tasks in the logs."},
 	{ "Name": "ListFiles", "Description": "Lists all the files loaded by the workflow tasks in the logs."},
 	{ "Name": "MailsReceiver", "Description": "Fetches a collection of emails."},
