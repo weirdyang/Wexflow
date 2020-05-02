@@ -62,6 +62,7 @@
 	{ "Name": "Sha256", "Description": "Generates SHA-256 hashes of a collection of files."},
 	{ "Name": "Sha512", "Description": "Generates SHA-512 hashes of a collection of files."},
 	{ "Name": "Slack", "Description": "Sends slack messages."},
+	{ "Name": "Sql", "Description": "Executes a collection of SQL script files."},
 	{ "Name": "SshCmd", "Description": "Executes an SSH command."},
 	{ "Name": "SubWorkflow", "Description": "Kicks off a sub workflow."},
 	{ "Name": "TextsDecryptor", "Description": "Decrypts a collection of files encrypted by the task TextsEncryptor."},

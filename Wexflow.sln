@@ -521,6 +521,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Tasks.JsonToYaml", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Tasks.ScssToCss", "src\netcore\Wexflow.Tasks.ScssToCss\Wexflow.Tasks.ScssToCss.csproj", "{7CA1C9D1-2883-41B2-B813-A67AAECD349E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wexflow.Tasks.Sql", "src\netcore\Wexflow.Tasks.Sql\Wexflow.Tasks.Sql.csproj", "{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -4437,6 +4439,22 @@ Global
 		{7CA1C9D1-2883-41B2-B813-A67AAECD349E}.Release|x64.Build.0 = Release|Any CPU
 		{7CA1C9D1-2883-41B2-B813-A67AAECD349E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7CA1C9D1-2883-41B2-B813-A67AAECD349E}.Release|x86.Build.0 = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|x64.Build.0 = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|x64.ActiveCfg = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|x64.Build.0 = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4698,6 +4716,7 @@ Global
 		{C4E3D1C8-310E-4834-923D-461DCB107890} = {6CC60633-28FB-45F3-8434-A79D00150CB2}
 		{78AA15C8-7A2A-412E-B0D7-C631B74338B8} = {6CC60633-28FB-45F3-8434-A79D00150CB2}
 		{7CA1C9D1-2883-41B2-B813-A67AAECD349E} = {6CC60633-28FB-45F3-8434-A79D00150CB2}
+		{1E2D521D-F11A-4F4C-BD9E-C1B64EB40048} = {6CC60633-28FB-45F3-8434-A79D00150CB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {694D69C8-AA13-4F54-BAAA-5B967F1A8F9C}
