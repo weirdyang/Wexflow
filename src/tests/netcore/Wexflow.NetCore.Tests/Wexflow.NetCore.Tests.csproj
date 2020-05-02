@@ -81,6 +81,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Sha512\Wexflow.Tasks.Sha512.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Slack\Wexflow.Tasks.Slack.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SqlToCsv\Wexflow.Tasks.SqlToCsv.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SqlToXml\Wexflow.Tasks.SqlToXml.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Sql\Wexflow.Tasks.Sql.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SshCmd\Wexflow.Tasks.SshCmd.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SubWorkflow\Wexflow.Tasks.SubWorkflow.csproj" />

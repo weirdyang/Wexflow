@@ -64,6 +64,7 @@
 	{ "Name": "Slack", "Description": "Sends slack messages."},
 	{ "Name": "Sql", "Description": "Executes a collection of SQL script files."},
 	{ "Name": "SqlToCsv", "Description": "Executes a collection of SQL scripts and outputs the results in CSV files."},
+	{ "Name": "SqlToXml", "Description": "Executes a collection of SQL scripts and outputs the results in XML files."},
 	{ "Name": "SshCmd", "Description": "Executes an SSH command."},
 	{ "Name": "SubWorkflow", "Description": "Kicks off a sub workflow."},
 	{ "Name": "TextsDecryptor", "Description": "Decrypts a collection of files encrypted by the task TextsEncryptor."},
