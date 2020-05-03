@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
-namespace Wexflow.DotnetCore.Tests
+namespace Wexflow.NetCore.Tests
 {
     [TestClass]
     public class YamlToJson

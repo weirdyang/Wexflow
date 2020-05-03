@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Wexflow.DotnetCore.Tests
+namespace Wexflow.NetCore.Tests
 {
     [TestClass]
     public class EnvironmentVariable

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 
-namespace Wexflow.DotnetCore.Tests
+namespace Wexflow.NetCore.Tests
 {
     [TestClass]
     public class Torrent

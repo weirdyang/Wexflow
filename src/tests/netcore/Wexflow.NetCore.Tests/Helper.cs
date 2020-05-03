@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using Wexflow.Core;
 
-namespace Wexflow.DotnetCore.Tests
+namespace Wexflow.NetCore.Tests
 {
     public class Helper
     {

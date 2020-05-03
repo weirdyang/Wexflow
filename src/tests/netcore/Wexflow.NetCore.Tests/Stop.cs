@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Wexflow.DotnetCore.Tests
+namespace Wexflow.NetCore.Tests
 {
     [TestClass]
     public class Stop
