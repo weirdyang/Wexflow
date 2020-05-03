@@ -97,6 +97,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.UglifyCss\Wexflow.Tasks.UglifyCss.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.UglifyHtml\Wexflow.Tasks.UglifyHtml.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.UglifyJs\Wexflow.Tasks.UglifyJs.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Untar\Wexflow.Tasks.Untar.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Unzip\Wexflow.Tasks.Unzip.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.VimeoListUploads\Wexflow.Tasks.VimeoListUploads.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Vimeo\Wexflow.Tasks.Vimeo.csproj" />

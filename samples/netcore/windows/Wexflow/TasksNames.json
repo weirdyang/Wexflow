@@ -78,6 +78,7 @@
 	{ "Name": "UglifyCss", "Description": "Compresses and minifies CSS files."},
 	{ "Name": "UglifyHtml", "Description": "Compresses and minifies HTML files."},
 	{ "Name": "UglifyJs", "Description": "Uglifies JavaScript files."},
+	{ "Name": "Untar", "Description": "Extracts TAR archives."},
 	{ "Name": "Unzip", "Description": "Extracts ZIP archives."},
 	{ "Name": "Vimeo", "Description": "Uploads videos to Vimeo."},
 	{ "Name": "VimeoListUploads", "Description": "Retrieves a list of videos uploaded to a Vimeo channel."},
