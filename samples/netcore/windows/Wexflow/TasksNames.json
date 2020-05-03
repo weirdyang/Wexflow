@@ -75,6 +75,7 @@
 	{ "Name": "Touch", "Description": "Creates a collection of empty files."},
 	{ "Name": "Twilio", "Description": "Sends an SMS."},
 	{ "Name": "Twitter", "Description": "Sends tweets."},
+	{ "Name": "UglifyCss", "Description": "Compresses and minifies CSS files."},
 	{ "Name": "Unzip", "Description": "Extracts ZIP archives."},
 	{ "Name": "Vimeo", "Description": "Uploads videos to Vimeo."},
 	{ "Name": "VimeoListUploads", "Description": "Retrieves a list of videos uploaded to a Vimeo channel."},
