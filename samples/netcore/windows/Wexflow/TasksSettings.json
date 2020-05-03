@@ -79,6 +79,7 @@
 	"UglifyHtml": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"UglifyJs": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],
 	"Untar": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "destDir", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
+	"Untgz": [ {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "destDir", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
 	"Unzip": [  {"Name": "selectFiles", "Required": true, "Type": "int", "List": [], "DefaultValue": ""}, {"Name": "destDir", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "password", "Required": false, "Type": "password", "List": [], "DefaultValue": ""}, {"Name": "overwrite", "Required": false, "Type": "bool", "List": [], "DefaultValue": "false"}, {"Name": "createSubDirectoryWithDateTime", "Required": false, "Type": "bool", "List": [], "DefaultValue": ""} ],
 	"Vimeo": [ {"Name": "token", "Required": true, "Type": "string", "List": [], "DefaultValue": ""} ],
 	"VimeoListUploads": [ {"Name": "token", "Required": true, "Type": "string", "List": [], "DefaultValue": ""}, {"Name": "userId", "Required": true, "Type": "int", "List": [], "DefaultValue": ""} ],

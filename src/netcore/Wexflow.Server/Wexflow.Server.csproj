@@ -198,6 +198,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.UglifyHtml\Wexflow.Tasks.UglifyHtml.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.UglifyJs\Wexflow.Tasks.UglifyJs.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Untar\Wexflow.Tasks.Untar.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.Untgz\Wexflow.Tasks.Untgz.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Unzip\Wexflow.Tasks.Unzip.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.VimeoListUploads\Wexflow.Tasks.VimeoListUploads.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Vimeo\Wexflow.Tasks.Vimeo.csproj" />
