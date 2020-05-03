@@ -1825,6 +1825,41 @@ namespace Wexflow.Core.Db.MySQL
             }
         }
 
+        public override string InsertRecord(Record record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateRecord(string recordId, Record record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteRecords(string[] recordIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Record> GetRecords(string keyword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string InsertNotification(Notification notification)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteNotifications(string[] notificationIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Notification> GetNotifications(string assignedTo)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Dispose()
         {
         }

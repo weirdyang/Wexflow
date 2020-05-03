@@ -10,13 +10,13 @@ namespace Wexflow.Core.Db.SQLite
         private static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
         private static readonly object padlock = new object();
 
-        private string _connectionString;
-        private string _dataSource;
-        private Helper _helper;
+        private static string connectionString;
 
         public Db(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
+            Db.connectionString = connectionString;
+
+            var dataSource = string.Empty;
 
             var connectionStringParts = ConnectionString.Split(';');
 
@@ -27,21 +27,20 @@ namespace Wexflow.Core.Db.SQLite
                     string connPart = part.TrimStart(' ').TrimEnd(' ');
                     if (connPart.StartsWith("Data Source="))
                     {
-                        _dataSource = connPart.Replace("Data Source=", string.Empty);
+                        dataSource = connPart.Replace("Data Source=", string.Empty);
                         break;
                     }
                 }
             }
 
-            _helper = new Helper(connectionString);
-
-            _helper.CreateDatabaseIfNotExists(_dataSource);
-            _helper.CreateTableIfNotExists(Core.Db.Entry.DocumentName, Entry.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.HistoryEntry.DocumentName, HistoryEntry.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.StatusCount.DocumentName, StatusCount.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.User.DocumentName, User.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.UserWorkflow.DocumentName, UserWorkflow.TableStruct);
-            _helper.CreateTableIfNotExists(Core.Db.Workflow.DocumentName, Workflow.TableStruct);
+            var helper = new Helper(connectionString);
+            helper.CreateDatabaseIfNotExists(dataSource);
+            helper.CreateTableIfNotExists(Core.Db.Entry.DocumentName, Entry.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.HistoryEntry.DocumentName, HistoryEntry.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.StatusCount.DocumentName, StatusCount.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.User.DocumentName, User.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.UserWorkflow.DocumentName, UserWorkflow.TableStruct);
+            helper.CreateTableIfNotExists(Core.Db.Workflow.DocumentName, Workflow.TableStruct);
         }
 
         public override void Init()
@@ -50,65 +49,60 @@ namespace Wexflow.Core.Db.SQLite
             // StatusCount
             ClearStatusCount();
 
-            lock (padlock)
+            var statusCount = new StatusCount
             {
-                var statusCount = new StatusCount
-                {
-                    PendingCount = 0,
-                    RunningCount = 0,
-                    DoneCount = 0,
-                    FailedCount = 0,
-                    WarningCount = 0,
-                    DisabledCount = 0,
-                    StoppedCount = 0
-                };
+                PendingCount = 0,
+                RunningCount = 0,
+                DoneCount = 0,
+                FailedCount = 0,
+                WarningCount = 0,
+                DisabledCount = 0,
+                StoppedCount = 0
+            };
 
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
+            using (var conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
 
-                    using (var command = new SQLiteCommand("INSERT INTO " + Core.Db.StatusCount.DocumentName + "("
-                        + StatusCount.ColumnName_PendingCount + ", "
-                        + StatusCount.ColumnName_RunningCount + ", "
-                        + StatusCount.ColumnName_DoneCount + ", "
-                        + StatusCount.ColumnName_FailedCount + ", "
-                        + StatusCount.ColumnName_WarningCount + ", "
-                        + StatusCount.ColumnName_DisabledCount + ", "
-                        + StatusCount.ColumnName_StoppedCount + ", "
-                        + StatusCount.ColumnName_RejectedCount + ") VALUES("
-                        + statusCount.PendingCount + ", "
-                        + statusCount.RunningCount + ", "
-                        + statusCount.DoneCount + ", "
-                        + statusCount.FailedCount + ", "
-                        + statusCount.WarningCount + ", "
-                        + statusCount.DisabledCount + ", "
-                        + statusCount.StoppedCount + ", "
-                        + statusCount.RejectedCount + ");"
-                        , conn))
-                    {
-                        command.ExecuteNonQuery();
-                    }
+                using (var command = new SQLiteCommand("INSERT INTO " + Core.Db.StatusCount.DocumentName + "("
+                    + StatusCount.ColumnName_PendingCount + ", "
+                    + StatusCount.ColumnName_RunningCount + ", "
+                    + StatusCount.ColumnName_DoneCount + ", "
+                    + StatusCount.ColumnName_FailedCount + ", "
+                    + StatusCount.ColumnName_WarningCount + ", "
+                    + StatusCount.ColumnName_DisabledCount + ", "
+                    + StatusCount.ColumnName_StoppedCount + ", "
+                    + StatusCount.ColumnName_RejectedCount + ") VALUES("
+                    + statusCount.PendingCount + ", "
+                    + statusCount.RunningCount + ", "
+                    + statusCount.DoneCount + ", "
+                    + statusCount.FailedCount + ", "
+                    + statusCount.WarningCount + ", "
+                    + statusCount.DisabledCount + ", "
+                    + statusCount.StoppedCount + ", "
+                    + statusCount.RejectedCount + ");"
+                    , conn))
+                {
+                    command.ExecuteNonQuery();
                 }
             }
+
 
             // Entries
             ClearEntries();
 
             // Insert default user if necessary
-            lock (padlock)
+            using (var conn = new SQLiteConnection(connectionString))
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                conn.Open();
+
+                using (var command = new SQLiteCommand("SELECT COUNT(*) FROM " + Core.Db.User.DocumentName + ";", conn))
                 {
-                    conn.Open();
+                    var usersCount = (long)command.ExecuteScalar();
 
-                    using (var command = new SQLiteCommand("SELECT COUNT(*) FROM " + Core.Db.User.DocumentName + ";", conn))
+                    if (usersCount == 0)
                     {
-                        var usersCount = (long)command.ExecuteScalar();
-
-                        if (usersCount == 0)
-                        {
-                            InsertDefaultUser();
-                        }
+                        InsertDefaultUser();
                     }
                 }
             }
@@ -119,7 +113,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -142,7 +136,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -158,7 +152,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -174,7 +168,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -193,7 +187,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -210,7 +204,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -227,7 +221,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -244,7 +238,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -279,7 +273,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<User> admins = new List<User>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -328,7 +322,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<Entry> entries = new List<Entry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -377,7 +371,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<Entry> entries = new List<Entry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -496,7 +490,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -519,7 +513,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -568,7 +562,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -618,7 +612,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -647,7 +641,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -678,7 +672,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -725,7 +719,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -776,7 +770,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -827,7 +821,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<HistoryEntry> entries = new List<HistoryEntry>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -943,7 +937,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -965,7 +959,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -988,7 +982,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1018,7 +1012,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1048,7 +1042,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1079,7 +1073,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1127,7 +1121,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1173,7 +1167,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1221,7 +1215,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<User> users = new List<User>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1268,7 +1262,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<User> users = new List<User>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1317,7 +1311,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<string> workflowIds = new List<string>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1350,7 +1344,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1387,7 +1381,7 @@ namespace Wexflow.Core.Db.SQLite
             {
                 List<Core.Db.Workflow> workflows = new List<Core.Db.Workflow>();
 
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1421,7 +1415,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1477,7 +1471,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1503,7 +1497,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1537,7 +1531,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1569,7 +1563,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1599,7 +1593,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1621,7 +1615,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1643,7 +1637,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1671,7 +1665,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1692,7 +1686,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1718,7 +1712,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1742,7 +1736,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1763,7 +1757,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
@@ -1793,7 +1787,7 @@ namespace Wexflow.Core.Db.SQLite
         {
             lock (padlock)
             {
-                using (var conn = new SQLiteConnection(_connectionString))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
 
