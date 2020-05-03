@@ -37,11 +37,14 @@ namespace Wexflow.Tasks.SqlToCsv
         public string QuoteString { get; }
         public string EndOfLine { get; }
         public bool Headers { get; }
-        public bool SingleRecordHeaders{ get; }
+        public bool SingleRecordHeaders { get; }
         public bool DoNotGenerateFilesIfEmpty { get; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public SqlToCsv(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public SqlToCsv(XElement xe, Workflow wf) : base(xe, wf)
         {
             DbType = (Type)Enum.Parse(typeof(Type), GetSetting("type"), true);
             ConnectionString = GetSetting("connectionString");
@@ -52,6 +55,10 @@ namespace Wexflow.Tasks.SqlToCsv
             if (bool.TryParse(GetSetting("headers", bool.TrueString), out var result1)) Headers = result1;
             if (bool.TryParse(GetSetting("singlerecordheaders", bool.TrueString), out var result2)) SingleRecordHeaders = result2;
             DoNotGenerateFilesIfEmpty = bool.Parse(GetSetting("doNotGenerateFilesIfEmpty", "false"));
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
@@ -59,8 +66,50 @@ namespace Wexflow.Tasks.SqlToCsv
             Info("Executing SQL scripts...");
 
             bool success = true;
-            bool atLeastOneSucceed = false;
+            bool atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ExecuteSqlFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ExecuteSqlFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool ExecuteSqlFiles(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             // Execute SqlScript if necessary
             try
             {
@@ -89,7 +138,7 @@ namespace Wexflow.Tasks.SqlToCsv
                     ExecuteSql(sql);
                     InfoFormat("The script {0} has been executed.", file.Path);
 
-                    if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                    if (!atLeastOneSuccess) atLeastOneSuccess = true;
                 }
                 catch (ThreadAbortException)
                 {
@@ -101,20 +150,7 @@ namespace Wexflow.Tasks.SqlToCsv
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
         private void ExecuteSql(string sql)

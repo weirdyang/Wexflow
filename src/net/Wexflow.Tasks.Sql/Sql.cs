@@ -95,7 +95,7 @@ namespace Wexflow.Tasks.Sql
             return new TaskStatus(status, false);
         }
 
-        private bool ExecuteSqlFiles(ref bool atLeastOneSucceed)
+        private bool ExecuteSqlFiles(ref bool atLeastOneSuccess)
         {
             var success = true;
 
@@ -126,7 +126,7 @@ namespace Wexflow.Tasks.Sql
                     ExecuteSql(sql);
                     InfoFormat("The script {0} has been executed.", file.Path);
 
-                    if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                    if (!atLeastOneSuccess) atLeastOneSuccess = true;
                 }
                 catch (ThreadAbortException)
                 {
