@@ -105,6 +105,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Wait\Wexflow.Tasks.Wait.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.XmlToCsv\Wexflow.Tasks.XmlToCsv.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Xslt\Wexflow.Tasks.Xslt.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.YamlToJson\Wexflow.Tasks.YamlToJson.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.YouTubeListUploads\Wexflow.Tasks.YouTubeListUploads.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.YouTubeSearch\Wexflow.Tasks.YouTubeSearch.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.YouTube\Wexflow.Tasks.YouTube.csproj" />

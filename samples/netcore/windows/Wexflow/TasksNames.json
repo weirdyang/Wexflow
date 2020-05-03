@@ -89,5 +89,6 @@
 	{ "Name": "YouTube", "Description": "Uploads videos to YouTube."},
 	{ "Name": "YouTubeListUploads", "Description": "Retrieves a list of videos uploaded to a YouTube channel."},
 	{ "Name": "YouTubeSearch", "Description": "Searches for content on YouTube."},
+	{ "Name": "YamlToJson", "Description": "Converts YAML files to JSON files."},
 	{ "Name": "Zip", "Description": "Creates a .zip from a collection of files."}
 ]
