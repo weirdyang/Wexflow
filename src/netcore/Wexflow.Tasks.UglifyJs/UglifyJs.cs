@@ -51,7 +51,7 @@ namespace Wexflow.Tasks.UglifyJs
 
         private bool UglifyScripts(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var jsFiles = SelectFiles();
 
             foreach (var jsFile in jsFiles)

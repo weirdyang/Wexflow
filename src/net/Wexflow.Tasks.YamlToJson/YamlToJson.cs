@@ -71,7 +71,7 @@ namespace Wexflow.Tasks.YamlToJson
 
         private bool ConvertFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var yamlFiles = SelectFiles();
 
             foreach (var yamlFile in yamlFiles)

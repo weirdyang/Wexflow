@@ -71,7 +71,7 @@ namespace Wexflow.Tasks.HtmlToText
 
         private bool ConvertFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var htmlFiles = SelectFiles();
 
             foreach (var htmlFile in htmlFiles)

@@ -49,7 +49,7 @@ namespace Wexflow.Tasks.ScssToCss
 
         private bool ConvertFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var scssFiles = SelectFiles();
 
             foreach (var scssFile in scssFiles)

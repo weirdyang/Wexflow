@@ -50,7 +50,7 @@ namespace Wexflow.Tasks.UglifyHtml
 
         private bool UglifyHtmlFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var htmlFiles = SelectFiles();
 
             foreach (var htmlFile in htmlFiles)

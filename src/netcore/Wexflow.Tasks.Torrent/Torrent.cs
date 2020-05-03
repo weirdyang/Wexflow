@@ -18,7 +18,7 @@ namespace Wexflow.Tasks.Torrent
         public override TaskStatus Run()
         {
             Info("Downloading torrents...");
-            
+
             bool success;
             var atLeastOneSuccess = false;
             try
@@ -88,7 +88,7 @@ namespace Wexflow.Tasks.Torrent
                 task.Wait();
 
                 // Keep running while the torrent isn't stopped or paused.
-                while (torrentManager.State != TorrentState.Stopped && torrentManager.State != TorrentState.Paused)
+                while (!IsStopped && torrentManager.State != TorrentState.Stopped && torrentManager.State != TorrentState.Paused)
                 {
                     Thread.Sleep(1000);
 

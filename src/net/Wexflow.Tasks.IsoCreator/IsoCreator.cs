@@ -32,7 +32,7 @@ namespace Wexflow.Tasks.IsoCreator
         {
             Info("Creating .iso...");
             Status status = Status.Success;
-            var success = false;
+            var success = true;
 
             try
             {
@@ -69,7 +69,7 @@ namespace Wexflow.Tasks.IsoCreator
 
         private bool CreateIso()
         {
-            var success = false;
+            var success = true;
             try
             {
                 var files = Directory.GetFiles(SrcDir, "*.*", SearchOption.AllDirectories);

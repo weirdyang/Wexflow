@@ -72,7 +72,7 @@ namespace Wexflow.Tasks.Slack
 
         private bool SendMessages(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var files = SelectFiles();
 
             if (files.Length > 0)

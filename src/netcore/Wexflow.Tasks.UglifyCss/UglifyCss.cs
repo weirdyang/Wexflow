@@ -51,7 +51,7 @@ namespace Wexflow.Tasks.UglifyCss
 
         private bool UglifyCssFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var cssFiles = SelectFiles();
 
             foreach (var cssFile in cssFiles)

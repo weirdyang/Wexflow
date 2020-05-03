@@ -85,52 +85,48 @@ copy "..\src\backend\Wexflow.Backend\js\users.min.js" %dstDir%\%backend%\js
 copy "..\src\backend\Wexflow.Backend\js\profiles.min.js" %dstDir%\%backend%\js
 
 :: Wexflow server
-net publish ..\src\netcore\Wexflow.Server\Wexflow.Server.csproj --force --output %~dp0\%dstDir%\Wexflow.Server
+dotnet publish ..\src\netcore\Wexflow.Server\Wexflow.Server.csproj --force --output %~dp0\%dstDir%\Wexflow.Server
 copy netcore\linux\appsettings.json %dstDir%\Wexflow.Server
 
 :: MongoDB script
-net publish ..\src\netcore\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MongoDB
+dotnet publish ..\src\netcore\Wexflow.Scripts.MongoDB\Wexflow.Scripts.MongoDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MongoDB
 copy netcore\linux\MongoDB\appsettings.json %dstDir%\Wexflow.Scripts.MongoDB
 xcopy "..\samples\netcore\linux\Wexflow\Workflows\*" %dstDir%\Wexflow.Scripts.MongoDB\Workflows /s /e
 
 :: RavenDB script
-net publish ..\src\netcore\Wexflow.Scripts.RavenDB\Wexflow.Scripts.RavenDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.RavenDB
+dotnet publish ..\src\netcore\Wexflow.Scripts.RavenDB\Wexflow.Scripts.RavenDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.RavenDB
 copy netcore\linux\RavenDB\appsettings.json %dstDir%\Wexflow.Scripts.RavenDB
 
-:: CosmosDB script
-net publish ..\src\netcore\Wexflow.Scripts.CosmosDB\Wexflow.Scripts.CosmosDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.CosmosDB
-copy netcore\linux\CosmosDB\appsettings.json %dstDir%\Wexflow.Scripts.CosmosDB
-
 :: PostgreSQL script
-net publish ..\src\netcore\Wexflow.Scripts.PostgreSQL\Wexflow.Scripts.PostgreSQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.PostgreSQL
+dotnet publish ..\src\netcore\Wexflow.Scripts.PostgreSQL\Wexflow.Scripts.PostgreSQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.PostgreSQL
 copy netcore\linux\PostgreSQL\appsettings.json %dstDir%\Wexflow.Scripts.PostgreSQL
 
 :: SQLServer script
-net publish ..\src\netcore\Wexflow.Scripts.SQLServer\Wexflow.Scripts.SQLServer.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLServer
+dotnet publish ..\src\netcore\Wexflow.Scripts.SQLServer\Wexflow.Scripts.SQLServer.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLServer
 copy netcore\linux\SQLServer\appsettings.json %dstDir%\Wexflow.Scripts.SQLServer
 
 :: MySQL script
-net publish ..\src\netcore\Wexflow.Scripts.MySQL\Wexflow.Scripts.MySQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MySQL
+dotnet publish ..\src\netcore\Wexflow.Scripts.MySQL\Wexflow.Scripts.MySQL.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MySQL
 copy netcore\linux\MySQL\appsettings.json %dstDir%\Wexflow.Scripts.MySQL
 
 :: SQLite script
-net publish ..\src\netcore\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLite
+dotnet publish ..\src\netcore\Wexflow.Scripts.SQLite\Wexflow.Scripts.SQLite.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.SQLite
 copy netcore\linux\SQLite\appsettings.json %dstDir%\Wexflow.Scripts.SQLite
 
 :: Firebird script
-net publish ..\src\netcore\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
+dotnet publish ..\src\netcore\Wexflow.Scripts.Firebird\Wexflow.Scripts.Firebird.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Firebird
 copy netcore\linux\Firebird\appsettings.json %dstDir%\Wexflow.Scripts.Firebird
 
 :: Oracle script
-net publish ..\src\netcore\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
+dotnet publish ..\src\netcore\Wexflow.Scripts.Oracle\Wexflow.Scripts.Oracle.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.Oracle
 copy netcore\linux\Oracle\appsettings.json %dstDir%\Wexflow.Scripts.Oracle
 
 :: MariaDB script
-net publish ..\src\netcore\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MariaDB
+dotnet publish ..\src\netcore\Wexflow.Scripts.MariaDB\Wexflow.Scripts.MariaDB.csproj --force --output %~dp0\%dstDir%\Wexflow.Scripts.MariaDB
 copy netcore\linux\MariaDB\appsettings.json %dstDir%\Wexflow.Scripts.MariaDB
 
 :: Wexflow.Clients.CommandLine
-net publish ..\src\netcore\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
+dotnet publish ..\src\netcore\Wexflow.Clients.CommandLine\Wexflow.Clients.CommandLine.csproj --force --output %~dp0\%dstDir%\Wexflow.Clients.CommandLine
 
 :: License
 copy ..\LICENSE.txt %dstDir%

@@ -75,7 +75,7 @@ namespace Wexflow.Tasks.CsvToYaml
 
         private bool ConvertFiles(ref bool atLeastOneSuccess)
         {
-            var success = false;
+            var success = true;
             var csvFiles = SelectFiles();
 
             foreach (var csvFile in csvFiles)
