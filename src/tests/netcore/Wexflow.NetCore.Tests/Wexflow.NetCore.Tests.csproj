@@ -85,6 +85,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Sql\Wexflow.Tasks.Sql.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SshCmd\Wexflow.Tasks.SshCmd.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.SubWorkflow\Wexflow.Tasks.SubWorkflow.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Tar\Wexflow.Tasks.Tar.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Template\Wexflow.Tasks.Template.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.TextsDecryptor\Wexflow.Tasks.TextsDecryptor.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.TextsEncryptor\Wexflow.Tasks.TextsEncryptor.csproj" />

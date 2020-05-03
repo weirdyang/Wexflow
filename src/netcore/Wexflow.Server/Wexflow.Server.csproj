@@ -186,6 +186,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.Sql\Wexflow.Tasks.Sql.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.SshCmd\Wexflow.Tasks.SshCmd.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.SubWorkflow\Wexflow.Tasks.SubWorkflow.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.Tar\Wexflow.Tasks.Tar.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.TextsDecryptor\Wexflow.Tasks.TextsDecryptor.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.TextsEncryptor\Wexflow.Tasks.TextsEncryptor.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Touch\Wexflow.Tasks.Touch.csproj" />
