@@ -88,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Db.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="Record.cs" />
+    <Compile Include="Version.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="HistoryEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

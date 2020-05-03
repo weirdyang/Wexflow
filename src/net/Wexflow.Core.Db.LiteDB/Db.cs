@@ -1471,12 +1471,12 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override string InsertRecord(Record record)
+        public override string InsertRecord(Core.Db.Record record)
         {
             throw new NotImplementedException();
         }
 
-        public override void UpdateRecord(string recordId, Record record)
+        public override void UpdateRecord(string recordId, Core.Db.Record record)
         {
             throw new NotImplementedException();
         }
@@ -1486,12 +1486,12 @@ namespace Wexflow.Core.Db.LiteDB
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<Record> GetRecords(string keyword)
+        public override IEnumerable<Core.Db.Record> GetRecords(string keyword)
         {
             throw new NotImplementedException();
         }
 
-        public override string InsertNotification(Notification notification)
+        public override string InsertNotification(Core.Db.Notification notification)
         {
             throw new NotImplementedException();
         }
@@ -1501,7 +1501,7 @@ namespace Wexflow.Core.Db.LiteDB
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<Notification> GetNotifications(string assignedTo)
+        public override IEnumerable<Core.Db.Notification> GetNotifications(string assignedTo)
         {
             throw new NotImplementedException();
         }
