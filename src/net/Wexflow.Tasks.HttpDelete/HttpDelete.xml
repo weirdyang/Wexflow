@@ -8,7 +8,9 @@
   <Task id="$int" name="HttpDelete" description="$string" enabled="true|false">
     <!-- The URL. Ex: http://localhost:8000/wexflow/delete/999 -->
     <Setting name="url" value="$string" />
-    <!-- The DELETE parameters. Ex: key1=value1&amp;key2=value2&amp;key3=value3-->
-    <Setting name="params" value="$string" />
+    <!-- Optional. Basic access authentication header.-->
+    <Setting name="authorization" value="$string" />
+    <!-- Optional. Bearer header.-->
+    <Setting name="bearer" value="$string" />
   </Task>
 </Tasks>

@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HttpDelete.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HttpDelete.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
   </ItemGroup>
 

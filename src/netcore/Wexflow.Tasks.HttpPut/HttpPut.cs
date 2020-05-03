@@ -30,9 +30,9 @@ namespace Wexflow.Tasks.HttpPut
             var status = Status.Success;
             try
             {
-                var postTask = Put(Url, Authorization, Bearer, Payload);
-                postTask.Wait();
-                var result = postTask.Result;
+                var putTask = Put(Url, Authorization, Bearer, Payload);
+                putTask.Wait();
+                var result = putTask.Result;
                 var destFile = Path.Combine(Workflow.WorkflowTempFolder, string.Format("HttpPut_{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
                 File.WriteAllText(destFile, result);
                 Files.Add(new FileInf(destFile, Id));
