@@ -34,13 +34,20 @@ namespace Wexflow.Tasks.SqlToXml
         public Type DbType { get; set; }
         public string ConnectionString { get; set; }
         public string SqlScript { get; set; }
+        public string SmbComputerName { get; private set; }
+        public string SmbDomain { get; private set; }
+        public string SmbUsername { get; private set; }
+        public string SmbPassword { get; private set; }
 
-        public SqlToXml(XElement xe, Workflow wf)
-            : base(xe, wf)
+        public SqlToXml(XElement xe, Workflow wf) : base(xe, wf)
         {
             DbType = (Type)Enum.Parse(typeof(Type), GetSetting("type"), true);
             ConnectionString = GetSetting("connectionString");
             SqlScript = GetSetting("sql", string.Empty);
+            SmbComputerName = GetSetting("smbComputerName");
+            SmbDomain = GetSetting("smbDomain");
+            SmbUsername = GetSetting("smbUsername");
+            SmbPassword = GetSetting("smbPassword");
         }
 
         public override TaskStatus Run()
@@ -48,8 +55,50 @@ namespace Wexflow.Tasks.SqlToXml
             Info("Executing SQL scripts...");
 
             bool success = true;
-            bool atLeastOneSucceed = false;
+            bool atLeastOneSuccess = false;
 
+            try
+            {
+                if (!string.IsNullOrEmpty(SmbComputerName) && !string.IsNullOrEmpty(SmbUsername) && !string.IsNullOrEmpty(SmbPassword))
+                {
+                    using (NetworkShareAccesser.Access(SmbComputerName, SmbDomain, SmbUsername, SmbPassword))
+                    {
+                        success = ExecuteSqlFiles(ref atLeastOneSuccess);
+                    }
+                }
+                else
+                {
+                    success = ExecuteSqlFiles(ref atLeastOneSuccess);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                ErrorFormat("An error occured while copying files.", e);
+                success = false;
+            }
+
+            var status = Status.Success;
+
+            if (!success && atLeastOneSuccess)
+            {
+                status = Status.Warning;
+            }
+            else if (!success)
+            {
+                status = Status.Error;
+            }
+
+            Info("Task finished.");
+            return new TaskStatus(status, false);
+        }
+
+        private bool ExecuteSqlFiles(ref bool atLeastOneSuccess)
+        {
+            var success = true;
             // Execute SqlScript if necessary
             try
             {
@@ -78,7 +127,7 @@ namespace Wexflow.Tasks.SqlToXml
                     ExecuteSql(sql);
                     InfoFormat("The script {0} has been executed.", file.Path);
 
-                    if (!atLeastOneSucceed) atLeastOneSucceed = true;
+                    if (!atLeastOneSuccess) atLeastOneSuccess = true;
                 }
                 catch (ThreadAbortException)
                 {
@@ -90,20 +139,7 @@ namespace Wexflow.Tasks.SqlToXml
                     success = false;
                 }
             }
-
-            var status = Status.Success;
-
-            if (!success && atLeastOneSucceed)
-            {
-                status = Status.Warning;
-            }
-            else if (!success)
-            {
-                status = Status.Error;
-            }
-
-            Info("Task finished.");
-            return new TaskStatus(status, false);
+            return success;
         }
 
         private void ExecuteSql(string sql)
