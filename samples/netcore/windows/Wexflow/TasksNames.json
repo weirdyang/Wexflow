@@ -70,6 +70,7 @@
 	{ "Name": "Tar", "Description": "Creates a .tar from a collection of files."},
 	{ "Name": "TextsDecryptor", "Description": "Decrypts a collection of files encrypted by the task TextsEncryptor."},
 	{ "Name": "TextsEncryptor", "Description": "Encrypts a collection of text based files."},
+	{ "Name": "Tgz", "Description": "Creates a tar.gz from a collection of files."},
 	{ "Name": "Touch", "Description": "Creates a collection of empty files."},
 	{ "Name": "Twilio", "Description": "Sends an SMS."},
 	{ "Name": "Twitter", "Description": "Sends tweets."},
