@@ -27,7 +27,7 @@ namespace Wexflow.Tasks.Approval
                     IsWaitingForApproval = true;
                     Workflow.IsWaitingForApproval = true;
 
-                    while (!File.Exists(trigger) && !Workflow.IsRejected)
+                    while (!File.Exists(trigger) && !Workflow.IsRejected && !IsStopped)
                     {
                         Thread.Sleep(500);
                     }
@@ -38,7 +38,7 @@ namespace Wexflow.Tasks.Approval
                     {
                         InfoFormat("Task approved: {0}", trigger);
                     }
-                    else
+                    else if (!IsStopped)
                     {
                         Info("This workflow has been rejected.");
                     }
