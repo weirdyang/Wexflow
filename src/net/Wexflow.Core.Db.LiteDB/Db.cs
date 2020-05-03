@@ -1471,39 +1471,153 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override string InsertRecord(Core.Db.Record record)
+        public override string InsertRecord(Core.Db.Record record, List<Core.Db.Version> versions)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var recordCol = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                var r = new Record
+                {
+                    Approved = record.Approved,
+                    AssignedOn = record.AssignedOn,
+                    AssignedTo = record.AssignedTo,
+                    Comments = record.Comments,
+                    CreatedBy = record.CreatedBy,
+                    CreatedOn = DateTime.Now,
+                    Description = record.Description,
+                    EndDate = record.EndDate,
+                    ManagerComments = record.ManagerComments,
+                    Name = record.Name,
+                    StartDate = record.StartDate
+                };
+                var recordId = recordCol.Insert(r).AsInt32.ToString();
+
+                var versionCol = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+
+                foreach (var version in versions)
+                {
+                    var v = new Version
+                    {
+                        CreatedOn = DateTime.Now,
+                        FilePath = version.FilePath,
+                        RecordId = recordId
+                    };
+
+                    versionCol.Insert(v);
+                }
+
+
+                return recordId;
+            }
         }
 
-        public override void UpdateRecord(string recordId, Core.Db.Record record)
+        public override void UpdateRecord(string recordId, Core.Db.Record record, List<Core.Db.Version> versions)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var recordCol = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                var r = new Record
+                {
+                    Id = int.Parse(recordId),
+                    Approved = record.Approved,
+                    AssignedOn = record.AssignedOn,
+                    AssignedTo = record.AssignedTo,
+                    Comments = record.Comments,
+                    CreatedBy = record.CreatedBy,
+                    CreatedOn = record.CreatedOn,
+                    Description = record.Description,
+                    EndDate = record.EndDate,
+                    ManagerComments = record.ManagerComments,
+                    Name = record.Name,
+                    StartDate = record.StartDate,
+                    ModifiedBy = record.ModifiedBy,
+                    ModifiedOn = DateTime.Now
+                };
+                recordCol.Update(r);
+
+                var versionCol = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+
+                var recordVersions = versionCol.Find(v => v.RecordId == recordId);
+
+                foreach (var version in recordVersions)
+                {
+                    if (!versions.Any(v => v.GetDbId() == version.Id.ToString()))
+                    {
+                        versionCol.Delete(version.Id);
+                    }
+                }
+
+                foreach (var version in versions)
+                {
+                    if (version.GetDbId() == "-1")
+                    {
+                        var v = new Version
+                        {
+                            CreatedOn = DateTime.Now,
+                            FilePath = version.FilePath,
+                            RecordId = recordId
+                        };
+
+                        versionCol.Insert(v);
+                    }
+                }
+            }
         }
 
         public override void DeleteRecords(string[] recordIds)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                col.DeleteMany(r => recordIds.Contains(r.Id.ToString()));
+            }
         }
 
         public override IEnumerable<Core.Db.Record> GetRecords(string keyword)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                var keywordToUpper = keyword.ToUpper();
+                var records = col.Find(r => r.Name.ToUpper().Contains(keywordToUpper) || (!string.IsNullOrEmpty(r.Description) && r.Description.ToUpper().Contains(keywordToUpper))).ToList();
+                return records;
+            }
         }
 
         public override string InsertNotification(Core.Db.Notification notification)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                var n = new Notification
+                {
+                    AssignedBy = notification.AssignedBy,
+                    AssignedOn = notification.AssignedOn,
+                    AssignedTo = notification.AssignedTo,
+                    Message = notification.Message
+                };
+                var notificationId = col.Insert(n).AsInt32.ToString();
+                return notificationId;
+            }
         }
 
         public override void DeleteNotifications(string[] notificationIds)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                col.DeleteMany(n => notificationIds.Contains(n.Id.ToString()));
+            }
         }
 
         public override IEnumerable<Core.Db.Notification> GetNotifications(string assignedTo)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                var notifications = col.Find(n => n.AssignedTo == assignedTo).ToList();
+                return notifications;
+            }
         }
 
         public override void Dispose()

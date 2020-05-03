@@ -8,6 +8,7 @@ namespace Wexflow.Core.Db
 
         public string AssignedBy { get; set; }
         public DateTime AssignedOn { get; set; }
+        public string AssignedTo { get; set; }
         public string Message { get; set; }
 
         public virtual string GetDbId()

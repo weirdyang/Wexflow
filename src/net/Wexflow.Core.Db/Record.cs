@@ -20,7 +20,6 @@ namespace Wexflow.Core.Db
         public DateTime CreatedOn { get; set; }
         public string AssignedTo { get; set; }
         public DateTime AssignedOn { get; set; }
-        public List<Version> Versions { get; set; }
 
         public virtual string GetDbId()
         {

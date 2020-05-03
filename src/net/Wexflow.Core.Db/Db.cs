@@ -100,8 +100,8 @@ namespace Wexflow.Core.Db
         public abstract string GetEntryLogs(string entryId);
         public abstract string GetHistoryEntryLogs(string entryId);
 
-        public abstract string InsertRecord(Record record);
-        public abstract void UpdateRecord(string recordId, Record record);
+        public abstract string InsertRecord(Record record, List<Version> versions);
+        public abstract void UpdateRecord(string recordId, Record record, List<Version> versions);
         public abstract void DeleteRecords(string[] recordIds);
         public abstract IEnumerable<Record> GetRecords(string keyword);
 

@@ -932,12 +932,12 @@ namespace Wexflow.Core.Db.MongoDB
             }
         }
 
-        public override string InsertRecord(Record record)
+        public override string InsertRecord(Record record, List<Version> versions)
         {
             throw new NotImplementedException();
         }
 
-        public override void UpdateRecord(string recordId, Record record)
+        public override void UpdateRecord(string recordId, Record record, List<Version> versions)
         {
             throw new NotImplementedException();
         }
