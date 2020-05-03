@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HttpGet.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HttpGet.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
   </ItemGroup>
 
