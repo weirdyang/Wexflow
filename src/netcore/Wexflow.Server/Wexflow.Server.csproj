@@ -190,6 +190,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.TextsDecryptor\Wexflow.Tasks.TextsDecryptor.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.TextsEncryptor\Wexflow.Tasks.TextsEncryptor.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Tgz\Wexflow.Tasks.Tgz.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.Torrent\Wexflow.Tasks.Torrent.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Touch\Wexflow.Tasks.Touch.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Twilio\Wexflow.Tasks.Twilio.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Twitter\Wexflow.Tasks.Twitter.csproj" />

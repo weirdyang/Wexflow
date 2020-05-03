@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Torrent.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Torrent.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoTorrent" Version="1.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
+  </ItemGroup>
+
+</Project>

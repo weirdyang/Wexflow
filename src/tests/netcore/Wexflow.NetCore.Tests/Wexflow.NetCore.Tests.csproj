@@ -90,6 +90,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.TextsDecryptor\Wexflow.Tasks.TextsDecryptor.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.TextsEncryptor\Wexflow.Tasks.TextsEncryptor.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Tgz\Wexflow.Tasks.Tgz.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Torrent\Wexflow.Tasks.Torrent.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Touch\Wexflow.Tasks.Touch.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Twilio\Wexflow.Tasks.Twilio.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Twitter\Wexflow.Tasks.Twitter.csproj" />
