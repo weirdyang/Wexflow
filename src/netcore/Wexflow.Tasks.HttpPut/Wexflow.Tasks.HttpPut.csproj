@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HttpPut.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HttpPut.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
   </ItemGroup>
 

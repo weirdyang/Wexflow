@@ -53,7 +53,7 @@ namespace Wexflow.Tasks.HttpPost
 
         public async System.Threading.Tasks.Task<string> Post(string url, string auth, string bearer, string payload)
         {
-            var httpContent = new StringContent(payload, Encoding.UTF8);
+            using (var httpContent = new StringContent(payload, Encoding.UTF8))
             using (var httpClient = new HttpClient())
             {
                 if (!string.IsNullOrEmpty(auth))
