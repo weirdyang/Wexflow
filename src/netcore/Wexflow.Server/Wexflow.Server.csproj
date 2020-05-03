@@ -196,6 +196,7 @@
     <ProjectReference Include="..\Wexflow.Tasks.Twitter\Wexflow.Tasks.Twitter.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.UglifyCss\Wexflow.Tasks.UglifyCss.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.UglifyHtml\Wexflow.Tasks.UglifyHtml.csproj" />
+    <ProjectReference Include="..\Wexflow.Tasks.UglifyJs\Wexflow.Tasks.UglifyJs.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Unzip\Wexflow.Tasks.Unzip.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.VimeoListUploads\Wexflow.Tasks.VimeoListUploads.csproj" />
     <ProjectReference Include="..\Wexflow.Tasks.Vimeo\Wexflow.Tasks.Vimeo.csproj" />

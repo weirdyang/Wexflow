@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="UglifyJs.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="UglifyJs.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUglify" Version="1.5.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wexflow.Core\Wexflow.Core.csproj" />
+  </ItemGroup>
+
+</Project>
