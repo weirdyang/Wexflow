@@ -76,6 +76,7 @@
 	{ "Name": "Twilio", "Description": "Sends an SMS."},
 	{ "Name": "Twitter", "Description": "Sends tweets."},
 	{ "Name": "UglifyCss", "Description": "Compresses and minifies CSS files."},
+	{ "Name": "UglifyHtml", "Description": "Compresses and minifies HTML files."},
 	{ "Name": "Unzip", "Description": "Extracts ZIP archives."},
 	{ "Name": "Vimeo", "Description": "Uploads videos to Vimeo."},
 	{ "Name": "VimeoListUploads", "Description": "Retrieves a list of videos uploaded to a Vimeo channel."},

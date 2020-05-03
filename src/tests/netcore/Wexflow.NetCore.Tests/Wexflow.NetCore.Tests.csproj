@@ -95,6 +95,7 @@
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Twilio\Wexflow.Tasks.Twilio.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Twitter\Wexflow.Tasks.Twitter.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.UglifyCss\Wexflow.Tasks.UglifyCss.csproj" />
+    <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.UglifyHtml\Wexflow.Tasks.UglifyHtml.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Unzip\Wexflow.Tasks.Unzip.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.VimeoListUploads\Wexflow.Tasks.VimeoListUploads.csproj" />
     <ProjectReference Include="..\..\..\netcore\Wexflow.Tasks.Vimeo\Wexflow.Tasks.Vimeo.csproj" />
