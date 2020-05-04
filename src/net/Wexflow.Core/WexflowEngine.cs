@@ -1331,6 +1331,25 @@ namespace Wexflow.Core
             }
         }
 
+        // <summary>
+        /// Deletes versions.
+        /// </summary>
+        /// <param name="recordIds">Version ids.</param>
+        /// <returns>Result.</returns>
+        public bool DeleteVersions(string[] versionIds)
+        {
+            try
+            {
+                Database.DeleteVersions(versionIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while deleting versions.", e);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Saves a record in the database.
         /// </summary>
