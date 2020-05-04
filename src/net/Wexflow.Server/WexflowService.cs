@@ -102,6 +102,7 @@ namespace Wexflow.Server
             //
             SaveRecord();
             DeleteRecords();
+            SearchRecords();
 
             //
             // History
@@ -4155,7 +4156,7 @@ namespace Wexflow.Server
                             CreatedBy = createdBy,
                             CreatedOn = DateTime.Parse(createdOn),
                             AssignedTo = assignedTo,
-                            AssignedOn = string.IsNullOrEmpty(assignedTo) ? null : (DateTime?)DateTime.Parse(assignedTo)
+                            AssignedOn = string.IsNullOrEmpty(assignedOn) ? null : (DateTime?)DateTime.Parse(assignedOn)
                         };
 
                         List<Core.Db.Version> recordVersions = new List<Core.Db.Version>();
@@ -4250,7 +4251,76 @@ namespace Wexflow.Server
             });
         }
 
+        /// <summary>
+        /// Searches for records by keyword.
+        /// </summary>
+        private void SearchRecords()
+        {
+            Get(Root + "searchRecords", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
 
+                string keyword = Request.Query["s"].ToString();
+
+                var records = new Contracts.Record[] { };
+
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password))
+                {
+                    var recordsArray = WexflowServer.WexflowEngine.GetRecords(keyword);
+                    List<Contracts.Record> recordsList = new List<Contracts.Record>();
+                    foreach (var record in recordsArray)
+                    {
+                        var r = new Contracts.Record
+                        {
+                            Id = record.GetDbId(),
+                            Name = record.Name,
+                            Description = record.Description,
+                            StartDate = record.StartDate.HasValue ? record.StartDate.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            EndDate = record.EndDate.HasValue ? record.EndDate.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            Comments = record.Comments,
+                            Approved = record.Approved,
+                            ManagerComments = record.ManagerComments,
+                            ModifiedBy = record.ModifiedBy,
+                            ModifiedOn = record.ModifiedOn.HasValue ? record.ModifiedOn.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            CreatedBy = record.CreatedBy,
+                            CreatedOn = record.CreatedOn.ToString(WexflowServer.Config["DateTimeFormat"]),
+                            AssignedTo = record.AssignedTo,
+                            AssignedOn = record.AssignedOn.HasValue ? record.AssignedOn.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty
+                        };
+
+                        var versions = WexflowServer.WexflowEngine.GetVersions(record.GetDbId());
+                        List<Contracts.Version> versionsList = new List<Contracts.Version>();
+                        foreach (var version in versions)
+                        {
+                            var v = new Contracts.Version
+                            {
+                                Id = version.GetDbId(),
+                                RecordId = version.RecordId,
+                                FilePath = version.FilePath,
+                                CreatedOn = version.CreatedOn.ToString(WexflowServer.Config["DateTimeFormat"])
+                            };
+                            versionsList.Add(v);
+                        }
+                        r.Versions = versionsList.ToArray();
+                        recordsList.Add(r);
+                    }
+                    records = recordsList.ToArray();
+                }
+
+                var recordsStr = JsonConvert.SerializeObject(records);
+                var recordsBytes = Encoding.UTF8.GetBytes(recordsStr);
+
+                return new Response()
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(recordsBytes, 0, recordsBytes.Length)
+                };
+
+            });
+        }
 
     }
 }
