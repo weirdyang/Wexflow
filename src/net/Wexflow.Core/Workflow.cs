@@ -1279,7 +1279,7 @@ namespace Wexflow.Core
             foreach (var task in tasks)
             {
                 if (!task.IsEnabled) continue;
-                if (task.IsStopped) continue;
+                if (task.IsStopped) break;
                 if (IsApproval && IsRejected) break;
                 var status = task.Run();
                 Logs.AddRange(task.Logs);
