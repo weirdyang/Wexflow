@@ -100,6 +100,7 @@ namespace Wexflow.Server
             //
             // Records
             //
+            UploadVerion();
             SaveRecord();
             DeleteRecords();
             SearchRecords();
@@ -4107,6 +4108,70 @@ namespace Wexflow.Server
         }
 
         /// <summary>
+        /// Uploads a version.
+        /// </summary>
+        private void UploadVerion()
+        {
+            Post(Root + "uploadVersion", args =>
+            {
+                try
+                {
+                    var ressr = new SaveResult { FilePath = string.Empty, Result = false };
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
+
+                    var file = Request.Files.Single();
+                    var fileName = file.Name;
+                    var strWriter = new StringWriter();
+                    var ms = new MemoryStream();
+                    file.Value.CopyTo(ms);
+
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                    {
+                        var recordId = Request.Query["r"].ToString();
+                        var filePath = Path.Combine(WexflowServer.WexflowEngine.RecordsTempFolder, Guid.NewGuid().ToString(), fileName);
+                        File.WriteAllBytes(filePath, ms.ToArray());
+                        var version = new Core.Db.Version
+                        {
+                            RecordId = recordId,
+                            FilePath = filePath
+                        };
+                        var versionId = WexflowServer.WexflowEngine.SaveVersion(version);
+                        if (versionId != "-1")
+                        {
+                            ressr.Result = true;
+                            ressr.FilePath = filePath;
+                        }
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(ressr);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(new SaveResult { FilePath = string.Empty, Result = false });
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
+
+        /// <summary>
         /// Saves a record.
         /// </summary>
         private void SaveRecord()
@@ -4121,7 +4186,7 @@ namespace Wexflow.Server
                     var password = auth.Password;
 
                     var user = WexflowServer.WexflowEngine.GetUser(username);
-                    if (user.Password.Equals(password))
+                    if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                     {
                         var json = RequestStream.FromStream(Request.Body).AsString();
                         var o = JObject.Parse(json);
@@ -4217,7 +4282,7 @@ namespace Wexflow.Server
                     var password = auth.Password;
 
                     var user = WexflowServer.WexflowEngine.GetUser(username);
-                    if (user.Password.Equals(password))
+                    if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                     {
                         var json = RequestStream.FromStream(Request.Body).AsString();
                         var o = JObject.Parse(json);
@@ -4267,7 +4332,7 @@ namespace Wexflow.Server
                 var records = new Contracts.Record[] { };
 
                 var user = WexflowServer.WexflowEngine.GetUser(username);
-                if (user.Password.Equals(password))
+                if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                 {
                     var recordsArray = WexflowServer.WexflowEngine.GetRecords(keyword);
                     List<Contracts.Record> recordsList = new List<Contracts.Record>();

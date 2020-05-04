@@ -1313,6 +1313,25 @@ namespace Wexflow.Core
         }
 
         /// <summary>
+        /// Inserts a version in the database.
+        /// </summary>
+        /// <param name="version">Version.</param>
+        /// <returns>Version id.</returns>
+        public string SaveVersion(Db.Version version)
+        {
+            try
+            {
+                var versionId = Database.InsertVersion(version);
+                return versionId;
+            }
+            catch (Exception e)
+            {
+                Logger.ErrorFormat("An error occured while saving the version {0}.", e, version.FilePath);
+                return "-1";
+            }
+        }
+
+        /// <summary>
         /// Saves a record in the database.
         /// </summary>
         /// <param name="recordId">Record id.</param>
