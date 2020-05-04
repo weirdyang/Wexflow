@@ -661,7 +661,7 @@ namespace Wexflow.Core
                 var admin = GetUser("admin");
                 foreach (var worlflowFile in workflowFiles)
                 {
-                    SaveWorkflowFromFile(admin.GetId(), UserProfile.SuperAdministrator, worlflowFile, false);
+                    SaveWorkflowFromFile(admin.GetDbId(), UserProfile.SuperAdministrator, worlflowFile, false);
                 }
                 Logger.InfoFormat("Loading workflows from hot folder {0} finished.", WorkflowsFolder);
             }
@@ -1080,7 +1080,7 @@ namespace Wexflow.Core
         {
             var user = Database.GetUser(username);
             Database.DeleteUser(username, password);
-            Database.DeleteUserWorkflowRelationsByUserId(user.GetId());
+            Database.DeleteUserWorkflowRelationsByUserId(user.GetDbId());
         }
 
         /// <summary>
