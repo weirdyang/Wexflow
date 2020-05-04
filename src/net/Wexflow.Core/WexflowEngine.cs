@@ -1500,14 +1500,23 @@ namespace Wexflow.Core
         /// <summary>
         /// Inserts a notification in the database.
         /// </summary>
+        /// <param name="notificationId">Notification id.</param>
         /// <param name="notification">Notification.</param>
         /// <returns>Notification id.</returns>
-        public string SaveNotification(Notification notification)
+        public string SaveNotification(string notificationId, Notification notification)
         {
             try
             {
-                var id = Database.InsertNotification(notification);
-                return id;
+                if (notificationId == "-1")
+                {
+                    var id = Database.InsertNotification(notification);
+                    return id;
+                }
+                else
+                {
+                    Database.UpdateNotification(notificationId, notification);
+                    return notificationId;
+                }
             }
             catch (Exception e)
             {
