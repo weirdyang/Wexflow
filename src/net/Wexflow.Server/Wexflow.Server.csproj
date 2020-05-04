@@ -197,6 +197,7 @@
     <Compile Include="Contracts\Entry.cs" />
     <Compile Include="Contracts\HistoryEntry.cs" />
     <Compile Include="Contracts\Node.cs" />
+    <Compile Include="Contracts\Record.cs" />
     <Compile Include="Contracts\SaveResult.cs" />
     <Compile Include="Contracts\TaskSetting.cs" />
     <Compile Include="Contracts\SettingInfo.cs" />
@@ -205,10 +206,12 @@
     <Compile Include="Contracts\TaskName.cs" />
     <Compile Include="Contracts\User.cs" />
     <Compile Include="Contracts\Variable.cs" />
+    <Compile Include="Contracts\Version.cs" />
     <Compile Include="Contracts\WorkflowInfo.cs" />
     <Compile Include="Contracts\Workflow\Workflow.cs" />
     <Compile Include="Contracts\Workflow\WorkflowInfo.cs" />
     <Compile Include="IAppConfiguration.cs" />
+    <Compile Include="Contracts\Notification.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

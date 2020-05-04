@@ -1439,6 +1439,16 @@ namespace Wexflow.Core
         }
 
         /// <summary>
+        /// returns record versions.
+        /// </summary>
+        /// <param name="recordId">Record id.</param>
+        /// <returns>record versions.</returns>
+        public Db.Version[] GetVersions(string recordId)
+        {
+            return Database.GetVersions(recordId).ToArray();
+        }
+
+        /// <summary>
         /// returns the latest version of a record.
         /// </summary>
         /// <param name="recordId">Record id.</param>
