@@ -1527,7 +1527,7 @@ namespace Wexflow.Core.Db.LiteDB
             lock (padlock)
             {
                 var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
-                col.DeleteMany(r => recordIds.Contains(r.Id.ToString()));
+                col.DeleteMany(r => recordIds.Contains(r.GetDbId()));
             }
         }
 
@@ -1544,37 +1544,83 @@ namespace Wexflow.Core.Db.LiteDB
 
         public override IEnumerable<Core.Db.Record> GetRecordsCreatedBy(string createdBy)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                var records = col.Find(r => r.CreatedBy == createdBy).ToList();
+                return records;
+            }
         }
 
         public override IEnumerable<Core.Db.Record> GetRecords(string assingedTo, string keyword)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
+                var keywordToUpper = keyword.ToUpper();
+                var records = col.Find(r => r.AssignedTo == assingedTo && (r.Name.ToUpper().Contains(keywordToUpper) || (!string.IsNullOrEmpty(r.Description) && r.Description.ToUpper().Contains(keywordToUpper)))).ToList();
+                return records;
+            }
         }
 
         public override string InsertVersion(Core.Db.Version version)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+                var v = new Version
+                {
+                    RecordId = version.RecordId,
+                    CreatedOn = DateTime.Now,
+                    FilePath = version.FilePath
+                };
+                var versionId = col.Insert(v).AsInt32.ToString();
+                return versionId;
+            }
         }
 
         public override void UpdateVersion(string versionId, Core.Db.Version version)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+                var v = new Version
+                {
+                    RecordId = version.RecordId,
+                    CreatedOn = version.CreatedOn,
+                    FilePath = version.FilePath
+                };
+                col.Update(v);
+            }
         }
 
         public override void DeleteVersions(string[] versionIds)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+                col.DeleteMany(v => versionIds.Contains(v.GetDbId()));
+            }
         }
 
         public override IEnumerable<Core.Db.Version> GetVersions(string recordId)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+                var versions = col.Find(v => v.RecordId == recordId).ToList();
+                return versions;
+            }
         }
 
         public override Core.Db.Version GetLatestVersion(string recordId)
         {
-            throw new NotImplementedException();
+            lock (padlock)
+            {
+                var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
+                var version = col.FindAll().OrderByDescending(v => v.CreatedOn).FirstOrDefault();
+                return version;
+            }
         }
 
         public override string InsertNotification(Core.Db.Notification notification)
