@@ -1853,12 +1853,12 @@ namespace Wexflow.Core.Db.SQLServer
             }
         }
 
-        public override string InsertRecord(Record record, List<Version> versions)
+        public override string InsertRecord(Record record)
         {
             throw new NotImplementedException();
         }
 
-        public override void UpdateRecord(string recordId, Record record, List<Version> versions)
+        public override void UpdateRecord(string recordId, Record record)
         {
             throw new NotImplementedException();
         }
@@ -1869,6 +1869,41 @@ namespace Wexflow.Core.Db.SQLServer
         }
 
         public override IEnumerable<Record> GetRecords(string keyword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Record> GetRecordsCreatedBy(string createdBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Record> GetRecords(string assingedTo, string keyword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string InsertVersion(Version version)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateVersion(string versionId, Version version)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteVersions(string[] versionIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Version> GetVersions(string recordId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Version GetLatestVersion(string recordId)
         {
             throw new NotImplementedException();
         }
