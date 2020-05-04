@@ -101,6 +101,7 @@ namespace Wexflow.Server
             // Records
             //
             SaveRecord();
+            DeleteRecords();
 
             //
             // History
@@ -4104,7 +4105,9 @@ namespace Wexflow.Server
 
         }
 
-
+        /// <summary>
+        /// Saves a record.
+        /// </summary>
         private void SaveRecord()
         {
             Post(Root + "saveRecord", args =>
@@ -4196,6 +4199,58 @@ namespace Wexflow.Server
                 }
             });
         }
+
+        /// <summary>
+        /// Deletes records
+        /// </summary>
+        private void DeleteRecords()
+        {
+            Post(Root + "deleteRecords", args =>
+            {
+                try
+                {
+                    var res = false;
+
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
+
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    if (user.Password.Equals(password))
+                    {
+                        var json = RequestStream.FromStream(Request.Body).AsString();
+                        var o = JObject.Parse(json);
+                        var recordIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("recordsToDelete")).ToString());
+                        res = WexflowServer.WexflowEngine.DeleteRecords(recordIds);
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(res);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(false);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
+
+
 
     }
 }
