@@ -113,6 +113,7 @@ namespace Wexflow.Server
             //
             HasNotifications();
             SaveNotification();
+            DeleteNotifications();
 
             //
             // History
@@ -4665,6 +4666,56 @@ namespace Wexflow.Server
 
                         var notificationId = WexflowServer.WexflowEngine.SaveNotification(id, notification);
                         res = notificationId != "-1";
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(res);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(false);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
+
+        /// <summary>
+        /// Deletes notifications.
+        /// </summary>
+        private void DeleteNotifications()
+        {
+            Post(Root + "deleteNotifications", args =>
+            {
+                try
+                {
+                    var res = false;
+
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
+
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                    {
+                        var json = RequestStream.FromStream(Request.Body).AsString();
+                        var o = JObject.Parse(json);
+                        var notificationIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("notificationsToDelete")).ToString());
+                        res = WexflowServer.WexflowEngine.DeleteNotifications(notificationIds);
                     }
 
                     var resStr = JsonConvert.SerializeObject(res);
