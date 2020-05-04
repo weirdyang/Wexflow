@@ -1618,7 +1618,7 @@ namespace Wexflow.Core.Db.LiteDB
             lock (padlock)
             {
                 var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
-                var version = col.FindAll().OrderByDescending(v => v.CreatedOn).FirstOrDefault();
+                var version = col.Find(v => v.RecordId == recordId).OrderByDescending(v => v.CreatedOn).FirstOrDefault();
                 return version;
             }
         }

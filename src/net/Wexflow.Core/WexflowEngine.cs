@@ -1,5 +1,6 @@
 ﻿using Quartz;
 using Quartz.Impl;
+using Quartz.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -77,17 +78,21 @@ namespace Wexflow.Core
         /// </summary>
         public string WorkflowsFolder { get; private set; }
         /// <summary>
+        /// Records folder path.
+        /// </summary>
+        public string RecordsFolder { get; private set; }
+        /// <summary>
         /// Temp folder path.
         /// </summary>
         public string TempFolder { get; private set; }
         /// <summary>
+        /// Workflows temp folder used for global variables parsing.
+        /// </summary>
+        public string RecordsTempFolder { get; private set; }
+        /// <summary>
         /// Tasks folder path.
         /// </summary>
         public string TasksFolder { get; private set; }
-        /// <summary>
-        /// Workflows temp folder used for global variables parsing.
-        /// </summary>
-        public string WorkflowsTempFolder { get; private set; }
         /// <summary>
         /// Approval folder path.
         /// </summary>
@@ -221,12 +226,12 @@ namespace Wexflow.Core
         {
             var xdoc = XDocument.Load(SettingsFile);
             WorkflowsFolder = GetWexflowSetting(xdoc, "workflowsFolder");
+            RecordsFolder = GetWexflowSetting(xdoc, "recordsFolder");
+            if (!Directory.Exists(RecordsFolder)) Directory.CreateDirectory(RecordsFolder);
             TempFolder = GetWexflowSetting(xdoc, "tempFolder");
             TasksFolder = GetWexflowSetting(xdoc, "tasksFolder");
             if (!Directory.Exists(TempFolder)) Directory.CreateDirectory(TempFolder);
-            WorkflowsTempFolder = Path.Combine(TempFolder, "Workflows");
             ApprovalFolder = GetWexflowSetting(xdoc, "approvalFolder");
-            if (!Directory.Exists(WorkflowsTempFolder)) Directory.CreateDirectory(WorkflowsTempFolder);
             XsdPath = GetWexflowSetting(xdoc, "xsd");
             TasksNamesFile = GetWexflowSetting(xdoc, "tasksNamesFile");
             TasksSettingsFile = GetWexflowSetting(xdoc, "tasksSettingsFile");
@@ -301,7 +306,6 @@ namespace Wexflow.Core
                     , workflow.GetDbId()
                     , workflow.Xml
                     , TempFolder
-                    , WorkflowsTempFolder
                     , TasksFolder
                     , ApprovalFolder
                     , XsdPath
@@ -355,7 +359,6 @@ namespace Wexflow.Core
                             , "-1"
                             , xml
                             , TempFolder
-                            , WorkflowsTempFolder
                             , TasksFolder
                             , ApprovalFolder
                             , XsdPath
@@ -398,7 +401,6 @@ namespace Wexflow.Core
                             , "-1"
                             , xml
                             , TempFolder
-                            , WorkflowsTempFolder
                             , TasksFolder
                             , ApprovalFolder
                             , XsdPath
@@ -1309,5 +1311,190 @@ namespace Wexflow.Core
         {
             return Database.GetHistoryEntryLogs(entryId);
         }
+
+        /// <summary>
+        /// Saves a record in the database.
+        /// </summary>
+        /// <param name="recordId">Record id.</param>
+        /// <param name="record">Record.</param>
+        /// <param name="versions">Version.</param>
+        /// <returns></returns>
+        public string SaveRecord(string recordId, Record record, List<Db.Version> versions)
+        {
+            try
+            {
+                if (recordId == "-1") // insert
+                {
+                    var id = Database.InsertRecord(record);
+
+                    foreach (var version in versions)
+                    {
+                        var versionId = Database.InsertVersion(version);
+
+                        // Move version file from temp folder to Records folder.
+                        var fileName = Path.GetFileName(version.FilePath);
+                        var destPath = Path.Combine(RecordsFolder, id, versionId, fileName);
+                        File.Move(version.FilePath, destPath);
+                        Directory.Delete(Path.GetDirectoryName(version.FilePath));
+
+                        // Update version.
+                        version.FilePath = destPath;
+                        Database.UpdateVersion(versionId, version);
+                    }
+
+                    return id;
+                }
+                else // update
+                {
+                    Database.UpdateRecord(recordId, record);
+
+                    var recordVersions = Database.GetVersions(recordId);
+
+                    List<string> versionsToDelete = new List<string>();
+                    foreach (var version in recordVersions)
+                    {
+                        if (!versions.Any(v => v.GetDbId() == version.GetDbId()))
+                        {
+                            versionsToDelete.Add(version.GetDbId());
+                        }
+                    }
+                    Database.DeleteVersions(versionsToDelete.ToArray());
+
+                    foreach (var version in versions)
+                    {
+                        if (version.FilePath.Contains(RecordsTempFolder))
+                        {
+                            var versionId = Database.InsertVersion(version);
+
+                            // Move version file from temp folder to Records folder.
+                            var fileName = Path.GetFileName(version.FilePath);
+                            var destPath = Path.Combine(RecordsFolder, recordId, versionId, fileName);
+                            File.Move(version.FilePath, destPath);
+                            Directory.Delete(Path.GetDirectoryName(version.FilePath));
+
+                            // Update version.
+                            version.FilePath = destPath;
+                            Database.UpdateVersion(versionId, version);
+                        }
+                    }
+
+                    return recordId;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.ErrorFormat("An error occured while saving the record {0}.", e, recordId);
+                return "-1";
+            }
+        }
+
+        /// <summary>
+        /// Deletes records.
+        /// </summary>
+        /// <param name="recordIds">Record ids.</param>
+        /// <returns>Result.</returns>
+        public bool DeleteRecords(string[] recordIds)
+        {
+            try
+            {
+                Database.DeleteRecords(recordIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while deleting records.", e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns records by keyword.
+        /// </summary>
+        /// <param name="keyword">Keyword.</param>
+        /// <returns>Records by keyword</returns>
+        public Record[] GetRecords(string keyword)
+        {
+            return Database.GetRecords(keyword).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the records assigned to a user by keyword.
+        /// </summary>
+        /// <param name="assignedTo">Assigned to.</param>
+        /// <param name="keyword">Keyword.</param>
+        /// <returns>Records assigned to a user by keyword.</returns>
+        public Record[] GetRecords(string assignedTo, string keyword)
+        {
+            return Database.GetRecords(assignedTo, keyword).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the records created by a user.
+        /// </summary>
+        /// <param name="createdBy">User id.</param>
+        /// <returns>Records created by a user.</returns>
+        public Record[] GetRecordsCreatedBy(string createdBy)
+        {
+            return Database.GetRecordsCreatedBy(createdBy).ToArray();
+        }
+
+        /// <summary>
+        /// returns the latest version of a record.
+        /// </summary>
+        /// <param name="recordId">Record id.</param>
+        /// <returns>Latest version of a record.</returns>
+        public Db.Version GetLatestVersion(string recordId)
+        {
+            return Database.GetLatestVersion(recordId);
+        }
+
+        /// <summary>
+        /// Inserts a notification in the database.
+        /// </summary>
+        /// <param name="notification">Notification.</param>
+        /// <returns>Notification id.</returns>
+        public string SaveNotification(Notification notification)
+        {
+            try
+            {
+                var id = Database.InsertNotification(notification);
+                return id;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while saving a notification.", e);
+                return "-1";
+            }
+        }
+
+        /// <summary>
+        /// Deletes notifications.
+        /// </summary>
+        /// <param name="notificationIds">Notification ids.</param>
+        /// <returns>Result.</returns>
+        public bool DeleteNotifications(string[] notificationIds)
+        {
+            try
+            {
+                Database.DeleteNotifications(notificationIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while deleting notifications.", e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns the notifications assigned to a user.
+        /// </summary>
+        /// <param name="assignedTo">User id.</param>
+        /// <returns>Notifications assigned to a user.</returns>
+        public Notification[] GetNotifications(string assignedTo)
+        {
+            return Database.GetNotifications(assignedTo).ToArray();
+        }
+
     }
 }

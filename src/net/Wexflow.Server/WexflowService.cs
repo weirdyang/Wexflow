@@ -1397,7 +1397,6 @@ namespace Wexflow.Server
                               , "-1"
                               , xdoc.ToString()
                               , WexflowServer.WexflowEngine.TempFolder
-                              , WexflowServer.WexflowEngine.WorkflowsTempFolder
                               , WexflowServer.WexflowEngine.TasksFolder
                               , WexflowServer.WexflowEngine.ApprovalFolder
                               , WexflowServer.WexflowEngine.XsdPath
@@ -4099,6 +4098,9 @@ namespace Wexflow.Server
             });
 
         }
+
+
+
 
     }
 }

@@ -62,10 +62,6 @@ namespace Wexflow.Core
         /// </summary>
         public string WexflowTempFolder { get; private set; }
         /// <summary>
-        /// Workflows temp folder used for global variables parsing.
-        /// </summary>
-        public string WorkflowsTempFolder { get; private set; }
-        /// <summary>
         /// Workflow temp folder.
         /// </summary>
         public string WorkflowTempFolder { get; private set; }
@@ -228,7 +224,6 @@ namespace Wexflow.Core
         /// <param name="dbId">Database ID.</param>
         /// <param name="xml">XML of the workflow.</param>
         /// <param name="wexflowTempFolder">Wexflow temp folder.</param>
-        /// <param name="workflowsTempFolder">Workflows temp folder.</param>
         /// <param name="tasksFolder">Tasks folder.</param>
         /// <param name="approvalFolder">Approval folder.</param>
         /// <param name="xsdPath">XSD path.</param>
@@ -241,7 +236,6 @@ namespace Wexflow.Core
             , string dbId
             , string xml
             , string wexflowTempFolder
-            , string workflowsTempFolder
             , string tasksFolder
             , string approvalFolder
             , string xsdPath
@@ -258,7 +252,6 @@ namespace Wexflow.Core
             DbId = dbId;
             Xml = xml;
             WexflowTempFolder = wexflowTempFolder;
-            WorkflowsTempFolder = workflowsTempFolder;
             TasksFolder = tasksFolder;
             ApprovalFolder = approvalFolder;
             XsdPath = xsdPath;
@@ -893,7 +886,6 @@ namespace Wexflow.Core
                     , DbId
                     , Xml
                     , WexflowTempFolder
-                    , WorkflowsTempFolder
                     , TasksFolder
                     , ApprovalFolder
                     , XsdPath
