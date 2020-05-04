@@ -114,6 +114,7 @@ namespace Wexflow.Server
             HasNotifications();
             SaveNotification();
             DeleteNotifications();
+            GetNotifications();
 
             //
             // History
@@ -4741,6 +4742,54 @@ namespace Wexflow.Server
                         Contents = s => s.Write(resBytes, 0, resBytes.Length)
                     };
                 }
+            });
+        }
+
+        /// <summary>
+        /// Retrieves notifications of a user.
+        /// </summary>
+        private void GetNotifications()
+        {
+            Get(Root + "notifications", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var assignedToUsername = Request.Query["a"].ToString();
+                Core.Db.User assignedTo = WexflowServer.WexflowEngine.GetUser(assignedToUsername);
+
+                var notifications = new Contracts.Notification[] { };
+
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                {
+                    var notificationsArray = WexflowServer.WexflowEngine.GetNotifications(assignedTo.GetDbId());
+                    List<Contracts.Notification> notificationList = new List<Contracts.Notification>();
+                    foreach (var notification in notificationsArray)
+                    {
+                        var n = new Contracts.Notification
+                        {
+                            Id = notification.GetDbId(),
+                            AssignedBy = notification.AssignedBy,
+                            AssignedOn = notification.AssignedOn.ToString(WexflowServer.Config["DateTimeFormat"]),
+                            AssignedTo = notification.AssignedTo,
+                            Message = notification.Message
+                        };
+                        notificationList.Add(n);
+                    }
+                    notifications = notificationList.ToArray();
+                }
+
+                var notificationsStr = JsonConvert.SerializeObject(notifications);
+                var notificationsBytes = Encoding.UTF8.GetBytes(notificationsStr);
+
+                return new Response()
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(notificationsBytes, 0, notificationsBytes.Length)
+                };
+
             });
         }
 
