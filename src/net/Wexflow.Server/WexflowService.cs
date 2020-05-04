@@ -109,6 +109,11 @@ namespace Wexflow.Server
             SearchRecordsCreatedByOrAssignedTo();
 
             //
+            // Notifications
+            //
+            HasNotifications();
+
+            //
             // History
             //
             GetHistoryEntriesCountByDate();
@@ -4582,6 +4587,40 @@ namespace Wexflow.Server
                 {
                     ContentType = "application/json",
                     Contents = s => s.Write(recordsBytes, 0, recordsBytes.Length)
+                };
+
+            });
+        }
+
+        /// <summary>
+        /// Indicates whether the user has notifications or not.
+        /// </summary>
+        private void HasNotifications()
+        {
+            Get(Root + "hasNotifications", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var assignedToUsername = Request.Query["a"].ToString();
+                Core.Db.User assignedTo = WexflowServer.WexflowEngine.GetUser(assignedToUsername);
+
+                var res = false;
+
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                {
+                    res = WexflowServer.WexflowEngine.HasNotifications(assignedTo.GetDbId());
+                }
+
+                var resStr = JsonConvert.SerializeObject(res);
+                var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                return new Response()
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(resBytes, 0, resBytes.Length)
                 };
 
             });

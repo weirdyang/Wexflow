@@ -1633,10 +1633,29 @@ namespace Wexflow.Core.Db.LiteDB
                     AssignedBy = notification.AssignedBy,
                     AssignedOn = notification.AssignedOn,
                     AssignedTo = notification.AssignedTo,
-                    Message = notification.Message
+                    Message = notification.Message,
+                    IsRead = notification.IsRead
                 };
                 var notificationId = col.Insert(n).AsInt32.ToString();
                 return notificationId;
+            }
+        }
+
+        public override void UpdateNotification(string notificationId, Core.Db.Notification notification)
+        {
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                var n = new Notification
+                {
+                    Id = int.Parse(notificationId),
+                    AssignedBy = notification.AssignedBy,
+                    AssignedOn = notification.AssignedOn,
+                    AssignedTo = notification.AssignedTo,
+                    Message = notification.Message,
+                    IsRead = notification.IsRead
+                };
+                col.Update(n);
             }
         }
 
@@ -1659,9 +1678,21 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
+        public override bool HasNotifications(string assignedTo)
+        {
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                var notifications = col.Find(n => n.AssignedTo == assignedTo).ToList();
+                var hasNotifications = notifications.Any(n => !n.IsRead);
+                return hasNotifications;
+            }
+        }
+
         public override void Dispose()
         {
             db.Dispose();
         }
+
     }
 }

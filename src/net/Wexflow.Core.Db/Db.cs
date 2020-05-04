@@ -113,9 +113,12 @@ namespace Wexflow.Core.Db
         public abstract IEnumerable<Version> GetVersions(string recordId);
         public abstract Version GetLatestVersion(string recordId);
 
+
         public abstract string InsertNotification(Notification notification);
+        public abstract void UpdateNotification(string notificationId, Notification notification);
         public abstract void DeleteNotifications(string[] notificationIds);
         public abstract IEnumerable<Notification> GetNotifications(string assignedTo);
+        public abstract bool HasNotifications(string assignedTo);
 
         public abstract void Dispose();
 

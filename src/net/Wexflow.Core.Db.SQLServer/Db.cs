@@ -1913,12 +1913,22 @@ namespace Wexflow.Core.Db.SQLServer
             throw new NotImplementedException();
         }
 
+        public override void UpdateNotification(string notificationId, Notification notification)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DeleteNotifications(string[] notificationIds)
         {
             throw new NotImplementedException();
         }
 
         public override IEnumerable<Notification> GetNotifications(string assignedTo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasNotifications(string assignedTo)
         {
             throw new NotImplementedException();
         }

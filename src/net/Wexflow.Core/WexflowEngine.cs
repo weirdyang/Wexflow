@@ -1545,5 +1545,14 @@ namespace Wexflow.Core
             return Database.GetNotifications(assignedTo).ToArray();
         }
 
+        /// <summary>
+        /// Indicates whether the user has notifications or not.
+        /// </summary>
+        /// <param name="assignedTo">Assigned to user id.</param>
+        /// <returns></returns>
+        public bool HasNotifications(string assignedTo)
+        {
+            return Database.HasNotifications(assignedTo);
+        }
     }
 }
