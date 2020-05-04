@@ -1458,12 +1458,13 @@ namespace Wexflow.Core
         /// <summary>
         /// Returns the records assigned to a user by keyword.
         /// </summary>
-        /// <param name="assignedTo">Assigned to.</param>
+        /// <param name="createdBy">Created by user id.</param>
+        /// <param name="assignedTo">Assigned to user id.</param>
         /// <param name="keyword">Keyword.</param>
         /// <returns>Records assigned to a user by keyword.</returns>
-        public Record[] GetRecords(string assignedTo, string keyword)
+        public Record[] GetRecordsCreatedByOrAssignedTo(string createdBy, string assignedTo, string keyword)
         {
-            return Database.GetRecords(assignedTo, keyword).ToArray();
+            return Database.GetRecordsCreatedByOrAssignedTo(createdBy, assignedTo, keyword).ToArray();
         }
 
         /// <summary>

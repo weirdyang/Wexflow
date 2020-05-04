@@ -1552,13 +1552,13 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override IEnumerable<Core.Db.Record> GetRecords(string assingedTo, string keyword)
+        public override IEnumerable<Core.Db.Record> GetRecordsCreatedByOrAssignedTo(string createdBy, string assingedTo, string keyword)
         {
             lock (padlock)
             {
                 var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
                 var keywordToUpper = keyword.ToUpper();
-                var records = col.Find(r => r.AssignedTo == assingedTo && (r.Name.ToUpper().Contains(keywordToUpper) || (!string.IsNullOrEmpty(r.Description) && r.Description.ToUpper().Contains(keywordToUpper)))).ToList();
+                var records = col.Find(r => (r.CreatedBy == createdBy || r.AssignedTo == assingedTo) && (r.Name.ToUpper().Contains(keywordToUpper) || (!string.IsNullOrEmpty(r.Description) && r.Description.ToUpper().Contains(keywordToUpper)))).ToList();
                 return records;
             }
         }

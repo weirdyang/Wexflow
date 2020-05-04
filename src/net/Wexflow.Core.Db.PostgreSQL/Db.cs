@@ -1863,7 +1863,7 @@ namespace Wexflow.Core.Db.PostgreSQL
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<Record> GetRecords(string assingedTo, string keyword)
+        public override IEnumerable<Record> GetRecordsCreatedByOrAssignedTo(string createdBy, string assingedTo, string keyword)
         {
             throw new NotImplementedException();
         }

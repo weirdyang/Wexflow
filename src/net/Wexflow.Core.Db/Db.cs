@@ -104,8 +104,8 @@ namespace Wexflow.Core.Db
         public abstract void UpdateRecord(string recordId, Record record);
         public abstract void DeleteRecords(string[] recordIds);
         public abstract IEnumerable<Record> GetRecords(string keyword);
-        public abstract IEnumerable<Record> GetRecords(string assingedTo, string keyword);
         public abstract IEnumerable<Record> GetRecordsCreatedBy(string createdBy);
+        public abstract IEnumerable<Record> GetRecordsCreatedByOrAssignedTo(string createdBy, string assingedTo, string keyword);
 
         public abstract string InsertVersion(Version version);
         public abstract void UpdateVersion(string versionId, Version version);

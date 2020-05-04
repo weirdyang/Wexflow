@@ -106,6 +106,7 @@ namespace Wexflow.Server
             DeleteRecords();
             SearchRecords();
             GetRecordsCreatedBy();
+            SearchRecordsCreatedByOrAssignedTo();
 
             //
             // History
@@ -4450,7 +4451,7 @@ namespace Wexflow.Server
                 var username = auth.Username;
                 var password = auth.Password;
 
-                var createdByUsername = Request.Query["u"].ToString();
+                var createdByUsername = Request.Query["c"].ToString();
                 Core.Db.User createdBy = WexflowServer.WexflowEngine.GetUser(createdByUsername);
 
                 var records = new Contracts.Record[] { };
@@ -4459,6 +4460,81 @@ namespace Wexflow.Server
                 if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                 {
                     var recordsArray = WexflowServer.WexflowEngine.GetRecordsCreatedBy(createdBy.GetDbId());
+                    List<Contracts.Record> recordsList = new List<Contracts.Record>();
+                    foreach (var record in recordsArray)
+                    {
+                        var r = new Contracts.Record
+                        {
+                            Id = record.GetDbId(),
+                            Name = record.Name,
+                            Description = record.Description,
+                            StartDate = record.StartDate.HasValue ? record.StartDate.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            EndDate = record.EndDate.HasValue ? record.EndDate.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            Comments = record.Comments,
+                            Approved = record.Approved,
+                            ManagerComments = record.ManagerComments,
+                            ModifiedBy = record.ModifiedBy,
+                            ModifiedOn = record.ModifiedOn.HasValue ? record.ModifiedOn.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty,
+                            CreatedBy = record.CreatedBy,
+                            CreatedOn = record.CreatedOn.ToString(WexflowServer.Config["DateTimeFormat"]),
+                            AssignedTo = record.AssignedTo,
+                            AssignedOn = record.AssignedOn.HasValue ? record.AssignedOn.Value.ToString(WexflowServer.Config["DateTimeFormat"]) : string.Empty
+                        };
+
+                        var versions = WexflowServer.WexflowEngine.GetVersions(record.GetDbId());
+                        List<Contracts.Version> versionsList = new List<Contracts.Version>();
+                        foreach (var version in versions)
+                        {
+                            var v = new Contracts.Version
+                            {
+                                Id = version.GetDbId(),
+                                RecordId = version.RecordId,
+                                FilePath = version.FilePath,
+                                CreatedOn = version.CreatedOn.ToString(WexflowServer.Config["DateTimeFormat"])
+                            };
+                            versionsList.Add(v);
+                        }
+                        r.Versions = versionsList.ToArray();
+                        recordsList.Add(r);
+                    }
+                    records = recordsList.ToArray();
+                }
+
+                var recordsStr = JsonConvert.SerializeObject(records);
+                var recordsBytes = Encoding.UTF8.GetBytes(recordsStr);
+
+                return new Response()
+                {
+                    ContentType = "application/json",
+                    Contents = s => s.Write(recordsBytes, 0, recordsBytes.Length)
+                };
+
+            });
+        }
+
+        /// <summary>
+        /// Searches for records assigned to or created by by keyword.
+        /// </summary>
+        private void SearchRecordsCreatedByOrAssignedTo()
+        {
+            Get(Root + "searchRecordsCreatedByOrAssignedTo", args =>
+            {
+                var auth = GetAuth(Request);
+                var username = auth.Username;
+                var password = auth.Password;
+
+                var keyword = Request.Query["s"].ToString();
+                var createdByUsername = Request.Query["c"].ToString();
+                Core.Db.User createdBy = !string.IsNullOrEmpty(createdByUsername) ? WexflowServer.WexflowEngine.GetUser(createdByUsername) : null;
+                var assignedToUsername = Request.Query["a"].ToString();
+                Core.Db.User assignedTo = !string.IsNullOrEmpty(assignedToUsername) ? WexflowServer.WexflowEngine.GetUser(assignedToUsername) : null;
+
+                var records = new Contracts.Record[] { };
+
+                var user = WexflowServer.WexflowEngine.GetUser(username);
+                if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                {
+                    var recordsArray = WexflowServer.WexflowEngine.GetRecordsCreatedByOrAssignedTo(createdBy != null ? createdBy.GetDbId() : string.Empty, assignedTo != null ? assignedTo.GetDbId() : string.Empty, keyword);
                     List<Contracts.Record> recordsList = new List<Contracts.Record>();
                     foreach (var record in recordsArray)
                     {
