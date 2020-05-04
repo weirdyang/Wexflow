@@ -18,7 +18,7 @@ namespace Wexflow.Core.Db
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string AssignedTo { get; set; }
-        public DateTime AssignedOn { get; set; }
+        public DateTime? AssignedOn { get; set; }
 
         public virtual string GetDbId()
         {

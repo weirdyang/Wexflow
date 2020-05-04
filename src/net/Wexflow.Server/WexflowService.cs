@@ -98,6 +98,11 @@ namespace Wexflow.Server
             UploadWorkflow();
 
             //
+            // Records
+            //
+            SaveRecord();
+
+            //
             // History
             //
             GetHistoryEntriesCountByDate();
@@ -4100,7 +4105,97 @@ namespace Wexflow.Server
         }
 
 
+        private void SaveRecord()
+        {
+            Post(Root + "saveRecord", args =>
+            {
+                try
+                {
+                    var res = false;
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
 
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    if (user.Password.Equals(password))
+                    {
+                        var json = RequestStream.FromStream(Request.Body).AsString();
+                        var o = JObject.Parse(json);
+
+                        var id = o.Value<string>("Id");
+                        var name = o.Value<string>("Name");
+                        var description = o.Value<string>("Description");
+                        var startDate = o.Value<string>("StartDate");
+                        var endDate = o.Value<string>("EndDate");
+                        var comments = o.Value<string>("Comments");
+                        var approved = o.Value<bool>("Approved");
+                        var managerComments = o.Value<string>("ManagerComments");
+                        var modifiedBy = o.Value<string>("ModifiedBy");
+                        var modifiedOn = o.Value<string>("ModifiedOn");
+                        var createdBy = o.Value<string>("CreatedBy");
+                        var createdOn = o.Value<string>("CreatedOn");
+                        var assignedTo = o.Value<string>("AssignedTo");
+                        var assignedOn = o.Value<string>("AssignedOn");
+                        var versions = o.Value<Contracts.Version[]>("Versions");
+
+                        var record = new Core.Db.Record
+                        {
+                            Name = name,
+                            Description = description,
+                            StartDate = string.IsNullOrEmpty(startDate) ? null : (DateTime?)DateTime.Parse(startDate),
+                            EndDate = string.IsNullOrEmpty(endDate) ? null : (DateTime?)DateTime.Parse(endDate),
+                            Comments = comments,
+                            Approved = approved,
+                            ManagerComments = managerComments,
+                            ModifiedBy = modifiedBy,
+                            ModifiedOn = string.IsNullOrEmpty(modifiedOn) ? null : (DateTime?)DateTime.Parse(modifiedOn),
+                            CreatedBy = createdBy,
+                            CreatedOn = DateTime.Parse(createdOn),
+                            AssignedTo = assignedTo,
+                            AssignedOn = string.IsNullOrEmpty(assignedTo) ? null : (DateTime?)DateTime.Parse(assignedTo)
+                        };
+
+                        List<Core.Db.Version> recordVersions = new List<Core.Db.Version>();
+                        foreach (var version in versions)
+                        {
+                            recordVersions.Add(new Core.Db.Version
+                            {
+                                RecordId = version.RecordId,
+                                CreatedOn = DateTime.Parse(version.CreatedOn),
+                                FilePath = version.FilePath
+                            });
+                        }
+
+                        var recordId = WexflowServer.WexflowEngine.SaveRecord(id, record, recordVersions);
+
+                        res = recordId != "-1";
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(res);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(false);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
 
     }
 }
