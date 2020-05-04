@@ -118,6 +118,8 @@
     <Content Include="css\users.min.css" />
     <Content Include="designer.html" />
     <Content Include="forgot-password.html" />
+    <Content Include="images\notification_active.png" />
+    <Content Include="images\notification.png" />
     <Content Include="images\da.png" />
     <Content Include="images\delete.png" />
     <Content Include="images\en.png" />

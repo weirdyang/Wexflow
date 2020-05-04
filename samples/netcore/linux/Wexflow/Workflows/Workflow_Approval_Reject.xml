@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Workflow xmlns="urn:wexflow-schema" id="132" name="Workflow_Approval_Disapprove" description="Workflow_Approval_Disapprove">
+<Workflow xmlns="urn:wexflow-schema" id="132" name="Workflow_Approval_Reject" description="Workflow_Approval_Reject">
   <Settings>
     <Setting name="launchType" value="trigger" />
     <Setting name="enabled" value="true" />

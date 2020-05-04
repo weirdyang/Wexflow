@@ -233,8 +233,8 @@ namespace Wexflow.Server
                             .Where(wf =>
                                 wf.IsApproval &&
                                 (wf.Name.ToUpper().Contains(keywordToUpper)
-                                || wf.Description.ToUpper().Contains(keywordToUpper))
-                                || wf.Id.ToString().Contains(keywordToUpper))
+                                || wf.Description.ToUpper().Contains(keywordToUpper)
+                                || wf.Id.ToString().Contains(keywordToUpper)))
                             .Select(wf => new WorkflowInfo(wf.DbId, wf.Id, wf.InstanceId, wf.Name, wf.FilePath,
                                 (LaunchType)wf.LaunchType, wf.IsEnabled, wf.IsApproval, wf.EnableParallelJobs, wf.IsWaitingForApproval, wf.Description, wf.IsRunning, wf.IsPaused,
                                 wf.Period.ToString(@"dd\.hh\:mm\:ss"), wf.CronExpression,
