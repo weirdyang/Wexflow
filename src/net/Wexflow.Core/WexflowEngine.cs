@@ -1048,7 +1048,7 @@ namespace Wexflow.Core
         /// <param name="email">User's email.</param>
         public void UpdateUser(string userId, string username, string password, UserProfile userProfile, string email)
         {
-            var user = Database.GetUserByUserId(userId);
+            var user = Database.GetUserById(userId);
             Database.UpdateUser(userId, new User
             {
                 Username = username,
@@ -1091,6 +1091,16 @@ namespace Wexflow.Core
         public User GetUser(string username)
         {
             return Database.GetUser(username);
+        }
+
+        /// <summary>
+        /// Gets a user by Id.
+        /// </summary>
+        /// <param name="userId">User id.</param>
+        /// <returns>User.</returns>
+        public User GetUserById(string userId)
+        {
+            return Database.GetUserById(userId);
         }
 
         /// <summary>
@@ -1525,6 +1535,24 @@ namespace Wexflow.Core
             try
             {
                 Database.MarkNotificationsAsRead(notificationIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while marking notifications as read.", e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Marks notifications as unread.
+        /// </summary>
+        /// <param name="notificationIds">Notification Ids.</param>
+        public bool MarkNotificationsAsUnread(string[] notificationIds)
+        {
+            try
+            {
+                Database.MarkNotificationsAsUnread(notificationIds);
                 return true;
             }
             catch (Exception e)

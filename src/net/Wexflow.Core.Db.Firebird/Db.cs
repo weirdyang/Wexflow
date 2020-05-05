@@ -1135,7 +1135,7 @@ namespace Wexflow.Core.Db.Firebird
             }
         }
 
-        public override Core.Db.User GetUserByUserId(string userId)
+        public override Core.Db.User GetUserById(string userId)
         {
             lock (padlock)
             {
@@ -1851,6 +1851,11 @@ namespace Wexflow.Core.Db.Firebird
             throw new NotImplementedException();
         }
 
+        public override void MarkNotificationsAsUnread(string[] notificationIds)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DeleteNotifications(string[] notificationIds)
         {
             throw new NotImplementedException();
@@ -1869,6 +1874,5 @@ namespace Wexflow.Core.Db.Firebird
         public override void Dispose()
         {
         }
-
     }
 }

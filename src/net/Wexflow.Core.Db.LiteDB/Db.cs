@@ -485,7 +485,7 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override Core.Db.User GetUserByUserId(string userId)
+        public override Core.Db.User GetUserById(string userId)
         {
             lock (padlock)
             {
@@ -1527,7 +1527,7 @@ namespace Wexflow.Core.Db.LiteDB
             lock (padlock)
             {
                 var col = db.GetCollection<Record>(Core.Db.Record.DocumentName);
-                col.DeleteMany(r => recordIds.Contains(r.GetDbId()));
+                col.DeleteMany(r => recordIds.Contains(r.Id.ToString()));
             }
         }
 
@@ -1599,7 +1599,7 @@ namespace Wexflow.Core.Db.LiteDB
             lock (padlock)
             {
                 var col = db.GetCollection<Version>(Core.Db.Version.DocumentName);
-                col.DeleteMany(v => versionIds.Contains(v.GetDbId()));
+                col.DeleteMany(v => versionIds.Contains(v.Id.ToString()));
             }
         }
 
@@ -1654,7 +1654,24 @@ namespace Wexflow.Core.Db.LiteDB
                     AssignedTo = n.AssignedTo,
                     Message = n.Message,
                     IsRead = true
-                }, n => notificationIds.Contains(n.GetDbId()));
+                }, n => notificationIds.Contains(n.Id.ToString()));
+            }
+        }
+
+        public override void MarkNotificationsAsUnread(string[] notificationIds)
+        {
+            lock (padlock)
+            {
+                var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
+                col.UpdateMany(n => new Notification
+                {
+                    Id = n.Id,
+                    AssignedBy = n.AssignedBy,
+                    AssignedOn = n.AssignedOn,
+                    AssignedTo = n.AssignedTo,
+                    Message = n.Message,
+                    IsRead = false
+                }, n => notificationIds.Contains(n.Id.ToString()));
             }
         }
 
@@ -1673,7 +1690,7 @@ namespace Wexflow.Core.Db.LiteDB
             {
                 var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
                 var keywordToUpper = keyword.ToUpper();
-                var notifications = col.Find(n => n.AssignedTo == assignedTo && n.Message.ToUpper().Contains(keywordToUpper)).ToList();
+                var notifications = col.Find(n => n.AssignedTo == assignedTo && n.Message.ToUpper().Contains(keywordToUpper)).OrderByDescending(n => n.AssignedOn).ToList();
                 return notifications;
             }
         }

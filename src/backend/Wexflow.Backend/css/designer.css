@@ -87,7 +87,7 @@
     box-sizing: border-box;
     position: fixed;
     top: 45px;
-    z-index: 9
+    z-index: 9;
 }
 
 #back {

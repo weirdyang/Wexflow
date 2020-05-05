@@ -1175,7 +1175,7 @@ namespace Wexflow.Core.Db.MariaDB
             }
         }
 
-        public override Core.Db.User GetUserByUserId(string userId)
+        public override Core.Db.User GetUserById(string userId)
         {
             lock (padlock)
             {
@@ -1891,6 +1891,11 @@ namespace Wexflow.Core.Db.MariaDB
         }
 
         public override void MarkNotificationsAsRead(string[] notificationIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void MarkNotificationsAsUnread(string[] notificationIds)
         {
             throw new NotImplementedException();
         }

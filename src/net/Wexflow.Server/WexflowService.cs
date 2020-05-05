@@ -112,7 +112,8 @@ namespace Wexflow.Server
             // Notifications
             //
             HasNotifications();
-            SaveNotification();
+            MarkNotificationsAsRead();
+            MarkNotificationsAsUnread();
             DeleteNotifications();
             SearchNotifications();
 
@@ -4630,9 +4631,9 @@ namespace Wexflow.Server
         }
 
         /// <summary>
-        /// Saves a notification.
+        /// marks notifications as read.
         /// </summary>
-        private void SaveNotification()
+        private void MarkNotificationsAsRead()
         {
             Post(Root + "markNotificationsAsRead", args =>
             {
@@ -4647,9 +4648,56 @@ namespace Wexflow.Server
                     if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                     {
                         var json = RequestStream.FromStream(Request.Body).AsString();
-                        var o = JObject.Parse(json);
-                        var notificationIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("notificationIds")).ToString());
+                        var notificationIds = JsonConvert.DeserializeObject<string[]>(JArray.Parse(json).ToString());
                         res = WexflowServer.WexflowEngine.MarkNotificationsAsRead(notificationIds);
+                    }
+
+                    var resStr = JsonConvert.SerializeObject(res);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+
+                    var resStr = JsonConvert.SerializeObject(false);
+                    var resBytes = Encoding.UTF8.GetBytes(resStr);
+
+                    return new Response()
+                    {
+                        ContentType = "application/json",
+                        Contents = s => s.Write(resBytes, 0, resBytes.Length)
+                    };
+                }
+            });
+        }
+
+        /// <summary>
+        /// marks notifications as unread.
+        /// </summary>
+        private void MarkNotificationsAsUnread()
+        {
+            Post(Root + "markNotificationsAsUnread", args =>
+            {
+                try
+                {
+                    var res = false;
+                    var auth = GetAuth(Request);
+                    var username = auth.Username;
+                    var password = auth.Password;
+
+                    var user = WexflowServer.WexflowEngine.GetUser(username);
+                    if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
+                    {
+                        var json = RequestStream.FromStream(Request.Body).AsString();
+                        var notificationIds = JsonConvert.DeserializeObject<string[]>(JArray.Parse(json).ToString());
+                        res = WexflowServer.WexflowEngine.MarkNotificationsAsUnread(notificationIds);
                     }
 
                     var resStr = JsonConvert.SerializeObject(res);
@@ -4697,8 +4745,7 @@ namespace Wexflow.Server
                     if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                     {
                         var json = RequestStream.FromStream(Request.Body).AsString();
-                        var o = JObject.Parse(json);
-                        var notificationIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("notificationsToDelete")).ToString());
+                        var notificationIds = JsonConvert.DeserializeObject<string[]>(JArray.Parse(json).ToString());
                         res = WexflowServer.WexflowEngine.DeleteNotifications(notificationIds);
                     }
 
@@ -4752,13 +4799,16 @@ namespace Wexflow.Server
                     List<Contracts.Notification> notificationList = new List<Contracts.Notification>();
                     foreach (var notification in notificationsArray)
                     {
+                        Core.Db.User assignedByUser = WexflowServer.WexflowEngine.GetUserById(notification.AssignedBy);
+                        Core.Db.User assignedToUser = WexflowServer.WexflowEngine.GetUserById(notification.AssignedTo);
                         var n = new Contracts.Notification
                         {
                             Id = notification.GetDbId(),
-                            AssignedBy = notification.AssignedBy,
+                            AssignedBy = assignedByUser.Username,
                             AssignedOn = notification.AssignedOn.ToString(WexflowServer.Config["DateTimeFormat"]),
-                            AssignedTo = notification.AssignedTo,
-                            Message = notification.Message
+                            AssignedTo = assignedToUser.Username,
+                            Message = notification.Message,
+                            IsRead = notification.IsRead
                         };
                         notificationList.Add(n);
                     }

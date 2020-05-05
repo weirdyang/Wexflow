@@ -64,7 +64,7 @@ namespace Wexflow.Core.Db
         public abstract void UpdateUser(string id, User user);
         public abstract void UpdateUsernameAndEmailAndUserProfile(string userId, string username, string email, UserProfile up);
         public abstract User GetUser(string username);
-        public abstract User GetUserByUserId(string id);
+        public abstract User GetUserById(string id);
         public abstract void DeleteUser(string username, string password);
         public abstract string GetPassword(string username);
         public abstract IEnumerable<User> GetUsers();
@@ -116,6 +116,7 @@ namespace Wexflow.Core.Db
 
         public abstract string InsertNotification(Notification notification);
         public abstract void MarkNotificationsAsRead(string[] notificationIds);
+        public abstract void MarkNotificationsAsUnread(string[] notificationIds);
         public abstract void DeleteNotifications(string[] notificationIds);
         public abstract IEnumerable<Notification> GetNotifications(string assignedTo, string keyword);
         public abstract bool HasNotifications(string assignedTo);
