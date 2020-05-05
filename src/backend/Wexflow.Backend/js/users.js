@@ -2,8 +2,6 @@
     "use strict";
 
     let updateLanguage = function (language) {
-        document.getElementById("help").innerHTML = language.get("help");
-        document.getElementById("about").innerHTML = language.get("about");
         document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
         document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
         document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
@@ -31,12 +29,16 @@
     language.init();
 
     let uri = Common.trimEnd(Settings.Uri, "/");
+
+    let lnkRecords = document.getElementById("lnk-records");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
-    //let lnkEditor = document.getElementById("lnk-editor");
-    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkApproval = document.getElementById("lnk-approval");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let lnkNotifications = document.getElementById("lnk-notifications");
+    let imgNotifications = document.getElementById("img-notifications");
+
     let divUsers = document.getElementById("users");
     let divUsersTable = document.getElementById("users-table");
     let divUserActions = document.getElementById("user-actions");
@@ -96,39 +98,49 @@
                 if (user.Password !== u.Password) {
                     Common.redirectToLoginPage();
                 } else if (u.UserProfile === 0 || u.UserProfile === 1) {
-                    logedinUser = u.Username;
-                    logedinUserProfile = u.UserProfile;
 
-                    divUsers.style.display = "block";
-                    lnkManager.style.display = "inline";
-                    lnkDesigner.style.display = "inline";
-                    //lnkEditor.style.display = "inline";
-                    //lnkApproval.style.display = "inline";
-                    lnkUsers.style.display = "inline";
+                    Common.get(uri + "/hasNotifications?a=" + encodeURIComponent(user.Username), function (hasNotifications) {
 
-                    if (u.UserProfile === 0) {
-                        lnkProfiles.style.display = "inline";
-                    }
+                        logedinUser = u.Username;
+                        logedinUserProfile = u.UserProfile;
 
-                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+                        divUsers.style.display = "block";
+                        lnkRecords.style.display = "inline";
+                        lnkManager.style.display = "inline";
+                        lnkDesigner.style.display = "inline";
+                        lnkApproval.style.display = "inline";
+                        lnkUsers.style.display = "inline";
+                        lnkNotifications.style.display = "inline";
 
-                    btnLogout.onclick = function () {
-                        deleteUser();
-                        Common.redirectToLoginPage();
-                    };
+                        if (u.UserProfile === 0) {
+                            lnkProfiles.style.display = "inline";
+                        }
 
-                    if (u.UserProfile === 1) {
-                        newUserAction.style.display = "none";
-                    }
+                        if (hasNotifications === true) {
+                            imgNotifications.src = "images/notification-active.png";
+                        } else {
+                            imgNotifications.src = "images/notification.png";
+                        }
 
-                    loadUsers();
+                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
+                        btnLogout.onclick = function () {
+                            deleteUser();
+                            Common.redirectToLoginPage();
+                        };
+
+                        if (u.UserProfile === 1) {
+                            newUserAction.style.display = "none";
+                        }
+
+                        loadUsers();
+
+                    }, function () { }, auth);
                 } else {
                     Common.redirectToLoginPage();
                 }
 
-            },
-            function () { }, auth);
+            }, function () { }, auth);
     }
 
     btnSearch.onclick = function () {

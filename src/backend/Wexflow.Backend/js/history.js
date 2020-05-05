@@ -2,8 +2,6 @@
     "use strict";
 
     let updateLanguage = function (language) {
-        document.getElementById("help").innerHTML = language.get("help");
-        document.getElementById("about").innerHTML = language.get("about");
         document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
         document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
         document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
@@ -66,12 +64,14 @@
     let lblEntriesCount = document.getElementById("spn-entries-count");
     let txtFrom = document.getElementById("txt-from");
     let txtTo = document.getElementById("txt-to");
+    let lnkRecords = document.getElementById("lnk-records");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
-    //let lnkEditor = document.getElementById("lnk-editor");
-    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkApproval = document.getElementById("lnk-approval");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let lnkNotifications = document.getElementById("lnk-notifications");
+    let imgNotifications = document.getElementById("img-notifications");
 
     let page = 1;
     let numberOfPages = 0;
@@ -97,139 +97,146 @@
                 if (user.Password !== u.Password) {
                     Common.redirectToLoginPage();
                 } else {
+                    Common.get(uri + "/hasNotifications?a=" + encodeURIComponent(user.Username), function (hasNotifications) {
+                        if (u.UserProfile === 0 || u.UserProfile === 1) {
+                            lnkRecords.style.display = "inline";
+                            lnkManager.style.display = "inline";
+                            lnkDesigner.style.display = "inline";
+                            lnkApproval.style.display = "inline";
+                            lnkUsers.style.display = "inline";
+                            lnkNotifications.style.display = "inline";
+                        }
 
-                    if (u.UserProfile === 0 || u.UserProfile === 1) {
-                        lnkManager.style.display = "inline";
-                        lnkDesigner.style.display = "inline";
-                        //lnkEditor.style.display = "inline";
-                        //lnkApproval.style.display = "inline";
-                        lnkUsers.style.display = "inline";
-                    }
+                        if (u.UserProfile === 0) {
+                            lnkProfiles.style.display = "inline";
+                        }
 
-                    if (u.UserProfile === 0) {
-                        lnkProfiles.style.display = "inline";
-                    }
+                        if (hasNotifications === true) {
+                            imgNotifications.src = "images/notification-active.png";
+                        } else {
+                            imgNotifications.src = "images/notification.png";
+                        }
 
-                    divEntries.style.display = "block";
-                    divEntriesAction.style.display = "block";
+                        divEntries.style.display = "block";
+                        divEntriesAction.style.display = "block";
 
-                    btnLogout.onclick = function () {
-                        deleteUser();
-                        Common.redirectToLoginPage();
-                    };
+                        btnLogout.onclick = function () {
+                            deleteUser();
+                            Common.redirectToLoginPage();
+                        };
 
-                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
-                    Common.get(uri + "/historyEntryStatusDateMin",
-                        function (dateMin) {
-                            Common.get(uri + "/historyEntryStatusDateMax",
-                                function (dateMax) {
+                        Common.get(uri + "/historyEntryStatusDateMin",
+                            function (dateMin) {
+                                Common.get(uri + "/historyEntryStatusDateMax",
+                                    function (dateMax) {
 
-                                    from = new Date(dateMin);
-                                    to = new Date(dateMax);
+                                        from = new Date(dateMin);
+                                        to = new Date(dateMax);
 
-                                    //if (from.getDay() === to.getDay() &&
-                                    //    from.getMonth() === to.getMonth() &&
-                                    //    from.getYear() === to.getYear()) {
-                                    to.setDate(to.getDate() + 1);
-                                    //}
+                                        //if (from.getDay() === to.getDay() &&
+                                        //    from.getMonth() === to.getMonth() &&
+                                        //    from.getYear() === to.getYear()) {
+                                        to.setDate(to.getDate() + 1);
+                                        //}
 
-                                    Common.get(uri + "/historyEntriesCountByDate?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime(),
-                                        function (count) {
+                                        Common.get(uri + "/historyEntriesCountByDate?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime(),
+                                            function (count) {
 
-                                            $(txtFrom).datepicker({
-                                                changeMonth: true,
-                                                changeYear: true,
-                                                dateFormat: "dd-mm-yy",
-                                                onSelect: function () {
-                                                    from = $(this).datepicker("getDate");
-                                                }
-                                            });
+                                                $(txtFrom).datepicker({
+                                                    changeMonth: true,
+                                                    changeYear: true,
+                                                    dateFormat: "dd-mm-yy",
+                                                    onSelect: function () {
+                                                        from = $(this).datepicker("getDate");
+                                                    }
+                                                });
 
-                                            $(txtFrom).datepicker("setDate", from);
+                                                $(txtFrom).datepicker("setDate", from);
 
-                                            $(txtTo).datepicker({
-                                                changeMonth: true,
-                                                changeYear: true,
-                                                dateFormat: "dd-mm-yy",
-                                                onSelect: function () {
-                                                    to = $(this).datepicker("getDate");
-                                                }
-                                            });
+                                                $(txtTo).datepicker({
+                                                    changeMonth: true,
+                                                    changeYear: true,
+                                                    dateFormat: "dd-mm-yy",
+                                                    onSelect: function () {
+                                                        to = $(this).datepicker("getDate");
+                                                    }
+                                                });
 
-                                            $(txtTo).datepicker("setDate", to);
+                                                $(txtTo).datepicker("setDate", to);
 
-                                            updatePagerControls(count);
+                                                updatePagerControls(count);
 
-                                            btnNextPage.onclick = function () {
-                                                page++;
-                                                if (page > 1) {
-                                                    Common.disableButton(btnPreviousPage, false);
-                                                }
+                                                btnNextPage.onclick = function () {
+                                                    page++;
+                                                    if (page > 1) {
+                                                        Common.disableButton(btnPreviousPage, false);
+                                                    }
 
-                                                if (page >= numberOfPages) {
-                                                    Common.disableButton(btnNextPage, true);
-                                                } else {
-                                                    Common.disableButton(btnNextPage, false);
-                                                }
+                                                    if (page >= numberOfPages) {
+                                                        Common.disableButton(btnNextPage, true);
+                                                    } else {
+                                                        Common.disableButton(btnNextPage, false);
+                                                    }
 
-                                                lblPages.innerHTML = page + " / " + numberOfPages;
-                                                loadEntries();
-                                            };
+                                                    lblPages.innerHTML = page + " / " + numberOfPages;
+                                                    loadEntries();
+                                                };
 
-                                            Common.disableButton(btnPreviousPage, true);
+                                                Common.disableButton(btnPreviousPage, true);
 
-                                            btnPreviousPage.onclick = function () {
-                                                page--;
-                                                if (page === 1) {
-                                                    Common.disableButton(btnPreviousPage, true);
-                                                }
+                                                btnPreviousPage.onclick = function () {
+                                                    page--;
+                                                    if (page === 1) {
+                                                        Common.disableButton(btnPreviousPage, true);
+                                                    }
 
-                                                if (page < numberOfPages) {
-                                                    Common.disableButton(btnNextPage, false);
-                                                }
+                                                    if (page < numberOfPages) {
+                                                        Common.disableButton(btnNextPage, false);
+                                                    }
 
-                                                lblPages.innerHTML = page + " / " + numberOfPages;
-                                                loadEntries();
-                                            };
+                                                    lblPages.innerHTML = page + " / " + numberOfPages;
+                                                    loadEntries();
+                                                };
 
-                                            btnSearch.onclick = function () {
-                                                page = 1;
-                                                updatePager();
-                                                loadEntries();
-                                            };
-
-                                            txtSearch.onkeyup = function (e) {
-                                                e.preventDefault();
-
-                                                if (e.keyCode === 13) {
+                                                btnSearch.onclick = function () {
                                                     page = 1;
                                                     updatePager();
                                                     loadEntries();
-                                                }
-                                            };
+                                                };
 
-                                            slctEntriesCount.onchange = function () {
-                                                page = 1;
-                                                updatePagerControls(count);
+                                                txtSearch.onkeyup = function (e) {
+                                                    e.preventDefault();
+
+                                                    if (e.keyCode === 13) {
+                                                        page = 1;
+                                                        updatePager();
+                                                        loadEntries();
+                                                    }
+                                                };
+
+                                                slctEntriesCount.onchange = function () {
+                                                    page = 1;
+                                                    updatePagerControls(count);
+                                                    loadEntries();
+                                                };
+
                                                 loadEntries();
-                                            };
 
-                                            loadEntries();
+                                            },
+                                            function () { }, auth);
 
-                                        },
-                                        function () { }, auth);
-
-                                },
-                                function () { }, auth);
+                                    },
+                                    function () { }, auth);
 
 
-                        },
-                        function () { }, auth);
+                            },
+                            function () { }, auth);
 
+                    }, function () { }, auth);
                 }
-            },
-            function () { }, auth);
+            }, function () { }, auth);
     }
 
     function updatePager() {

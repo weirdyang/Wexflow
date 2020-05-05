@@ -2,8 +2,6 @@
     "use strict";
 
     let updateLanguage = function (language) {
-        document.getElementById("help").innerHTML = language.get("help");
-        document.getElementById("about").innerHTML = language.get("about");
         document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
         document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
         document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
@@ -72,12 +70,14 @@
 
     let id = "wf-manager";
     let uri = Common.trimEnd(Settings.Uri, "/");
+    let lnkRecords = document.getElementById("lnk-records");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
-    //let lnkEditor = document.getElementById("lnk-editor");
-    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkApproval = document.getElementById("lnk-approval");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let lnkNotifications = document.getElementById("lnk-notifications");
+    let imgNotifications = document.getElementById("img-notifications");
     let selectedId = -1;
     let workflows = {};
     let jobs = [];
@@ -137,7 +137,6 @@
     let searchText = document.getElementById("wf-search-text");
     let suser = getUser();
 
-
     if (suser === null || suser === "") {
         Common.redirectToLoginPage();
     } else {
@@ -152,50 +151,43 @@
                 if (user.Password !== u.Password) {
                     Common.redirectToLoginPage();
                 } else {
-
                     if (u.UserProfile === 0 || u.UserProfile === 1) {
-                        lnkManager.style.display = "inline";
-                        lnkDesigner.style.display = "inline";
-                        //lnkEditor.style.display = "inline";
-                        //lnkApproval.style.display = "inline";
-                        lnkUsers.style.display = "inline";
+                        Common.get(uri + "/hasNotifications?a=" + encodeURIComponent(user.Username), function (hasNotifications) {
+                            lnkRecords.style.display = "inline";
+                            lnkManager.style.display = "inline";
+                            lnkDesigner.style.display = "inline";
+                            lnkApproval.style.display = "inline";
+                            lnkUsers.style.display = "inline";
+                            lnkNotifications.style.display = "inline";
 
-                        if (u.UserProfile === 0) {
-                            lnkProfiles.style.display = "inline";
-                        }
+                            if (u.UserProfile === 0) {
+                                lnkProfiles.style.display = "inline";
+                            }
 
-                        let btnLogout = document.getElementById("btn-logout");
-                        let divWorkflows = document.getElementById("wf-manager");
-                        divWorkflows.style.display = "block";
+                            if (hasNotifications === true) {
+                                imgNotifications.src = "images/notification-active.png";
+                            } else {
+                                imgNotifications.src = "images/notification.png";
+                            }
 
-                        btnLogout.onclick = function () {
-                            deleteUser();
-                            Common.redirectToLoginPage();
-                        };
-                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+                            let btnLogout = document.getElementById("btn-logout");
+                            let divWorkflows = document.getElementById("wf-manager");
+                            divWorkflows.style.display = "block";
 
-                        Common.disableButton(startButton, true);
-                        Common.disableButton(suspendButton, true);
-                        Common.disableButton(resumeButton, true);
-                        Common.disableButton(stopButton, true);
-                        Common.disableButton(approveButton, true);
-                        Common.disableButton(rejectButton, true);
+                            btnLogout.onclick = function () {
+                                deleteUser();
+                                Common.redirectToLoginPage();
+                            };
+                            document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
-                        searchButton.onclick = function () {
-                            loadWorkflows();
-                            notify("");
                             Common.disableButton(startButton, true);
                             Common.disableButton(suspendButton, true);
                             Common.disableButton(resumeButton, true);
                             Common.disableButton(stopButton, true);
                             Common.disableButton(approveButton, true);
                             Common.disableButton(rejectButton, true);
-                        };
 
-                        searchText.onkeyup = function (event) {
-                            event.preventDefault();
-
-                            if (event.keyCode === 13) { // Enter
+                            searchButton.onclick = function () {
                                 loadWorkflows();
                                 notify("");
                                 Common.disableButton(startButton, true);
@@ -204,17 +196,32 @@
                                 Common.disableButton(stopButton, true);
                                 Common.disableButton(approveButton, true);
                                 Common.disableButton(rejectButton, true);
-                            }
-                        };
+                            };
 
-                        loadWorkflows();
+                            searchText.onkeyup = function (event) {
+                                event.preventDefault();
+
+                                if (event.keyCode === 13) { // Enter
+                                    loadWorkflows();
+                                    notify("");
+                                    Common.disableButton(startButton, true);
+                                    Common.disableButton(suspendButton, true);
+                                    Common.disableButton(resumeButton, true);
+                                    Common.disableButton(stopButton, true);
+                                    Common.disableButton(approveButton, true);
+                                    Common.disableButton(rejectButton, true);
+                                }
+                            };
+
+                            loadWorkflows();
+
+                        }, function () { }, auth);
                     } else {
                         Common.redirectToLoginPage();
                     }
 
                 }
-            },
-            function () { }, auth);
+            }, function () { }, auth);
     }
 
     function compareById(wf1, wf2) {

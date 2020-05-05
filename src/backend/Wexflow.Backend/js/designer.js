@@ -2,8 +2,6 @@
     "use strict";
 
     let updateLanguage = function (language) {
-        document.getElementById("lnk-help").innerHTML = language.get("help");
-        document.getElementById("lnk-about").innerHTML = language.get("about");
         document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
         document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
         document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
@@ -65,16 +63,16 @@
 
     let uri = Common.trimEnd(Settings.Uri, "/");
     let lnkDashoard = document.getElementById("lnk-dashboard");
+    let lnkRecords = document.getElementById("lnk-records");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
-    //let lnkEditor = document.getElementById("lnk-editor");
-    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkApproval = document.getElementById("lnk-approval");
     let lnkHistory = document.getElementById("lnk-history");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let lnkNotifications = document.getElementById("lnk-notifications");
+    let imgNotifications = document.getElementById("img-notifications");
     let btnLogout = document.getElementById("btn-logout");
-    let lnkAbout = document.getElementById("lnk-about");
-    let lnkHelp = document.getElementById("lnk-help");
     let navigation = document.getElementById("navigation");
     let leftcard = document.getElementById("leftcard");
     let propwrap = document.getElementById("propwrap");
@@ -102,33 +100,43 @@
                 } else {
 
                     if (u.UserProfile === 0 || u.UserProfile === 1) {
-                        lnkManager.style.display = "inline";
-                        lnkDesigner.style.display = "inline";
-                        //lnkEditor.style.display = "inline";
-                        //lnkApproval.style.display = "inline";
-                        lnkUsers.style.display = "inline";
 
-                        if (u.UserProfile === 0) {
-                            lnkProfiles.style.display = "inline";
-                        }
+                        Common.get(uri + "/hasNotifications?a=" + encodeURIComponent(user.Username), function (hasNotifications) {
+                            lnkRecords.style.display = "inline";
+                            lnkManager.style.display = "inline";
+                            lnkDesigner.style.display = "inline";
+                            lnkApproval.style.display = "inline";
+                            lnkUsers.style.display = "inline";
+                            lnkNotifications.style.display = "inline";
 
-                        navigation.style.display = "block";
-                        leftcard.style.display = "block";
-                        propwrap.style.display = "block";
-                        wfclose.style.display = "block";
-                        wfpropwrap.style.display = "block";
-                        canvas.style.display = "block";
+                            if (u.UserProfile === 0) {
+                                lnkProfiles.style.display = "inline";
+                            }
 
-                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+                            if (hasNotifications === true) {
+                                imgNotifications.src = "images/notification-active.png";
+                            } else {
+                                imgNotifications.src = "images/notification.png";
+                            }
 
-                        load();
+                            navigation.style.display = "block";
+                            leftcard.style.display = "block";
+                            propwrap.style.display = "block";
+                            wfclose.style.display = "block";
+                            wfpropwrap.style.display = "block";
+                            canvas.style.display = "block";
+
+                            document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+
+                            load();
+
+                        }, function () { }, auth);
                     } else {
                         Common.redirectToLoginPage();
                     }
 
                 }
-            },
-            function () { }, auth);
+            }, function () { }, auth);
     }
 
     function load() {
@@ -167,8 +175,26 @@
             });
         };
 
+        lnkRecords.onclick = function () {
+            let lnk = "records.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
         lnkManager.onclick = function () {
             let lnk = "manager.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkApproval.onclick = function () {
+            let lnk = "approval.html";
             saveChanges(function () {
                 window.location.href = lnk;
             }, function () {
@@ -205,6 +231,15 @@
 
         lnkProfiles.onclick = function () {
             let lnk = "profiles.html";
+            saveChanges(function () {
+                window.location.href = lnk;
+            }, function () {
+                window.location.href = lnk;
+            });
+        };
+
+        lnkNotifications.onclick = function () {
+            let lnk = "notifications.html";
             saveChanges(function () {
                 window.location.href = lnk;
             }, function () {

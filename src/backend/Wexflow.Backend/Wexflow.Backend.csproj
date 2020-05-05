@@ -112,13 +112,15 @@
     <Content Include="css\login.min.css" />
     <Content Include="css\approval.css" />
     <Content Include="css\manager.min.css" />
+    <Content Include="css\notifications.css" />
     <Content Include="css\profiles.css" />
     <Content Include="css\profiles.min.css" />
+    <Content Include="css\records.css" />
     <Content Include="css\users.css" />
     <Content Include="css\users.min.css" />
     <Content Include="designer.html" />
     <Content Include="forgot-password.html" />
-    <Content Include="images\notification_active.png" />
+    <Content Include="images\notification-active.png" />
     <Content Include="images\notification.png" />
     <Content Include="images\da.png" />
     <Content Include="images\delete.png" />
@@ -152,8 +154,10 @@
     <Content Include="js\manager.min.js" />
     <Content Include="js\mode-json.js" />
     <Content Include="js\mode-xml.js" />
+    <Content Include="js\notifications.js" />
     <Content Include="js\profiles.js" />
     <Content Include="js\profiles.min.js" />
+    <Content Include="js\records.js" />
     <Content Include="js\theme-ambiance.js" />
     <Content Include="js\theme-chaos.js" />
     <Content Include="js\theme-chrome.js" />
@@ -270,7 +274,9 @@
     <Content Include="js\worker-json.js" />
     <Content Include="js\worker-xml.js" />
     <Content Include="manager.html" />
+    <Content Include="notifications.html" />
     <Content Include="profiles.html" />
+    <Content Include="records.html" />
     <Content Include="users.html" />
     <Content Include="Web.config" />
   </ItemGroup>

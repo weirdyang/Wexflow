@@ -2,8 +2,6 @@
     "use strict";
 
     let updateLanguage = function (language) {
-        document.getElementById("help").innerHTML = language.get("help");
-        document.getElementById("about").innerHTML = language.get("about");
         document.getElementById("lnk-dashboard").innerHTML = language.get("lnk-dashboard");
         document.getElementById("lnk-manager").innerHTML = language.get("lnk-manager");
         document.getElementById("lnk-designer").innerHTML = language.get("lnk-designer");
@@ -81,12 +79,14 @@
     let lblEntriesCount = document.getElementById("spn-entries-count");
     let txtFrom = document.getElementById("txt-from");
     let txtTo = document.getElementById("txt-to");
+    let lnkRecords = document.getElementById("lnk-records");
     let lnkManager = document.getElementById("lnk-manager");
     let lnkDesigner = document.getElementById("lnk-designer");
-    //let lnkEditor = document.getElementById("lnk-editor");
-    //let lnkApproval = document.getElementById("lnk-approval");
+    let lnkApproval = document.getElementById("lnk-approval");
     let lnkUsers = document.getElementById("lnk-users");
     let lnkProfiles = document.getElementById("lnk-profiles");
+    let lnkNotifications = document.getElementById("lnk-notifications");
+    let imgNotifications = document.getElementById("img-notifications");
 
     let suser = getUser();
     let page = 1;
@@ -113,144 +113,154 @@
                     Common.redirectToLoginPage();
                 } else {
 
-                    divStatus.style.display = "block";
-                    divEntries.style.display = "block";
+                    Common.get(uri + "/hasNotifications?a=" + encodeURIComponent(user.Username), function (hasNotifications) {
 
-                    btnLogout.onclick = function () {
-                        deleteUser();
-                        Common.redirectToLoginPage();
-                    };
+                        divStatus.style.display = "block";
+                        divEntries.style.display = "block";
 
-                    document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
+                        btnLogout.onclick = function () {
+                            deleteUser();
+                            Common.redirectToLoginPage();
+                        };
 
-                    if (u.UserProfile === 0 || u.UserProfile === 1) {
-                        lnkManager.style.display = "inline";
-                        lnkDesigner.style.display = "inline";
-                        //lnkEditor.style.display = "inline";
-                        //lnkApproval.style.display = "inline";
-                        lnkUsers.style.display = "inline";
-                    }
+                        document.getElementById("spn-username").innerHTML = " (" + u.Username + ")";
 
-                    if (u.UserProfile === 0) {
-                        lnkProfiles.style.display = "inline";
-                    }
+                        if (u.UserProfile === 0 || u.UserProfile === 1) {
+                            lnkRecords.style.display = "inline";
+                            lnkManager.style.display = "inline";
+                            lnkDesigner.style.display = "inline";
+                            lnkApproval.style.display = "inline";
+                            lnkUsers.style.display = "inline";
+                            lnkNotifications.style.display = "inline";
+                        }
 
-                    Common.get(uri + "/entryStatusDateMin",
-                        function (dateMin) {
-                            Common.get(uri + "/entryStatusDateMax",
-                                function (dateMax) {
+                        if (u.UserProfile === 0) {
+                            lnkProfiles.style.display = "inline";
+                        }
 
-                                    from = new Date(dateMin);
-                                    to = new Date(dateMax);
+                        if (hasNotifications === true) {
+                            imgNotifications.src = "images/notification-active.png";
+                        } else {
+                            imgNotifications.src = "images/notification.png";
+                        }
 
-                                    //if (from.getDay() === to.getDay() &&
-                                    //    from.getMonth() === to.getMonth() &&
-                                    //    from.getYear() === to.getYear()) {
-                                    to.setDate(to.getDate() + 1);
-                                    //}
-                                    Common.get(uri + "/entriesCountByDate?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime(),
-                                        function (count) {
+                        Common.get(uri + "/entryStatusDateMin",
+                            function (dateMin) {
+                                Common.get(uri + "/entryStatusDateMax",
+                                    function (dateMax) {
 
-                                            updateStatusCount();
+                                        from = new Date(dateMin);
+                                        to = new Date(dateMax);
 
-                                            setInterval(function () {
+                                        //if (from.getDay() === to.getDay() &&
+                                        //    from.getMonth() === to.getMonth() &&
+                                        //    from.getYear() === to.getYear()) {
+                                        to.setDate(to.getDate() + 1);
+                                        //}
+                                        Common.get(uri + "/entriesCountByDate?s=" + encodeURIComponent(txtSearch.value) + "&from=" + from.getTime() + "&to=" + to.getTime(),
+                                            function (count) {
 
                                                 updateStatusCount();
 
-                                            }, refreshTimeout);
+                                                setInterval(function () {
 
-                                            $(txtFrom).datepicker({
-                                                changeMonth: true,
-                                                changeYear: true,
-                                                dateFormat: "dd-mm-yy",
-                                                onSelect: function () {
-                                                    from = $(this).datepicker("getDate");
-                                                }
-                                            });
+                                                    updateStatusCount();
 
-                                            $(txtFrom).datepicker("setDate", from);
+                                                }, refreshTimeout);
 
-                                            $(txtTo).datepicker({
-                                                changeMonth: true,
-                                                changeYear: true,
-                                                dateFormat: "dd-mm-yy",
-                                                onSelect: function () {
-                                                    to = $(this).datepicker("getDate");
-                                                }
-                                            });
+                                                $(txtFrom).datepicker({
+                                                    changeMonth: true,
+                                                    changeYear: true,
+                                                    dateFormat: "dd-mm-yy",
+                                                    onSelect: function () {
+                                                        from = $(this).datepicker("getDate");
+                                                    }
+                                                });
 
-                                            $(txtTo).datepicker("setDate", to);
+                                                $(txtFrom).datepicker("setDate", from);
 
-                                            updatePagerControls(count);
+                                                $(txtTo).datepicker({
+                                                    changeMonth: true,
+                                                    changeYear: true,
+                                                    dateFormat: "dd-mm-yy",
+                                                    onSelect: function () {
+                                                        to = $(this).datepicker("getDate");
+                                                    }
+                                                });
 
-                                            btnNextPage.onclick = function () {
-                                                page++;
-                                                if (page > 1) {
-                                                    Common.disableButton(btnPreviousPage, false);
-                                                }
+                                                $(txtTo).datepicker("setDate", to);
 
-                                                if (page >= numberOfPages) {
-                                                    Common.disableButton(btnNextPage, true);
-                                                } else {
-                                                    Common.disableButton(btnNextPage, false);
-                                                }
+                                                updatePagerControls(count);
 
-                                                lblPages.innerHTML = page + " / " + numberOfPages;
-                                                loadEntries();
-                                            };
+                                                btnNextPage.onclick = function () {
+                                                    page++;
+                                                    if (page > 1) {
+                                                        Common.disableButton(btnPreviousPage, false);
+                                                    }
 
-                                            Common.disableButton(btnPreviousPage, true);
+                                                    if (page >= numberOfPages) {
+                                                        Common.disableButton(btnNextPage, true);
+                                                    } else {
+                                                        Common.disableButton(btnNextPage, false);
+                                                    }
 
-                                            btnPreviousPage.onclick = function () {
-                                                page--;
-                                                if (page === 1) {
-                                                    Common.disableButton(btnPreviousPage, true);
-                                                }
+                                                    lblPages.innerHTML = page + " / " + numberOfPages;
+                                                    loadEntries();
+                                                };
 
-                                                if (page < numberOfPages) {
-                                                    Common.disableButton(btnNextPage, false);
-                                                }
+                                                Common.disableButton(btnPreviousPage, true);
 
-                                                lblPages.innerHTML = page + " / " + numberOfPages;
-                                                loadEntries();
-                                            };
+                                                btnPreviousPage.onclick = function () {
+                                                    page--;
+                                                    if (page === 1) {
+                                                        Common.disableButton(btnPreviousPage, true);
+                                                    }
 
-                                            btnSearch.onclick = function () {
-                                                page = 1;
-                                                updatePager();
-                                                loadEntries();
-                                            };
+                                                    if (page < numberOfPages) {
+                                                        Common.disableButton(btnNextPage, false);
+                                                    }
 
-                                            txtSearch.onkeyup = function (e) {
-                                                e.preventDefault();
+                                                    lblPages.innerHTML = page + " / " + numberOfPages;
+                                                    loadEntries();
+                                                };
 
-                                                if (e.keyCode === 13) {
+                                                btnSearch.onclick = function () {
                                                     page = 1;
                                                     updatePager();
                                                     loadEntries();
-                                                }
-                                            };
+                                                };
 
-                                            slctEntriesCount.onchange = function () {
-                                                page = 1;
-                                                //updatePagerControls(count);
-                                                updatePager();
+                                                txtSearch.onkeyup = function (e) {
+                                                    e.preventDefault();
+
+                                                    if (e.keyCode === 13) {
+                                                        page = 1;
+                                                        updatePager();
+                                                        loadEntries();
+                                                    }
+                                                };
+
+                                                slctEntriesCount.onchange = function () {
+                                                    page = 1;
+                                                    //updatePagerControls(count);
+                                                    updatePager();
+                                                    loadEntries();
+                                                };
+
                                                 loadEntries();
-                                            };
 
-                                            loadEntries();
+                                            },
+                                            function () { }, auth);
 
-                                        },
-                                        function () { }, auth);
+                                    },
+                                    function () { }, auth);
+                            },
+                            function () { }, auth);
 
-                                },
-                                function () { }, auth);
-                        },
-                        function () { }, auth);
 
+                    }, function () { }, auth);
                 }
-            },
-            function () { }, auth);
+            }, function () { }, auth);
     }
 
     function updateStatusCount() {
