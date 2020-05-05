@@ -1331,10 +1331,10 @@ namespace Wexflow.Core
             }
         }
 
-        // <summary>
-        /// Deletes versions.
+        /// <summary>
+        ///  Deletes versions.
         /// </summary>
-        /// <param name="recordIds">Version ids.</param>
+        /// <param name="versionIds">Verions ids.</param>
         /// <returns>Result.</returns>
         public bool DeleteVersions(string[] versionIds)
         {
@@ -1500,28 +1500,37 @@ namespace Wexflow.Core
         /// <summary>
         /// Inserts a notification in the database.
         /// </summary>
-        /// <param name="notificationId">Notification id.</param>
         /// <param name="notification">Notification.</param>
         /// <returns>Notification id.</returns>
-        public string SaveNotification(string notificationId, Notification notification)
+        public string InsertNotification(Notification notification)
         {
             try
             {
-                if (notificationId == "-1")
-                {
-                    var id = Database.InsertNotification(notification);
-                    return id;
-                }
-                else
-                {
-                    Database.UpdateNotification(notificationId, notification);
-                    return notificationId;
-                }
+                var id = Database.InsertNotification(notification);
+                return id;
             }
             catch (Exception e)
             {
-                Logger.Error("An error occured while saving a notification.", e);
+                Logger.Error("An error occured while inserting a notification.", e);
                 return "-1";
+            }
+        }
+
+        /// <summary>
+        /// Marks notifications as read.
+        /// </summary>
+        /// <param name="notificationIds">Notification Ids.</param>
+        public bool MarkNotificationsAsRead(string[] notificationIds)
+        {
+            try
+            {
+                Database.MarkNotificationsAsRead(notificationIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while marking notifications as read.", e);
+                return false;
             }
         }
 
@@ -1548,10 +1557,11 @@ namespace Wexflow.Core
         /// Returns the notifications assigned to a user.
         /// </summary>
         /// <param name="assignedTo">User id.</param>
+        /// <param name="keyword">Keyword.</param>
         /// <returns>Notifications assigned to a user.</returns>
-        public Notification[] GetNotifications(string assignedTo)
+        public Notification[] GetNotifications(string assignedTo, string keyword)
         {
-            return Database.GetNotifications(assignedTo).ToArray();
+            return Database.GetNotifications(assignedTo, keyword).ToArray();
         }
 
         /// <summary>

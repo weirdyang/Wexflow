@@ -1641,21 +1641,20 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override void UpdateNotification(string notificationId, Core.Db.Notification notification)
+        public override void MarkNotificationsAsRead(string[] notificationIds)
         {
             lock (padlock)
             {
                 var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
-                var n = new Notification
+                col.UpdateMany(n => new Notification
                 {
-                    Id = int.Parse(notificationId),
-                    AssignedBy = notification.AssignedBy,
-                    AssignedOn = notification.AssignedOn,
-                    AssignedTo = notification.AssignedTo,
-                    Message = notification.Message,
-                    IsRead = notification.IsRead
-                };
-                col.Update(n);
+                    Id = n.Id,
+                    AssignedBy = n.AssignedBy,
+                    AssignedOn = n.AssignedOn,
+                    AssignedTo = n.AssignedTo,
+                    Message = n.Message,
+                    IsRead = true
+                }, n => notificationIds.Contains(n.GetDbId()));
             }
         }
 
@@ -1668,12 +1667,13 @@ namespace Wexflow.Core.Db.LiteDB
             }
         }
 
-        public override IEnumerable<Core.Db.Notification> GetNotifications(string assignedTo)
+        public override IEnumerable<Core.Db.Notification> GetNotifications(string assignedTo, string keyword)
         {
             lock (padlock)
             {
                 var col = db.GetCollection<Notification>(Core.Db.Notification.DocumentName);
-                var notifications = col.Find(n => n.AssignedTo == assignedTo).ToList();
+                var keywordToUpper = keyword.ToUpper();
+                var notifications = col.Find(n => n.AssignedTo == assignedTo && n.Message.ToUpper().Contains(keywordToUpper)).ToList();
                 return notifications;
             }
         }

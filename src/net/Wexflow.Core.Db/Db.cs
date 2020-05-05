@@ -115,9 +115,9 @@ namespace Wexflow.Core.Db
 
 
         public abstract string InsertNotification(Notification notification);
-        public abstract void UpdateNotification(string notificationId, Notification notification);
+        public abstract void MarkNotificationsAsRead(string[] notificationIds);
         public abstract void DeleteNotifications(string[] notificationIds);
-        public abstract IEnumerable<Notification> GetNotifications(string assignedTo);
+        public abstract IEnumerable<Notification> GetNotifications(string assignedTo, string keyword);
         public abstract bool HasNotifications(string assignedTo);
 
         public abstract void Dispose();

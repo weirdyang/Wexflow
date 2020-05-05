@@ -1548,7 +1548,7 @@ namespace Wexflow.Core.Db.RavenDB
             throw new NotImplementedException();
         }
 
-        public override void UpdateNotification(string notificationId, Notification notification)
+        public override void MarkNotificationsAsRead(string[] notificationIds)
         {
             throw new NotImplementedException();
         }
@@ -1558,7 +1558,7 @@ namespace Wexflow.Core.Db.RavenDB
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<Notification> GetNotifications(string assignedTo)
+        public override IEnumerable<Notification> GetNotifications(string assignedTo, string keyword)
         {
             throw new NotImplementedException();
         }

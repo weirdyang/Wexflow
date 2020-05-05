@@ -114,7 +114,7 @@ namespace Wexflow.Server
             HasNotifications();
             SaveNotification();
             DeleteNotifications();
-            GetNotifications();
+            SearchNotifications();
 
             //
             // History
@@ -4634,7 +4634,7 @@ namespace Wexflow.Server
         /// </summary>
         private void SaveNotification()
         {
-            Post(Root + "saveNotification", args =>
+            Post(Root + "markNotificationsAsRead", args =>
             {
                 try
                 {
@@ -4648,25 +4648,8 @@ namespace Wexflow.Server
                     {
                         var json = RequestStream.FromStream(Request.Body).AsString();
                         var o = JObject.Parse(json);
-
-                        var id = o.Value<string>("Id");
-                        var assignedBy = o.Value<string>("AssignedBy");
-                        var assignedOn = o.Value<string>("AssignedOn");
-                        var assignedTo = o.Value<string>("AssignedTo");
-                        var message = o.Value<string>("Message");
-                        var isRead = o.Value<bool>("IsRead");
-
-                        var notification = new Core.Db.Notification
-                        {
-                            AssignedBy = assignedBy,
-                            AssignedOn = DateTime.Parse(assignedOn),
-                            AssignedTo = assignedTo,
-                            Message = message,
-                            IsRead = isRead
-                        };
-
-                        var notificationId = WexflowServer.WexflowEngine.SaveNotification(id, notification);
-                        res = notificationId != "-1";
+                        var notificationIds = JsonConvert.DeserializeObject<string[]>(((JArray)o.SelectToken("notificationIds")).ToString());
+                        res = WexflowServer.WexflowEngine.MarkNotificationsAsRead(notificationIds);
                     }
 
                     var resStr = JsonConvert.SerializeObject(res);
@@ -4746,11 +4729,11 @@ namespace Wexflow.Server
         }
 
         /// <summary>
-        /// Retrieves notifications of a user.
+        /// Searches for notifications of a user.
         /// </summary>
-        private void GetNotifications()
+        private void SearchNotifications()
         {
-            Get(Root + "notifications", args =>
+            Get(Root + "searchNotifications", args =>
             {
                 var auth = GetAuth(Request);
                 var username = auth.Username;
@@ -4758,13 +4741,14 @@ namespace Wexflow.Server
 
                 var assignedToUsername = Request.Query["a"].ToString();
                 Core.Db.User assignedTo = WexflowServer.WexflowEngine.GetUser(assignedToUsername);
+                var keyword = Request.Query["s"].ToString();
 
                 var notifications = new Contracts.Notification[] { };
 
                 var user = WexflowServer.WexflowEngine.GetUser(username);
                 if (user.Password.Equals(password) && (user.UserProfile == Core.Db.UserProfile.SuperAdministrator || user.UserProfile == Core.Db.UserProfile.Administrator))
                 {
-                    var notificationsArray = WexflowServer.WexflowEngine.GetNotifications(assignedTo.GetDbId());
+                    var notificationsArray = WexflowServer.WexflowEngine.GetNotifications(assignedTo.GetDbId(), keyword);
                     List<Contracts.Notification> notificationList = new List<Contracts.Notification>();
                     foreach (var notification in notificationsArray)
                     {

@@ -66,11 +66,12 @@
     margin-top: 10px !important;
 }
 
-/*page-header*/
-#page-header {
+/*navigation*/
+#navigation {
     display: none;
 }
-/*page-content*/
-#page-content {
+
+/*content*/
+#content {
     display: none;
 }
